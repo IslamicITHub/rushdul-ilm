@@ -333,7 +333,10 @@
     <item quantity="other">Rewind <ns1:g example="30" id="rewind_amount">%d</ns1:g> seconds</item>
   </plurals>
     <string name="androidx_startup" translatable="false">androidx.startup</string>
+    <string name="answer_screen_label">Answer</string>
     <string name="app_name">Rushd-ul-Ilm</string>
+    <string name="app_settings_title">App Settings</string>
+    <string name="app_version">App Version: 1.0.0-alpha</string>
     <string name="call_notification_answer_action">Answer</string>
     <string name="call_notification_answer_video_action">Video</string>
     <string name="call_notification_decline_action">Decline</string>
@@ -345,6 +348,8 @@
     <string name="close_sheet">"Close sheet"</string>
     <string name="default_error_message">"Invalid input"</string>
     <string name="default_popup_window_title" ns2:ignore="ExtraTranslation">"Pop-Up Window"</string>
+    <string name="download_button_label">Download</string>
+    <string name="downloaded_status">Downloaded</string>
     <string name="dropdown_menu">"Dropdown menu"</string>
     <string name="exo_controls_cc_disabled_description">Enable subtitles</string>
     <string name="exo_controls_cc_enabled_description">Disable subtitles</string>
@@ -400,8 +405,19 @@
     <string name="exo_track_surround_7_point_1">7.1 surround sound</string>
     <string name="exo_track_unknown">Unknown</string>
     <string name="exo_track_unknown_name">Unknown (<ns1:g example="Frengligian" id="name">%1$s</ns1:g>)</string>
+    <string name="home_screen_label">Rushd-ul-Ilm (رشد العلم)</string>
+    <string name="icon_desc_back">Back</string>
+    <string name="icon_desc_clear">Clear Search</string>
+    <string name="icon_desc_language">Language Icon</string>
+    <string name="icon_desc_mic">Microphone</string>
+    <string name="icon_desc_search">Search Icon</string>
     <string name="in_progress">In progress</string>
     <string name="indeterminate">Partially checked</string>
+    <string name="language_english_display">English</string>
+    <string name="language_hindi_display">Hindi</string>
+    <string name="language_selector_label">Language</string>
+    <string name="language_telugu_display">Telugu</string>
+    <string name="language_urdu_display">Urdu</string>
     <string name="m3c_bottom_sheet_collapse_description">Collapse bottom sheet</string>
     <string name="m3c_bottom_sheet_dismiss_description">Dismiss bottom sheet</string>
     <string name="m3c_bottom_sheet_drag_handle_description">Drag handle</string>
@@ -462,19 +478,48 @@
     <string name="m3c_time_picker_pm">PM</string>
     <string name="m3c_tooltip_long_press_label">Show tooltip</string>
     <string name="m3c_tooltip_pane_description">Tooltip</string>
+    <string name="madhab_hanafi">Hanafi (Deoband)</string>
+    <string name="madhab_neutral">Neutral Only</string>
+    <string name="madhab_preference">Islamic Source Preference</string>
+    <string name="mic_button_hint">Press mic and ask your question</string>
+    <string name="mic_button_label">Press Mic</string>
+    <string name="nav_home">Home</string>
+    <string name="nav_settings">Settings</string>
+    <string name="nav_videos">Videos</string>
     <string name="navigation_menu">"Navigation menu"</string>
+    <string name="no_videos_found">No videos found.</string>
+    <string name="not_downloaded_status">Not downloaded</string>
     <string name="not_selected">Not selected</string>
     <string name="off">Off</string>
+    <string name="offline_banner_text">📵 Offline Mode — Using Downloaded Knowledge</string>
+    <string name="offline_knowledge_title">Download Offline Knowledge</string>
     <string name="on">On</string>
+    <string name="play_button">▶ Play</string>
     <string name="range_end">"Range end"</string>
     <string name="range_start">"Range start"</string>
+    <string name="read_aloud_button">🔊 Read Aloud</string>
+    <string name="related_lectures_label">Related Lectures</string>
+    <string name="search_placeholder">Search by topic or scholar...</string>
     <string name="selected">Selected</string>
+    <string name="setting_autoplay">Auto-play read aloud</string>
+    <string name="setting_large_text">Large text mode</string>
+    <string name="settings_label">Settings</string>
+    <string name="source_all">All Sources</string>
+    <string name="source_deoband">Darul Ifta Deoband (Hanafi)</string>
+    <string name="source_islamqa_info">IslamQA.info (Neutral)</string>
+    <string name="source_islamqa_org">IslamQA.org (Neutral)</string>
+    <string name="source_label">Source:</string>
+    <string name="source_selector_label">Source:</string>
     <string name="status_bar_notification_info_overflow">999+</string>
+    <string name="stop_reading_button">Stop Reading</string>
     <string name="switch_role">Switch</string>
     <string name="tab">Tab</string>
     <string name="template_percent"><ns1:g id="percentage">%1$d</ns1:g> percent.</string>
     <string name="tooltip_description">tooltip</string>
     <string name="tooltip_label">show tooltip</string>
+    <string name="update_button_label">Update</string>
+    <string name="video_library_label">Video Library</string>
+    <string name="view_original_link">View Original</string>
     <style name="DialogWindowTheme">
         <item name="android:windowClipToOutline">false</item>
     </style>
@@ -723,23 +768,14 @@
         <attr format="reference" name="fontProviderCerts"/>
         
         <attr name="fontProviderFetchStrategy">
-            <!-- The blocking font fetch works as follows.
-              First, check the local cache, then if the requested font is not cached, request the
-              font from the provider and wait until it is finished.  You can change the length of
-              the timeout by modifying fontProviderFetchTimeout.  If the timeout happens, the
-              default typeface will be used instead. -->
+            
             <enum name="blocking" value="0"/>
-            <!-- The async font fetch works as follows.
-              First, check the local cache, then if the requeted font is not cached, trigger a
-              request the font and continue with layout inflation. Once the font fetch succeeds, the
-              target text view will be refreshed with the downloaded font data. The
-              fontProviderFetchTimeout will be ignored if async loading is specified. -->
+            
             <enum name="async" value="1"/>
         </attr>
         
         <attr format="integer" name="fontProviderFetchTimeout">
-            <!-- A special value for the timeout. In this case, the blocking font fetching will not
-              timeout and wait until a reply is received from the font provider. -->
+            
             <enum name="forever" value="-1"/>
         </attr>
         

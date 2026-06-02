@@ -4,4 +4,12 @@ darulifta-deoband.com-offline/
 islamqa.info-offline/
 old_unused_backup/
 "Islamic YouTube Video Database/"
+.gemini/
+temp/
+scraping/
+android-app/.gradle/
+android-app/app/build/
+android-app/.idea
+android-app/local.properties
+
 

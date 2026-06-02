@@ -1,9 +1,9 @@
 -- Merging decision tree log ---
 manifest
-ADDED from /home/hidayat/Documents/Islamic Knowledge Q&A App/android-app/app/src/main/AndroidManifest.xml:8:1-38:12
-INJECTED from /home/hidayat/Documents/Islamic Knowledge Q&A App/android-app/app/src/main/AndroidManifest.xml:8:1-38:12
-INJECTED from /home/hidayat/Documents/Islamic Knowledge Q&A App/android-app/app/src/main/AndroidManifest.xml:8:1-38:12
-INJECTED from /home/hidayat/Documents/Islamic Knowledge Q&A App/android-app/app/src/main/AndroidManifest.xml:8:1-38:12
+ADDED from /home/hidayat/Documents/Islamic-Knowledge-Q&A-App/android-app/app/src/main/AndroidManifest.xml:8:1-38:12
+INJECTED from /home/hidayat/Documents/Islamic-Knowledge-Q&A-App/android-app/app/src/main/AndroidManifest.xml:8:1-38:12
+INJECTED from /home/hidayat/Documents/Islamic-Knowledge-Q&A-App/android-app/app/src/main/AndroidManifest.xml:8:1-38:12
+INJECTED from /home/hidayat/Documents/Islamic-Knowledge-Q&A-App/android-app/app/src/main/AndroidManifest.xml:8:1-38:12
 MERGED from [androidx.media3:media3-ui:1.3.1] /media/hidayat/PersonalData/Kali_Linux_Files/AndroidStudioPanda2Additional/.gradle/caches/transforms-4/2852c2730f6a77a3d8be45343d7042a7/transformed/media3-ui-1.3.1/AndroidManifest.xml:17:1-22:12
 MERGED from [androidx.media3:media3-extractor:1.3.1] /media/hidayat/PersonalData/Kali_Linux_Files/AndroidStudioPanda2Additional/.gradle/caches/transforms-4/5a876e0fa17e13c1cb897d82ebea7793/transformed/media3-extractor-1.3.1/AndroidManifest.xml:17:1-22:12
 MERGED from [androidx.media3:media3-container:1.3.1] /media/hidayat/PersonalData/Kali_Linux_Files/AndroidStudioPanda2Additional/.gradle/caches/transforms-4/02d7e7ecd08c4c9ae415fc2ebc4eb9c1/transformed/media3-container-1.3.1/AndroidManifest.xml:17:1-22:12
@@ -86,16 +86,16 @@ MERGED from [androidx.tracing:tracing:1.0.0] /media/hidayat/PersonalData/Kali_Li
 MERGED from [com.microsoft.onnxruntime:onnxruntime-android:1.17.3] /media/hidayat/PersonalData/Kali_Linux_Files/AndroidStudioPanda2Additional/.gradle/caches/transforms-4/cb889e571d4d66c713ca560f51428879/transformed/onnxruntime-android-1.17.3/AndroidManifest.xml:2:1-7:12
 MERGED from [com.google.dagger:dagger-lint-aar:2.51.1] /media/hidayat/PersonalData/Kali_Linux_Files/AndroidStudioPanda2Additional/.gradle/caches/transforms-4/6e8ddf2e1e0545fa19a2c3256ab80ba5/transformed/dagger-lint-aar-2.51.1/AndroidManifest.xml:16:1-19:12
 	package
-		INJECTED from /home/hidayat/Documents/Islamic Knowledge Q&A App/android-app/app/src/main/AndroidManifest.xml
+		INJECTED from /home/hidayat/Documents/Islamic-Knowledge-Q&A-App/android-app/app/src/main/AndroidManifest.xml
 	android:versionName
-		INJECTED from /home/hidayat/Documents/Islamic Knowledge Q&A App/android-app/app/src/main/AndroidManifest.xml
+		INJECTED from /home/hidayat/Documents/Islamic-Knowledge-Q&A-App/android-app/app/src/main/AndroidManifest.xml
 	android:versionCode
-		INJECTED from /home/hidayat/Documents/Islamic Knowledge Q&A App/android-app/app/src/main/AndroidManifest.xml
+		INJECTED from /home/hidayat/Documents/Islamic-Knowledge-Q&A-App/android-app/app/src/main/AndroidManifest.xml
 	xmlns:android
-		ADDED from /home/hidayat/Documents/Islamic Knowledge Q&A App/android-app/app/src/main/AndroidManifest.xml:8:11-69
+		ADDED from /home/hidayat/Documents/Islamic-Knowledge-Q&A-App/android-app/app/src/main/AndroidManifest.xml:8:11-69
 application
-ADDED from /home/hidayat/Documents/Islamic Knowledge Q&A App/android-app/app/src/main/AndroidManifest.xml:11:5-36:19
-INJECTED from /home/hidayat/Documents/Islamic Knowledge Q&A App/android-app/app/src/main/AndroidManifest.xml:11:5-36:19
+ADDED from /home/hidayat/Documents/Islamic-Knowledge-Q&A-App/android-app/app/src/main/AndroidManifest.xml:11:5-36:19
+INJECTED from /home/hidayat/Documents/Islamic-Knowledge-Q&A-App/android-app/app/src/main/AndroidManifest.xml:11:5-36:19
 MERGED from [androidx.compose.ui:ui-tooling-android:1.6.7] /media/hidayat/PersonalData/Kali_Linux_Files/AndroidStudioPanda2Additional/.gradle/caches/transforms-4/b7b5a34dc88e63cc966ffc2a3b71a68c/transformed/ui-tooling-release/AndroidManifest.xml:22:5-26:19
 MERGED from [androidx.compose.ui:ui-tooling-android:1.6.7] /media/hidayat/PersonalData/Kali_Linux_Files/AndroidStudioPanda2Additional/.gradle/caches/transforms-4/b7b5a34dc88e63cc966ffc2a3b71a68c/transformed/ui-tooling-release/AndroidManifest.xml:22:5-26:19
 MERGED from [androidx.compose.ui:ui-test-manifest:1.6.7] /media/hidayat/PersonalData/Kali_Linux_Files/AndroidStudioPanda2Additional/.gradle/caches/transforms-4/cc6c09df0a0ec34abdfbab4b7a3737d9/transformed/ui-test-manifest-1.6.7/AndroidManifest.xml:22:5-26:19
@@ -117,49 +117,49 @@ MERGED from [androidx.profileinstaller:profileinstaller:1.3.1] /media/hidayat/Pe
 MERGED from [androidx.startup:startup-runtime:1.1.1] /media/hidayat/PersonalData/Kali_Linux_Files/AndroidStudioPanda2Additional/.gradle/caches/transforms-4/8cbe8ba79ee6000a97d37b4988a265a7/transformed/startup-runtime-1.1.1/AndroidManifest.xml:25:5-31:19
 MERGED from [androidx.startup:startup-runtime:1.1.1] /media/hidayat/PersonalData/Kali_Linux_Files/AndroidStudioPanda2Additional/.gradle/caches/transforms-4/8cbe8ba79ee6000a97d37b4988a265a7/transformed/startup-runtime-1.1.1/AndroidManifest.xml:25:5-31:19
 	android:extractNativeLibs
-		INJECTED from /home/hidayat/Documents/Islamic Knowledge Q&A App/android-app/app/src/main/AndroidManifest.xml
+		INJECTED from /home/hidayat/Documents/Islamic-Knowledge-Q&A-App/android-app/app/src/main/AndroidManifest.xml
 	android:appComponentFactory
 		ADDED from [androidx.core:core:1.13.1] /media/hidayat/PersonalData/Kali_Linux_Files/AndroidStudioPanda2Additional/.gradle/caches/transforms-4/30bd7a76d77afcf5342d88034807c775/transformed/core-1.13.1/AndroidManifest.xml:28:18-86
 	android:supportsRtl
-		ADDED from /home/hidayat/Documents/Islamic Knowledge Q&A App/android-app/app/src/main/AndroidManifest.xml:19:9-35
+		ADDED from /home/hidayat/Documents/Islamic-Knowledge-Q&A-App/android-app/app/src/main/AndroidManifest.xml:19:9-35
 	android:label
-		ADDED from /home/hidayat/Documents/Islamic Knowledge Q&A App/android-app/app/src/main/AndroidManifest.xml:17:9-41
+		ADDED from /home/hidayat/Documents/Islamic-Knowledge-Q&A-App/android-app/app/src/main/AndroidManifest.xml:17:9-41
 	android:fullBackupContent
-		ADDED from /home/hidayat/Documents/Islamic Knowledge Q&A App/android-app/app/src/main/AndroidManifest.xml:15:9-54
+		ADDED from /home/hidayat/Documents/Islamic-Knowledge-Q&A-App/android-app/app/src/main/AndroidManifest.xml:15:9-54
 	android:roundIcon
-		ADDED from /home/hidayat/Documents/Islamic Knowledge Q&A App/android-app/app/src/main/AndroidManifest.xml:18:9-54
+		ADDED from /home/hidayat/Documents/Islamic-Knowledge-Q&A-App/android-app/app/src/main/AndroidManifest.xml:18:9-54
 	android:icon
-		ADDED from /home/hidayat/Documents/Islamic Knowledge Q&A App/android-app/app/src/main/AndroidManifest.xml:16:9-43
+		ADDED from /home/hidayat/Documents/Islamic-Knowledge-Q&A-App/android-app/app/src/main/AndroidManifest.xml:16:9-43
 	android:allowBackup
-		ADDED from /home/hidayat/Documents/Islamic Knowledge Q&A App/android-app/app/src/main/AndroidManifest.xml:13:9-35
+		ADDED from /home/hidayat/Documents/Islamic-Knowledge-Q&A-App/android-app/app/src/main/AndroidManifest.xml:13:9-35
 	android:theme
-		ADDED from /home/hidayat/Documents/Islamic Knowledge Q&A App/android-app/app/src/main/AndroidManifest.xml:20:9-48
+		ADDED from /home/hidayat/Documents/Islamic-Knowledge-Q&A-App/android-app/app/src/main/AndroidManifest.xml:20:9-48
 	android:dataExtractionRules
-		ADDED from /home/hidayat/Documents/Islamic Knowledge Q&A App/android-app/app/src/main/AndroidManifest.xml:14:9-65
+		ADDED from /home/hidayat/Documents/Islamic-Knowledge-Q&A-App/android-app/app/src/main/AndroidManifest.xml:14:9-65
 	android:name
-		ADDED from /home/hidayat/Documents/Islamic Knowledge Q&A App/android-app/app/src/main/AndroidManifest.xml:12:9-46
+		ADDED from /home/hidayat/Documents/Islamic-Knowledge-Q&A-App/android-app/app/src/main/AndroidManifest.xml:12:9-46
 activity#com.rushdululilm.app.MainActivity
-ADDED from /home/hidayat/Documents/Islamic Knowledge Q&A App/android-app/app/src/main/AndroidManifest.xml:24:9-35:20
+ADDED from /home/hidayat/Documents/Islamic-Knowledge-Q&A-App/android-app/app/src/main/AndroidManifest.xml:24:9-35:20
 	android:exported
-		ADDED from /home/hidayat/Documents/Islamic Knowledge Q&A App/android-app/app/src/main/AndroidManifest.xml:26:13-36
+		ADDED from /home/hidayat/Documents/Islamic-Knowledge-Q&A-App/android-app/app/src/main/AndroidManifest.xml:26:13-36
 	android:theme
-		ADDED from /home/hidayat/Documents/Islamic Knowledge Q&A App/android-app/app/src/main/AndroidManifest.xml:27:13-52
+		ADDED from /home/hidayat/Documents/Islamic-Knowledge-Q&A-App/android-app/app/src/main/AndroidManifest.xml:27:13-52
 	android:name
-		ADDED from /home/hidayat/Documents/Islamic Knowledge Q&A App/android-app/app/src/main/AndroidManifest.xml:25:13-41
+		ADDED from /home/hidayat/Documents/Islamic-Knowledge-Q&A-App/android-app/app/src/main/AndroidManifest.xml:25:13-41
 intent-filter#action:name:android.intent.action.MAIN+category:name:android.intent.category.LAUNCHER
-ADDED from /home/hidayat/Documents/Islamic Knowledge Q&A App/android-app/app/src/main/AndroidManifest.xml:31:13-34:29
+ADDED from /home/hidayat/Documents/Islamic-Knowledge-Q&A-App/android-app/app/src/main/AndroidManifest.xml:31:13-34:29
 action#android.intent.action.MAIN
-ADDED from /home/hidayat/Documents/Islamic Knowledge Q&A App/android-app/app/src/main/AndroidManifest.xml:32:17-69
+ADDED from /home/hidayat/Documents/Islamic-Knowledge-Q&A-App/android-app/app/src/main/AndroidManifest.xml:32:17-69
 	android:name
-		ADDED from /home/hidayat/Documents/Islamic Knowledge Q&A App/android-app/app/src/main/AndroidManifest.xml:32:25-66
+		ADDED from /home/hidayat/Documents/Islamic-Knowledge-Q&A-App/android-app/app/src/main/AndroidManifest.xml:32:25-66
 category#android.intent.category.LAUNCHER
-ADDED from /home/hidayat/Documents/Islamic Knowledge Q&A App/android-app/app/src/main/AndroidManifest.xml:33:17-77
+ADDED from /home/hidayat/Documents/Islamic-Knowledge-Q&A-App/android-app/app/src/main/AndroidManifest.xml:33:17-77
 	android:name
-		ADDED from /home/hidayat/Documents/Islamic Knowledge Q&A App/android-app/app/src/main/AndroidManifest.xml:33:27-74
+		ADDED from /home/hidayat/Documents/Islamic-Knowledge-Q&A-App/android-app/app/src/main/AndroidManifest.xml:33:27-74
 uses-sdk
-INJECTED from /home/hidayat/Documents/Islamic Knowledge Q&A App/android-app/app/src/main/AndroidManifest.xml reason: use-sdk injection requested
-INJECTED from /home/hidayat/Documents/Islamic Knowledge Q&A App/android-app/app/src/main/AndroidManifest.xml
-INJECTED from /home/hidayat/Documents/Islamic Knowledge Q&A App/android-app/app/src/main/AndroidManifest.xml
+INJECTED from /home/hidayat/Documents/Islamic-Knowledge-Q&A-App/android-app/app/src/main/AndroidManifest.xml reason: use-sdk injection requested
+INJECTED from /home/hidayat/Documents/Islamic-Knowledge-Q&A-App/android-app/app/src/main/AndroidManifest.xml
+INJECTED from /home/hidayat/Documents/Islamic-Knowledge-Q&A-App/android-app/app/src/main/AndroidManifest.xml
 MERGED from [androidx.media3:media3-ui:1.3.1] /media/hidayat/PersonalData/Kali_Linux_Files/AndroidStudioPanda2Additional/.gradle/caches/transforms-4/2852c2730f6a77a3d8be45343d7042a7/transformed/media3-ui-1.3.1/AndroidManifest.xml:20:5-44
 MERGED from [androidx.media3:media3-ui:1.3.1] /media/hidayat/PersonalData/Kali_Linux_Files/AndroidStudioPanda2Additional/.gradle/caches/transforms-4/2852c2730f6a77a3d8be45343d7042a7/transformed/media3-ui-1.3.1/AndroidManifest.xml:20:5-44
 MERGED from [androidx.media3:media3-extractor:1.3.1] /media/hidayat/PersonalData/Kali_Linux_Files/AndroidStudioPanda2Additional/.gradle/caches/transforms-4/5a876e0fa17e13c1cb897d82ebea7793/transformed/media3-extractor-1.3.1/AndroidManifest.xml:20:5-44
@@ -323,9 +323,9 @@ MERGED from [com.microsoft.onnxruntime:onnxruntime-android:1.17.3] /media/hidaya
 MERGED from [com.google.dagger:dagger-lint-aar:2.51.1] /media/hidayat/PersonalData/Kali_Linux_Files/AndroidStudioPanda2Additional/.gradle/caches/transforms-4/6e8ddf2e1e0545fa19a2c3256ab80ba5/transformed/dagger-lint-aar-2.51.1/AndroidManifest.xml:18:3-42
 MERGED from [com.google.dagger:dagger-lint-aar:2.51.1] /media/hidayat/PersonalData/Kali_Linux_Files/AndroidStudioPanda2Additional/.gradle/caches/transforms-4/6e8ddf2e1e0545fa19a2c3256ab80ba5/transformed/dagger-lint-aar-2.51.1/AndroidManifest.xml:18:3-42
 	android:targetSdkVersion
-		INJECTED from /home/hidayat/Documents/Islamic Knowledge Q&A App/android-app/app/src/main/AndroidManifest.xml
+		INJECTED from /home/hidayat/Documents/Islamic-Knowledge-Q&A-App/android-app/app/src/main/AndroidManifest.xml
 	android:minSdkVersion
-		INJECTED from /home/hidayat/Documents/Islamic Knowledge Q&A App/android-app/app/src/main/AndroidManifest.xml
+		INJECTED from /home/hidayat/Documents/Islamic-Knowledge-Q&A-App/android-app/app/src/main/AndroidManifest.xml
 uses-permission#android.permission.ACCESS_NETWORK_STATE
 ADDED from [androidx.media3:media3-common:1.3.1] /media/hidayat/PersonalData/Kali_Linux_Files/AndroidStudioPanda2Additional/.gradle/caches/transforms-4/97e680dcfa3ba3f95cccf4862f48537a/transformed/media3-common-1.3.1/AndroidManifest.xml:22:5-79
 MERGED from [androidx.media3:media3-exoplayer:1.3.1] /media/hidayat/PersonalData/Kali_Linux_Files/AndroidStudioPanda2Additional/.gradle/caches/transforms-4/071eeaabc37569faa2b2ed72f8b10c2c/transformed/media3-exoplayer-1.3.1/AndroidManifest.xml:22:5-79

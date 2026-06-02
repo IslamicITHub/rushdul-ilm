@@ -394,25 +394,25 @@ public final class DaggerRushdulIlmApplication_HiltComponents_SingletonC {
 
     @IdentifierNameString
     private static final class LazyClassKeyProvider {
-      static String com_rushdululilm_app_viewmodel_HomeViewModel = "com.rushdululilm.app.viewmodel.HomeViewModel";
-
-      static String com_rushdululilm_app_viewmodel_SettingsViewModel = "com.rushdululilm.app.viewmodel.SettingsViewModel";
-
       static String com_rushdululilm_app_viewmodel_VideoLibraryViewModel = "com.rushdululilm.app.viewmodel.VideoLibraryViewModel";
+
+      static String com_rushdululilm_app_viewmodel_HomeViewModel = "com.rushdululilm.app.viewmodel.HomeViewModel";
 
       static String com_rushdululilm_app_viewmodel_AnswerViewModel = "com.rushdululilm.app.viewmodel.AnswerViewModel";
 
-      @KeepFieldType
-      HomeViewModel com_rushdululilm_app_viewmodel_HomeViewModel2;
-
-      @KeepFieldType
-      SettingsViewModel com_rushdululilm_app_viewmodel_SettingsViewModel2;
+      static String com_rushdululilm_app_viewmodel_SettingsViewModel = "com.rushdululilm.app.viewmodel.SettingsViewModel";
 
       @KeepFieldType
       VideoLibraryViewModel com_rushdululilm_app_viewmodel_VideoLibraryViewModel2;
 
       @KeepFieldType
+      HomeViewModel com_rushdululilm_app_viewmodel_HomeViewModel2;
+
+      @KeepFieldType
       AnswerViewModel com_rushdululilm_app_viewmodel_AnswerViewModel2;
+
+      @KeepFieldType
+      SettingsViewModel com_rushdululilm_app_viewmodel_SettingsViewModel2;
     }
   }
 
@@ -464,23 +464,23 @@ public final class DaggerRushdulIlmApplication_HiltComponents_SingletonC {
     private static final class LazyClassKeyProvider {
       static String com_rushdululilm_app_viewmodel_AnswerViewModel = "com.rushdululilm.app.viewmodel.AnswerViewModel";
 
+      static String com_rushdululilm_app_viewmodel_VideoLibraryViewModel = "com.rushdululilm.app.viewmodel.VideoLibraryViewModel";
+
       static String com_rushdululilm_app_viewmodel_SettingsViewModel = "com.rushdululilm.app.viewmodel.SettingsViewModel";
 
       static String com_rushdululilm_app_viewmodel_HomeViewModel = "com.rushdululilm.app.viewmodel.HomeViewModel";
 
-      static String com_rushdululilm_app_viewmodel_VideoLibraryViewModel = "com.rushdululilm.app.viewmodel.VideoLibraryViewModel";
-
       @KeepFieldType
       AnswerViewModel com_rushdululilm_app_viewmodel_AnswerViewModel2;
+
+      @KeepFieldType
+      VideoLibraryViewModel com_rushdululilm_app_viewmodel_VideoLibraryViewModel2;
 
       @KeepFieldType
       SettingsViewModel com_rushdululilm_app_viewmodel_SettingsViewModel2;
 
       @KeepFieldType
       HomeViewModel com_rushdululilm_app_viewmodel_HomeViewModel2;
-
-      @KeepFieldType
-      VideoLibraryViewModel com_rushdululilm_app_viewmodel_VideoLibraryViewModel2;
     }
 
     private static final class SwitchingProvider<T> implements Provider<T> {
