@@ -1,0 +1,292 @@
+{
+  "/home/hidayat/Documents/Islamic Knowledge Q&A App/android-app/settings.gradle.kts": {
+    "mtime": 1780119217.3167155,
+    "ast_hash": "a657c5e8540653c9a4cb722340ca3fb1",
+    "semantic_hash": ""
+  },
+  "/home/hidayat/Documents/Islamic Knowledge Q&A App/android-app/build.gradle.kts": {
+    "mtime": 1780120379.5559576,
+    "ast_hash": "ffab1028e3dd65e1be1b54199b61db99",
+    "semantic_hash": ""
+  },
+  "/home/hidayat/Documents/Islamic Knowledge Q&A App/android-app/gradlew": {
+    "mtime": 1780119253.4213135,
+    "ast_hash": "266606e78242737ef3da02a80ea0564d",
+    "semantic_hash": ""
+  },
+  "/home/hidayat/Documents/Islamic Knowledge Q&A App/android-app/app/build.gradle.kts": {
+    "mtime": 1780193863.1862724,
+    "ast_hash": "712eeec9a15143222bfdf82ca980d9da",
+    "semantic_hash": ""
+  },
+  "/home/hidayat/Documents/Islamic Knowledge Q&A App/android-app/app/src/main/java/com/rushdululilm/app/MainActivity.kt": {
+    "mtime": 1780189594.083074,
+    "ast_hash": "f2b5259b790b0fe871966cc9477a5d16",
+    "semantic_hash": ""
+  },
+  "/home/hidayat/Documents/Islamic Knowledge Q&A App/android-app/app/src/main/java/com/rushdululilm/app/RushdulIlmApplication.kt": {
+    "mtime": 1780120749.346072,
+    "ast_hash": "c821d43719516f3ac6c6c85e40843b8d",
+    "semantic_hash": ""
+  },
+  "/home/hidayat/Documents/Islamic Knowledge Q&A App/android-app/app/src/main/java/com/rushdululilm/app/ui/theme/Theme.kt": {
+    "mtime": 1780192311.8268046,
+    "ast_hash": "6209dc66eba70958db70854f9ed07530",
+    "semantic_hash": ""
+  },
+  "/home/hidayat/Documents/Islamic Knowledge Q&A App/android-app/app/src/main/java/com/rushdululilm/app/ui/theme/Type.kt": {
+    "mtime": 1780192311.8268046,
+    "ast_hash": "1a5df8c140bda87386c4cab7e7bce82e",
+    "semantic_hash": ""
+  },
+  "/home/hidayat/Documents/Islamic Knowledge Q&A App/android-app/app/src/main/java/com/rushdululilm/app/ui/theme/Color.kt": {
+    "mtime": 1780192311.8268046,
+    "ast_hash": "721e50b34ee1de195e8850139daa98fb",
+    "semantic_hash": ""
+  },
+  "/home/hidayat/Documents/Islamic Knowledge Q&A App/android-app/app/src/main/java/com/rushdululilm/app/ui/screens/Screens.kt": {
+    "mtime": 1780122096.8723772,
+    "ast_hash": "25658d73eec08b6c79fc454303a7bc5f",
+    "semantic_hash": ""
+  },
+  "/home/hidayat/Documents/Islamic Knowledge Q&A App/android-app/app/src/main/java/com/rushdululilm/app/ui/screens/Routes.kt": {
+    "mtime": 1780122344.60844,
+    "ast_hash": "3b575eb017fe8a888ecab75487bf1768",
+    "semantic_hash": ""
+  },
+  "/home/hidayat/Documents/Islamic Knowledge Q&A App/android-app/app/src/main/java/com/rushdululilm/app/ui/screens/HomeScreen.kt": {
+    "mtime": 1780189698.900902,
+    "ast_hash": "8b15ca2da9779b478779b709c5c78f09",
+    "semantic_hash": ""
+  },
+  "/home/hidayat/Documents/Islamic Knowledge Q&A App/android-app/app/src/main/java/com/rushdululilm/app/ui/screens/AnswerScreen.kt": {
+    "mtime": 1780189707.4210503,
+    "ast_hash": "eded3205fded22409b6521d0a431be84",
+    "semantic_hash": ""
+  },
+  "/home/hidayat/Documents/Islamic Knowledge Q&A App/android-app/app/src/main/java/com/rushdululilm/app/ui/screens/VideoLibraryScreen.kt": {
+    "mtime": 1780189707.4210503,
+    "ast_hash": "5545dbcab5b25414b036df75338992da",
+    "semantic_hash": ""
+  },
+  "/home/hidayat/Documents/Islamic Knowledge Q&A App/android-app/app/src/main/java/com/rushdululilm/app/ui/screens/SettingsScreen.kt": {
+    "mtime": 1780189707.4210503,
+    "ast_hash": "36555edb845f6abf7fdf9ed249495fb1",
+    "semantic_hash": ""
+  },
+  "/home/hidayat/Documents/Islamic Knowledge Q&A App/android-app/app/src/main/java/com/rushdululilm/app/ui/screens/NavGraph.kt": {
+    "mtime": 1780189526.2258875,
+    "ast_hash": "c4b2835b4db7474246f2f258ee46a7e4",
+    "semantic_hash": ""
+  },
+  "/home/hidayat/Documents/Islamic Knowledge Q&A App/android-app/app/src/main/java/com/rushdululilm/app/ui/components/Components.kt": {
+    "mtime": 1780122096.8723772,
+    "ast_hash": "5a12106f3f44acdde6d34c9f5258891a",
+    "semantic_hash": ""
+  },
+  "/home/hidayat/Documents/Islamic Knowledge Q&A App/android-app/app/src/main/java/com/rushdululilm/app/ui/components/MicButton.kt": {
+    "mtime": 1780193764.0685604,
+    "ast_hash": "7f91394302957a2e6b2cf9de563a0061",
+    "semantic_hash": ""
+  },
+  "/home/hidayat/Documents/Islamic Knowledge Q&A App/android-app/app/src/main/java/com/rushdululilm/app/ui/components/LanguageSelector.kt": {
+    "mtime": 1780194069.9393988,
+    "ast_hash": "65320a6bb24a7e72e12eb74029f5d163",
+    "semantic_hash": ""
+  },
+  "/home/hidayat/Documents/Islamic Knowledge Q&A App/android-app/app/src/main/java/com/rushdululilm/app/ui/components/SourceSelector.kt": {
+    "mtime": 1780194185.9585724,
+    "ast_hash": "df56a777fc0e2d5d53d1308fc0acea0d",
+    "semantic_hash": ""
+  },
+  "/home/hidayat/Documents/Islamic Knowledge Q&A App/android-app/app/src/main/java/com/rushdululilm/app/viewmodel/ViewModels.kt": {
+    "mtime": 1780122096.8723772,
+    "ast_hash": "e63727c1787f8829075f414278629622",
+    "semantic_hash": ""
+  },
+  "/home/hidayat/Documents/Islamic Knowledge Q&A App/android-app/app/src/main/java/com/rushdululilm/app/viewmodel/HomeViewModel.kt": {
+    "mtime": 1780194293.3811948,
+    "ast_hash": "6a501144fba544b277af444f19259c85",
+    "semantic_hash": ""
+  },
+  "/home/hidayat/Documents/Islamic Knowledge Q&A App/android-app/app/src/main/java/com/rushdululilm/app/data/local/LocalData.kt": {
+    "mtime": 1780122096.8723772,
+    "ast_hash": "39e736bf7ec7f52c2c2c9931bed47c67",
+    "semantic_hash": ""
+  },
+  "/home/hidayat/Documents/Islamic Knowledge Q&A App/android-app/app/src/main/java/com/rushdululilm/app/data/remote/RemoteData.kt": {
+    "mtime": 1780122096.8723772,
+    "ast_hash": "8b7cf24ce5e36a93fcea95e4b3d3562e",
+    "semantic_hash": ""
+  },
+  "/home/hidayat/Documents/Islamic Knowledge Q&A App/android-app/app/src/main/java/com/rushdululilm/app/data/repository/Repository.kt": {
+    "mtime": 1780122096.8723772,
+    "ast_hash": "9dfd0284a0d7c333fab8a1f0ca15472c",
+    "semantic_hash": ""
+  },
+  "/home/hidayat/Documents/Islamic Knowledge Q&A App/android-app/app/src/main/java/com/rushdululilm/app/di/DiModules.kt": {
+    "mtime": 1780122096.8723772,
+    "ast_hash": "eee233cf856a3bd41fac70827222f5f7",
+    "semantic_hash": ""
+  },
+  "/home/hidayat/Documents/Islamic Knowledge Q&A App/android-app/app/src/main/java/com/rushdululilm/app/utils/Utils.kt": {
+    "mtime": 1780122096.8723772,
+    "ast_hash": "187fdfb401f58b0855a84dafe3d8c530",
+    "semantic_hash": ""
+  },
+  "/home/hidayat/Documents/Islamic Knowledge Q&A App/android-app/app/src/main/java/com/rushdululilm/app/model/Models.kt": {
+    "mtime": 1780122096.8723772,
+    "ast_hash": "5521081d64a5e116e0a2bc0746d31f29",
+    "semantic_hash": ""
+  },
+  "/home/hidayat/Documents/Islamic Knowledge Q&A App/android-app/.gradle/8.7/dependencies-accessors/e002398080c3dfc7631595529023ce5410dad032/sources/org/gradle/accessors/dm/LibrariesForLibs.java": {
+    "mtime": 1780119316.1463528,
+    "ast_hash": "3a0edab14b0ab8bf2c9f7e971d312502",
+    "semantic_hash": ""
+  },
+  "/home/hidayat/Documents/Islamic Knowledge Q&A App/android-app/.gradle/8.7/dependencies-accessors/e002398080c3dfc7631595529023ce5410dad032/sources/org/gradle/accessors/dm/LibrariesForLibsInPluginsBlock.java": {
+    "mtime": 1780119316.1517427,
+    "ast_hash": "fd84cf7f3bc19bb55b4e4cbc3b09238e",
+    "semantic_hash": ""
+  },
+  "/home/hidayat/Documents/Islamic Knowledge Q&A App/android-app/.gradle/8.7/dependencies-accessors/0e63699be62ee25b9d58897d88fcba7124ea1795/sources/org/gradle/accessors/dm/LibrariesForLibs.java": {
+    "mtime": 1780120380.2174115,
+    "ast_hash": "d41f57cac75e19b9168defa48301375e",
+    "semantic_hash": ""
+  },
+  "/home/hidayat/Documents/Islamic Knowledge Q&A App/android-app/.gradle/8.7/dependencies-accessors/0e63699be62ee25b9d58897d88fcba7124ea1795/sources/org/gradle/accessors/dm/LibrariesForLibsInPluginsBlock.java": {
+    "mtime": 1780120380.2199686,
+    "ast_hash": "4bec72433aad7bdef8996950cd7a4d7c",
+    "semantic_hash": ""
+  },
+  "/home/hidayat/Documents/Islamic Knowledge Q&A App/android-app/.gradle/8.7/dependencies-accessors/e157a101f06f9935e0c4fb39ec60d6637cddc7f3/sources/org/gradle/accessors/dm/LibrariesForLibs.java": {
+    "mtime": 1780193881.634591,
+    "ast_hash": "ce8dbc3f247699e58935d9669050f7dd",
+    "semantic_hash": ""
+  },
+  "/home/hidayat/Documents/Islamic Knowledge Q&A App/android-app/.gradle/8.7/dependencies-accessors/e157a101f06f9935e0c4fb39ec60d6637cddc7f3/sources/org/gradle/accessors/dm/LibrariesForLibsInPluginsBlock.java": {
+    "mtime": 1780193881.634591,
+    "ast_hash": "da6a73205ce01a3b0528c18cf425ab1d",
+    "semantic_hash": ""
+  },
+  "/home/hidayat/Documents/Islamic Knowledge Q&A App/knowledge-graph/graphiti_helper.py": {
+    "mtime": 1780053029.2595227,
+    "ast_hash": "bc6103cb5f411bc60694dbc28d21918d",
+    "semantic_hash": ""
+  },
+  "/home/hidayat/Documents/Islamic Knowledge Q&A App/knowledge-graph/verify_graphiti.py": {
+    "mtime": 1780183717.8499377,
+    "ast_hash": "761751bdbf94210747e452245239cb5c",
+    "semantic_hash": ""
+  },
+  "/home/hidayat/Documents/Islamic Knowledge Q&A App/knowledge-graph/mem0_helper.py": {
+    "mtime": 1780184276.630925,
+    "ast_hash": "36007cd6f8c94ce3847ef7ccfd9f67b8",
+    "semantic_hash": ""
+  },
+  "/home/hidayat/Documents/Islamic Knowledge Q&A App/knowledge-graph/graphiti_config.py": {
+    "mtime": 1780189015.6888313,
+    "ast_hash": "1175783e46fcb39ec88f72ca13b8dce2",
+    "semantic_hash": ""
+  },
+  "/home/hidayat/Documents/Islamic Knowledge Q&A App/knowledge-graph/mem0_local_db/meta.json": {
+    "mtime": 1780118467.7914793,
+    "ast_hash": "30a8715c779d7fa5cf1ec5c4caa6effe",
+    "semantic_hash": ""
+  },
+  "/home/hidayat/Documents/Islamic Knowledge Q&A App/mem0_local_db/meta.json": {
+    "mtime": 1780118167.0883608,
+    "ast_hash": "f8adb81c6dcbc6f0f9624b45b54229b2",
+    "semantic_hash": ""
+  },
+  "/home/hidayat/Documents/Islamic Knowledge Q&A App/.gemini/settings.json": {
+    "mtime": 1780187563.1272838,
+    "ast_hash": "f080aabf772e803c9e24b9ad0acbf2b6",
+    "semantic_hash": ""
+  },
+  "/home/hidayat/Documents/Islamic Knowledge Q&A App/AGENT_RULES.md": {
+    "mtime": 1780009110.0,
+    "ast_hash": "6c172c9de800ac5299c9e188f91f5b8b",
+    "semantic_hash": ""
+  },
+  "/home/hidayat/Documents/Islamic Knowledge Q&A App/SPRINT_SYSTEM.md": {
+    "mtime": 1780194326.3499563,
+    "ast_hash": "af0fe55b0b0c2ebd91d60f0f8f121755",
+    "semantic_hash": ""
+  },
+  "/home/hidayat/Documents/Islamic Knowledge Q&A App/INITIAL_CODEX_PROMPT.md": {
+    "mtime": 1780113101.2467089,
+    "ast_hash": "89f5df56296d8f64e58b5f5fe5080bb1",
+    "semantic_hash": ""
+  },
+  "/home/hidayat/Documents/Islamic Knowledge Q&A App/REPORT_DOC_RULES.md": {
+    "mtime": 1780009110.0,
+    "ast_hash": "b6e7610380083e0516778b6fcb8abb6e",
+    "semantic_hash": ""
+  },
+  "/home/hidayat/Documents/Islamic Knowledge Q&A App/AI_SYSTEM_PROMPT.md": {
+    "mtime": 1780115464.482568,
+    "ast_hash": "9a6a49583ee07015c6d3111f1ea7b9e9",
+    "semantic_hash": ""
+  },
+  "/home/hidayat/Documents/Islamic Knowledge Q&A App/GEMINI.md": {
+    "mtime": 1780187563.12687,
+    "ast_hash": "a61fcc842fc8a17269964549d247f3a3",
+    "semantic_hash": ""
+  },
+  "/home/hidayat/Documents/Islamic Knowledge Q&A App/AGENTS.md": {
+    "mtime": 1780116425.1986706,
+    "ast_hash": "bc34f8c4b3b52d6e77fde1d022fa1a2a",
+    "semantic_hash": ""
+  },
+  "/home/hidayat/Documents/Islamic Knowledge Q&A App/gemini_history.md": {
+    "mtime": 1780194465.9930255,
+    "ast_hash": "4bb4e516f374405e3e32f8367d77854e",
+    "semantic_hash": ""
+  },
+  "/home/hidayat/Documents/Islamic Knowledge Q&A App/temp/temp.txt": {
+    "mtime": 1780031203.0712364,
+    "ast_hash": "deb41640951e9e2f28ad304fe9728d97",
+    "semantic_hash": ""
+  },
+  "/home/hidayat/Documents/Islamic Knowledge Q&A App/backend/docker-compose.yml": {
+    "mtime": 1780052197.9475958,
+    "ast_hash": "123a4dc58c24cf334fdc9f7691b5e40b",
+    "semantic_hash": ""
+  },
+  "/home/hidayat/Documents/Islamic Knowledge Q&A App/knowledge-graph/api_keys.txt": {
+    "mtime": 1780058902.38316,
+    "ast_hash": "bd18ee30548650cf8525880395e80be0",
+    "semantic_hash": ""
+  },
+  "/home/hidayat/Documents/Islamic Knowledge Q&A App/knowledge-graph/MEM0_SETUP.md": {
+    "mtime": 1780113981.521606,
+    "ast_hash": "7fdd3051c7439d90cb36186e9bd8dcd3",
+    "semantic_hash": ""
+  },
+  "/home/hidayat/Documents/Islamic Knowledge Q&A App/knowledge-graph/GRAPHITI_SETUP.md": {
+    "mtime": 1780114197.9092689,
+    "ast_hash": "9b4104fee478d85341673050f1c14f2d",
+    "semantic_hash": ""
+  },
+  "/home/hidayat/Documents/Islamic Knowledge Q&A App/activity-logs/ACTIVITY_LOG.md": {
+    "mtime": 1780194398.9555795,
+    "ast_hash": "e7259885c088a2a7f8a7cd6beaac47cf",
+    "semantic_hash": ""
+  },
+  "/home/hidayat/Documents/Islamic Knowledge Q&A App/Report Documentation/01_PROJECT_OVERVIEW.md": {
+    "mtime": 1780009110.0,
+    "ast_hash": "9d27f2e80264fdc75170e170974e721d",
+    "semantic_hash": ""
+  },
+  "/home/hidayat/Documents/Islamic Knowledge Q&A App/Report Documentation/02_ANDROID_APP_LAYER.md": {
+    "mtime": 1780194366.6988668,
+    "ast_hash": "d9cc74821e68afd0f36534707972050a",
+    "semantic_hash": ""
+  },
+  "/home/hidayat/Documents/Islamic Knowledge Q&A App/Rushd-ul-Ilm_System_Design_v3.pdf": {
+    "mtime": 1779880002.3707485,
+    "ast_hash": "879aa2dfa35d2254c0c970647ec5ba4b",
+    "semantic_hash": ""
+  }
+}

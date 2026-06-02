@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- 
+File: data_extraction_rules.xml
+Purpose: Rules for how Android should extract data from the app during backup
+Layer: Layer 1 — Android App
+Created: 2026-05-30 | Developer: Shaik Hidayatullah
+-->
+<data-extraction-rules>
+    <cloud-backup>
+        <!-- We back up everything by default -->
+        <include domain="file" path="." />
+    </cloud-backup>
+    <device-transfer>
+        <!-- We transfer everything when the user moves to a new phone -->
+        <include domain="file" path="." />
+    </device-transfer>
+</data-extraction-rules>

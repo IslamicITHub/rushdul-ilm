@@ -1,0 +1,19 @@
+{
+    "logs": [
+        {
+            "outputFile": "com.rushdululilm.app-mergeDebugResources-2:/values-v23/values-v23.xml",
+            "map": [
+                {
+                    "source": "/media/hidayat/PersonalData/Kali_Linux_Files/AndroidStudioPanda2Additional/.gradle/caches/transforms-4/1a988687a820bbcfcdd1de50b52705a4/transformed/work-runtime-2.9.0/res/values-v23/values-v23.xml",
+                    "from": {
+                        "startLines": "2,3",
+                        "startColumns": "4,4",
+                        "startOffsets": "55,121",
+                        "endColumns": "65,62",
+                        "endOffsets": "116,179"
+                    }
+                }
+            ]
+        }
+    ]
+}

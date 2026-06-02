@@ -1,0 +1,10 @@
+<resources>
+    <!-- 
+    File: strings.xml
+    Purpose: A single place to store all text shown to the user.
+             This makes it easy to translate the app later.
+    Layer: Layer 1 — Android App
+    Created: 2026-05-30 | Developer: Shaik Hidayatullah
+    -->
+    <string name="app_name">Rushd-ul-Ilm</string>
+</resources>

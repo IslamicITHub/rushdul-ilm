@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- 
+    File: themes.xml
+    Purpose: Defines the overall look and feel of the app (colors, status bar, etc.)
+    Layer: Layer 1 — Android App
+    Created: 2026-05-30 | Developer: Shaik Hidayatullah
+    -->
+    <style name="Theme.RushdulIlm" parent="android:Theme.Material.Light.NoActionBar" />
+</resources>

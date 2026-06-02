@@ -1,0 +1,39 @@
+services:
+  neo4j:
+    # Neo4j is the graph database that stores all Graphiti knowledge
+    # neo4j:5-community is the FREE community edition — no license needed
+    image: neo4j:5-community
+
+    container_name: rushd-neo4j
+    # ^ Give it a memorable name so we can reference it easily
+
+    restart: unless-stopped
+    # ^ Auto-restart if it crashes, but stop when you manually run 'docker compose down'
+
+    ports:
+      - "7474:7474"
+      # ^ Port 7474 is the Neo4j web browser UI — open http://localhost:7474 to see your graph
+      - "7687:7687"
+      # ^ Port 7687 is the Bolt protocol port — Graphiti Python library connects here
+
+    environment:
+      - NEO4J_AUTH=neo4j/rushdululilm2026
+      # ^ Sets username=neo4j, password=rushdululilm2026
+      # ^ CHANGE THIS PASSWORD if you ever expose this server to the internet
+      - NEO4J_PLUGINS=["apoc"]
+      # ^ APOC is a plugin that adds extra features to Neo4j (needed by Graphiti)
+      - NEO4J_dbms_security_procedures_unrestricted=apoc.*
+      # ^ Allows APOC procedures to run — required for Graphiti to work correctly
+
+    volumes:
+      - neo4j_data:/data
+      # ^ Stores the graph database files permanently (survives container restarts)
+      - neo4j_logs:/logs
+      # ^ Stores Neo4j logs for debugging
+
+volumes:
+  # Add these to your existing volumes section (or create the section if it doesn't exist)
+  neo4j_data:
+    # ^ Docker will create and manage this storage volume automatically
+  neo4j_logs:
+    # ^ Docker will create and manage this storage volume automatically

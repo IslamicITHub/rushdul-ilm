@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- 
+File: AndroidManifest.xml
+Purpose: The app's "ID Card" that tells Android about our app's settings and screens
+Layer: Layer 1 — Android App
+Created: 2026-05-30 | Developer: Shaik Hidayatullah
+-->
+<manifest xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <!-- The application tag contains all the settings for the app itself -->
+    <application
+        android:name=".RushdulIlmApplication"
+        android:allowBackup="true"
+        android:dataExtractionRules="@xml/data_extraction_rules"
+        android:fullBackupContent="@xml/backup_rules"
+        android:icon="@mipmap/ic_launcher"
+        android:label="@string/app_name"
+        android:roundIcon="@mipmap/ic_launcher_round"
+        android:supportsRtl="true"
+        android:theme="@style/Theme.RushdulIlm">
+        
+        <!-- Every screen (Activity) in the app must be listed here -->
+        <!-- MainActivity is our first and main screen -->
+        <activity
+            android:name=".MainActivity"
+            android:exported="true"
+            android:theme="@style/Theme.RushdulIlm">
+            
+            <!-- This intent-filter tells Android that this screen is the one to start 
+                 when the user taps the app icon on their phone's home screen. -->
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+    </application>
+
+</manifest>
