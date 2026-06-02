@@ -21,12 +21,14 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
+import com.rushdululilm.app.R
 import com.rushdululilm.app.viewmodel.SettingsViewModel
 
 /**
@@ -48,10 +50,10 @@ fun SettingsScreen(
     Scaffold(
         topBar = {
             TopAppBar(
-                title = { Text("Settings / సెట్టింగ్‌లు", fontWeight = FontWeight.Bold) },
+                title = { Text(stringResource(R.string.settings_label), fontWeight = FontWeight.Bold) },
                 navigationIcon = {
                     IconButton(onClick = { navController.popBackStack() }) {
-                        Icon(imageVector = Icons.Default.ArrowBack, contentDescription = "Back")
+                        Icon(imageVector = Icons.Default.ArrowBack, contentDescription = stringResource(R.string.icon_desc_back))
                     }
                 }
             )
@@ -67,8 +69,13 @@ fun SettingsScreen(
         ) {
             // --- SECTION 1: LANGUAGE SETTINGS ---
             item {
-                SettingsSectionTitle("Language / భాష")
-                val languages = listOf("Telugu" to "తెలుగు", "Urdu" to "اردو", "Hindi" to "हिंदी", "English" to "English")
+                SettingsSectionTitle(stringResource(R.string.language_selector_label))
+                val languages = listOf(
+                    "Telugu" to stringResource(R.string.language_telugu_display),
+                    "Urdu" to stringResource(R.string.language_urdu_display),
+                    "Hindi" to stringResource(R.string.language_hindi_display),
+                    "English" to stringResource(R.string.language_english_display)
+                )
                 
                 Column(Modifier.selectableGroup()) {
                     languages.forEach { (eng, local) ->
@@ -83,8 +90,12 @@ fun SettingsScreen(
 
             // --- SECTION 2: MADHAB PREFERENCE ---
             item {
-                SettingsSectionTitle("Islamic Source Preference / ఇస్లామిక్ మూలం")
-                val madhabs = listOf("All Sources", "Neutral Only", "Hanafi (Deoband)")
+                SettingsSectionTitle(stringResource(R.string.madhab_preference))
+                val madhabs = listOf(
+                    stringResource(R.string.source_all),
+                    stringResource(R.string.madhab_neutral),
+                    stringResource(R.string.madhab_hanafi)
+                )
                 
                 Column(Modifier.selectableGroup()) {
                     madhabs.forEach { madhab ->
@@ -99,12 +110,12 @@ fun SettingsScreen(
 
             // --- SECTION 3: OFFLINE KNOWLEDGE DATABASE ---
             item {
-                SettingsSectionTitle("Download Offline Knowledge / ఆఫ్‌లైన్ జ్ఞానాన్ని డౌన్‌లోడ్ చేయండి")
+                SettingsSectionTitle(stringResource(R.string.offline_knowledge_title))
                 
                 DownloadItem(
                     name = "IslamQA.info",
                     size = "~500MB",
-                    status = "Not downloaded",
+                    status = stringResource(R.string.not_downloaded_status),
                     onDownload = { /* Placeholder */ }
                 )
                 
@@ -113,23 +124,23 @@ fun SettingsScreen(
                 DownloadItem(
                     name = "Darul Ifta Deoband",
                     size = "~200MB",
-                    status = "Downloaded",
+                    status = stringResource(R.string.downloaded_status),
                     onDownload = { /* Placeholder */ }
                 )
             }
 
             // --- SECTION 4: APP SETTINGS ---
             item {
-                SettingsSectionTitle("App Settings / యాప్ సెట్టింగ్‌లు")
+                SettingsSectionTitle(stringResource(R.string.app_settings_title))
                 
                 SettingsSwitch(
-                    label = "Auto-play read aloud / ఆటో-ప్లే రీడ్ అలౌడ్",
+                    label = stringResource(R.string.setting_autoplay),
                     checked = isAutoPlayEnabled,
                     onCheckedChange = { viewModel.onAutoPlayToggled(it) }
                 )
                 
                 SettingsSwitch(
-                    label = "Large text mode / పెద్ద వచన మోడ్",
+                    label = stringResource(R.string.setting_large_text),
                     checked = isLargeTextEnabled,
                     onCheckedChange = { viewModel.onLargeTextToggled(it) }
                 )
@@ -137,7 +148,7 @@ fun SettingsScreen(
                 Spacer(modifier = Modifier.height(16.dp))
                 
                 Text(
-                    text = "App Version: 1.0.0-alpha",
+                    text = stringResource(R.string.app_version),
                     fontSize = 14.sp,
                     color = Color.Gray
                 )
@@ -212,6 +223,7 @@ fun SettingsSwitch(label: String, checked: Boolean, onCheckedChange: (Boolean) -
  */
 @Composable
 fun DownloadItem(name: String, size: String, status: String, onDownload: () -> Unit) {
+    val downloadedStatus = stringResource(R.string.downloaded_status)
     Card(
         modifier = Modifier.fillMaxWidth(),
         elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)
@@ -230,12 +242,12 @@ fun DownloadItem(name: String, size: String, status: String, onDownload: () -> U
             Button(
                 onClick = onDownload,
                 colors = ButtonDefaults.buttonColors(
-                    containerColor = if (status == "Downloaded") Color(0xFF2E7D32) else MaterialTheme.colorScheme.primary
+                    containerColor = if (status == downloadedStatus) Color(0xFF2E7D32) else MaterialTheme.colorScheme.primary
                 )
             ) {
                 Icon(Icons.Default.Download, contentDescription = null)
                 Spacer(Modifier.width(4.dp))
-                Text(if (status == "Downloaded") "Update" else "Download")
+                Text(if (status == downloadedStatus) stringResource(R.string.update_button_label) else stringResource(R.string.download_button_label))
             }
         }
     }

@@ -25,6 +25,8 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.res.stringResource
+import com.rushdululilm.app.R
 import com.rushdululilm.app.ui.theme.RushdulIlmTheme
 
 /**
@@ -41,10 +43,10 @@ fun LanguageSelector(
 ) {
     // List of available languages. Each maps a short name to a bilingual display string.
     val languages = listOf(
-        "Telugu" to "తెలుగు (Telugu)",
-        "Urdu" to "اردو (Urdu)",
-        "Hindi" to "हिंदी (Hindi)",
-        "English" to "English"
+        "Telugu" to stringResource(R.string.language_telugu_display),
+        "Urdu" to stringResource(R.string.language_urdu_display),
+        "Hindi" to stringResource(R.string.language_hindi_display),
+        "English" to stringResource(R.string.language_english_display)
     )
 
     // State to track whether the dropdown menu is currently open (visible) or closed.
@@ -69,7 +71,7 @@ fun LanguageSelector(
             leadingIcon = { 
                 Icon(
                     imageVector = Icons.Default.Language, 
-                    contentDescription = "Language Icon"
+                    contentDescription = stringResource(R.string.icon_desc_language)
                 ) 
             },
             trailingIcon = { 

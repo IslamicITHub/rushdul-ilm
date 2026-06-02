@@ -26,6 +26,8 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
+import androidx.compose.ui.res.stringResource
+import com.rushdululilm.app.R
 import com.rushdululilm.app.ui.components.VideoCard
 import com.rushdululilm.app.viewmodel.VideoLibraryViewModel
 
@@ -48,7 +50,7 @@ fun VideoLibraryScreen(
             TopAppBar(
                 title = { 
                     Text(
-                        text = "వీడియో లైబ్రరీ / Video Library",
+                        text = stringResource(R.string.video_library_label),
                         style = MaterialTheme.typography.titleLarge.copy(fontWeight = FontWeight.Bold)
                     ) 
                 },
@@ -78,19 +80,19 @@ fun VideoLibraryScreen(
                     modifier = Modifier.fillMaxWidth(),
                     placeholder = { 
                         Text(
-                            text = "అంశం లేదా పండితుడిని వెతకండి... / Search...",
+                            text = stringResource(R.string.search_placeholder),
                             style = MaterialTheme.typography.bodyLarge, // 18sp minimum for readability
                             color = Color.DarkGray
                         ) 
                     },
                     leadingIcon = { 
-                        Icon(Icons.Default.Search, contentDescription = "Search Icon", tint = Color.DarkGray) 
+                        Icon(Icons.Default.Search, contentDescription = stringResource(R.string.icon_desc_search), tint = Color.DarkGray) 
                     },
                     trailingIcon = {
                         // Only show the clear button (X) if there is text in the search bar
                         if (searchQuery.isNotEmpty()) {
                             IconButton(onClick = { viewModel.onSearchQueryChanged("") }) {
-                                Icon(Icons.Default.Clear, contentDescription = "Clear Search", tint = Color.DarkGray)
+                                Icon(Icons.Default.Clear, contentDescription = stringResource(R.string.icon_desc_clear), tint = Color.DarkGray)
                             }
                         }
                     },
@@ -126,7 +128,7 @@ fun VideoLibraryScreen(
                 if (filteredVideos.isEmpty()) {
                     item {
                         Text(
-                            text = "ఎలాంటి వీడియోలు కనుగొనబడలేదు.\nNo videos found.",
+                            text = stringResource(R.string.no_videos_found),
                             style = MaterialTheme.typography.bodyLarge,
                             color = Color.Gray,
                             modifier = Modifier.padding(top = 32.dp).fillMaxWidth(),

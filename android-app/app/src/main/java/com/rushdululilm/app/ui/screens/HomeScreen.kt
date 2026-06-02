@@ -28,6 +28,8 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
+import androidx.compose.ui.res.stringResource
+import com.rushdululilm.app.R
 import com.rushdululilm.app.ui.components.LanguageSelector
 import com.rushdululilm.app.ui.components.MicButton
 import com.rushdululilm.app.ui.components.SourceSelector
@@ -133,7 +135,7 @@ fun HomeScreen(
 
             // 5. Instruction Text (Telugu + English)
             Text(
-                text = "మైక్ నొక్కి మీ ప్రశ్న అడగండి\nPress mic and ask your question",
+                text = stringResource(R.string.mic_button_hint),
                 style = MaterialTheme.typography.bodyLarge, // 18sp minimum
                 color = MaterialTheme.colorScheme.onBackground,
                 textAlign = TextAlign.Center,

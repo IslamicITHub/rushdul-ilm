@@ -19,12 +19,14 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.navigation.NavDestination.Companion.hierarchy
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
+import com.rushdululilm.app.R
 
 /**
  * RushdulIlmNavGraph is the master UI container that handles switching between screens.
@@ -51,8 +53,8 @@ fun RushdulIlmNavGraph() {
 
                 // 🔘 Home Button (Mic Screen)
                 NavigationBarItem(
-                    icon = { Icon(Icons.Default.Home, contentDescription = "Home") },
-                    label = { Text("Home") },
+                    icon = { Icon(Icons.Default.Home, contentDescription = stringResource(R.string.nav_home)) },
+                    label = { Text(stringResource(R.string.nav_home)) },
                     // Highlight this button if the current screen is HOME
                     selected = currentDestination?.hierarchy?.any { it.route == Routes.HOME } == true,
                     onClick = {
@@ -74,8 +76,8 @@ fun RushdulIlmNavGraph() {
 
                 // 🔘 Video Library Button
                 NavigationBarItem(
-                    icon = { Icon(Icons.Default.PlayArrow, contentDescription = "Videos") },
-                    label = { Text("Videos") },
+                    icon = { Icon(Icons.Default.PlayArrow, contentDescription = stringResource(R.string.nav_videos)) },
+                    label = { Text(stringResource(R.string.nav_videos)) },
                     selected = currentDestination?.hierarchy?.any { it.route == Routes.VIDEO_LIBRARY } == true,
                     onClick = {
                         navController.navigate(Routes.VIDEO_LIBRARY) {
@@ -90,8 +92,8 @@ fun RushdulIlmNavGraph() {
 
                 // 🔘 Settings Button
                 NavigationBarItem(
-                    icon = { Icon(Icons.Default.Settings, contentDescription = "Settings") },
-                    label = { Text("Settings") },
+                    icon = { Icon(Icons.Default.Settings, contentDescription = stringResource(R.string.nav_settings)) },
+                    label = { Text(stringResource(R.string.nav_settings)) },
                     selected = currentDestination?.hierarchy?.any { it.route == Routes.SETTINGS } == true,
                     onClick = {
                         navController.navigate(Routes.SETTINGS) {

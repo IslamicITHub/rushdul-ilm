@@ -38,6 +38,8 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
+import androidx.compose.ui.res.stringResource
+import com.rushdululilm.app.R
 import com.rushdululilm.app.model.RelatedVideo
 import com.rushdululilm.app.ui.theme.IslamicGreen
 import com.rushdululilm.app.ui.theme.QuranicBlue
@@ -64,11 +66,11 @@ fun AnswerScreen(
     Scaffold(
         topBar = {
             TopAppBar(
-                title = { Text("సమాధానం / Answer") },
+                title = { Text(stringResource(R.string.answer_screen_label)) },
                 // Back button to return to the Home Screen
                 navigationIcon = {
                     IconButton(onClick = { navController.popBackStack() }) {
-                        Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Back")
+                        Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = stringResource(R.string.icon_desc_back))
                     }
                 },
                 colors = TopAppBarDefaults.topAppBarColors(
@@ -128,6 +130,7 @@ fun AnswerScreen(
                         
                         // We build an "Annotated String" to make part of the text look like a clickable link
                         val annotatedLinkString = buildAnnotatedString {
+                            val viewOriginal = stringResource(R.string.view_original_link)
                             withStyle(
                                 style = SpanStyle(
                                     color = QuranicBlue,
@@ -135,14 +138,14 @@ fun AnswerScreen(
                                     fontSize = 16.sp
                                 )
                             ) {
-                                append("View Original")
+                                append(viewOriginal)
                             }
                             // Attach the URL to this text segment
                             addStringAnnotation(
                                 tag = "URL",
                                 annotation = answer.sourceUrl,
                                 start = 0,
-                                end = 13 // Length of "View Original"
+                                end = viewOriginal.length // Length of "View Original"
                             )
                         }
 
@@ -176,7 +179,7 @@ fun AnswerScreen(
                         )
                     ) {
                         Text(
-                            text = if (isReadingAloud) "ఆపు / Stop Reading" else "🔊 చదివి వినిపించు / Read Aloud",
+                            text = if (isReadingAloud) stringResource(R.string.stop_reading_button) else stringResource(R.string.read_aloud_button),
                             style = MaterialTheme.typography.bodyLarge // 18sp
                         )
                     }
@@ -187,7 +190,7 @@ fun AnswerScreen(
 
                     // Related Videos Section Header
                     Text(
-                        text = "సంబంధిత వీడియోలు / Related Lectures",
+                        text = stringResource(R.string.related_lectures_label),
                         style = MaterialTheme.typography.titleLarge, // 22sp bold
                         color = MaterialTheme.colorScheme.onBackground
                     )
@@ -256,7 +259,7 @@ fun AnswerVideoCard(video: RelatedVideo, onPlayClick: () -> Unit) {
                 modifier = Modifier.fillMaxWidth(),
                 colors = ButtonDefaults.buttonColors(containerColor = QuranicBlue)
             ) {
-                Text("▶ ప్లే చేయి / Play", style = MaterialTheme.typography.bodyMedium)
+                Text(stringResource(R.string.play_button), style = MaterialTheme.typography.bodyMedium)
             }
         }
     }

@@ -22,6 +22,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.res.stringResource
+import com.rushdululilm.app.R
 import com.rushdululilm.app.ui.theme.RushdulIlmTheme
 
 /**
@@ -38,16 +40,16 @@ fun SourceSelector(
 ) {
     // List of sources mapping ID to display name
     val sources = listOf(
-        "all" to "All Sources",
-        "islamqa_info" to "IslamQA.info (Neutral)",
-        "islamqa_org" to "IslamQA.org (Neutral)",
-        "deoband" to "Darul Ifta Deoband (Hanafi)"
+        "all" to stringResource(R.string.source_all),
+        "islamqa_info" to stringResource(R.string.source_islamqa_info),
+        "islamqa_org" to stringResource(R.string.source_islamqa_org),
+        "deoband" to stringResource(R.string.source_deoband)
     )
 
     Column(modifier = Modifier.fillMaxWidth()) {
         // Section Title in Telugu and English
         Text(
-            text = "మూలం: / Source:",
+            text = stringResource(R.string.source_selector_label),
             style = MaterialTheme.typography.bodyLarge,
             color = MaterialTheme.colorScheme.onBackground,
             modifier = Modifier.padding(horizontal = 16.dp)

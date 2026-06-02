@@ -43,7 +43,7 @@
 CURRENT_PHASE:        1
 CURRENT_SPRINT:       1.7
 CURRENT_SUB_SPRINT:   1.7.1
-CURRENT_MICRO_TASK:   P1.S7.SS1.MT1   ← START HERE
+CURRENT_MICRO_TASK:   P1.S7.SS1.MT2   ← START HERE
 
 PHASE 1 PROGRESS:
   Sprint 1.1 — Environment & Project Setup     [x] 7/7 micro-tasks done

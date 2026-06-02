@@ -35,6 +35,8 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.res.stringResource
+import com.rushdululilm.app.R
 import com.rushdululilm.app.ui.theme.RushdulIlmTheme
 
 /**
@@ -98,7 +100,7 @@ fun MicButton(
             // The microphone icon inside the button
             Icon(
                 imageVector = Icons.Default.Mic,
-                contentDescription = "Microphone",
+                contentDescription = stringResource(R.string.icon_desc_mic),
                 tint = Color.White,
                 modifier = Modifier.size(72.dp) // Large icon size
             )
@@ -109,7 +111,7 @@ fun MicButton(
 
         // Bilingual label for illiterate users (Telugu on top, English below)
         Text(
-            text = "మైక్ నొక్కండి\nPress Mic",
+            text = stringResource(R.string.mic_button_label),
             // Use the large body typography (18sp minimum)
             style = MaterialTheme.typography.bodyLarge,
             // Use the primary text color
