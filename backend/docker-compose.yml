@@ -1,39 +1,113 @@
+# ----------------------------------------------------------------------------
+# Rushd-ul-Ilm (رشد العلم) — Backend Docker Orchestration
+# Developer: Shaik Hidayatullah | Hardware: NVIDIA RTX 3050 (4GB VRAM)
+# 
+# What is this file?
+# This is a 'docker-compose' file. Instead of starting 5 different AI programs 
+# one by one, we list them all here. When we run 'docker compose up', Docker 
+# reads this file and starts the entire backend automatically.
+# ----------------------------------------------------------------------------
+
+# 'services' lists all the different programs (containers) we want to run.
 services:
-  neo4j:
-    # Neo4j is the graph database that stores all Graphiti knowledge
-    # neo4j:5-community is the FREE community edition — no license needed
-    image: neo4j:5-community
-
-    container_name: rushd-neo4j
-    # ^ Give it a memorable name so we can reference it easily
-
-    restart: unless-stopped
-    # ^ Auto-restart if it crashes, but stop when you manually run 'docker compose down'
-
-    ports:
-      - "7474:7474"
-      # ^ Port 7474 is the Neo4j web browser UI — open http://localhost:7474 to see your graph
-      - "7687:7687"
-      # ^ Port 7687 is the Bolt protocol port — Graphiti Python library connects here
-
-    environment:
-      - NEO4J_AUTH=neo4j/rushdululilm2026
-      # ^ Sets username=neo4j, password=rushdululilm2026
-      # ^ CHANGE THIS PASSWORD if you ever expose this server to the internet
-      - NEO4J_PLUGINS=["apoc"]
-      # ^ APOC is a plugin that adds extra features to Neo4j (needed by Graphiti)
-      - NEO4J_dbms_security_procedures_unrestricted=apoc.*
-      # ^ Allows APOC procedures to run — required for Graphiti to work correctly
-
+  # --------------------------------------------------------------------------
+  # SERVICE PLACEHOLDERS (To be filled in upcoming sprints)
+  # --------------------------------------------------------------------------
+  
+  # [Sprint 2.3] Ollama Service
+  # Runs the local LLM using the RTX 3050 GPU.
+  # ollama:
+  #   image: ollama/ollama:latest
+  #   container_name: rushd_ollama
+  #   # We comment out the ports because you already have a native Ollama on port 11434.
+  #   # By hiding this port from the host, Docker can start its own Ollama internally.
+  #   # ports:
+  #   #   - "11434:11434"
+  #   volumes:
+  #     # We mount your local host's ~/.ollama directory directly into the container.
+  #     # This allows the Docker container to instantly see the qwen3:4b model 
+  #     # you already pulled via your native 'ollama pull' command!
+  #     - ~/.ollama:/root/.ollama
+  #   networks:
+  #     - rushd-network
+  #   deploy:
+  #     resources:
+  #       reservations:
+  #         devices:
+  #           - driver: nvidia  # Uses the NVIDIA Container Toolkit we just installed
+  #             count: 1
+  #             capabilities: [gpu]
+              
+  # [Sprint 2.4] FastAPI Service
+  # This is our main Python server that the Android app talks to.
+  fastapi:
+    # Instead of pulling a pre-made image, 'build: .' tells Docker to look
+    # for the Dockerfile in the current directory (backend/) and build it.
+    build: .
+    container_name: rushd_fastapi
+    # We use host networking so the container can talk to your native Ollama
+    # on 127.0.0.1. Note: 'ports' and 'networks' are ignored in host mode.
+    network_mode: "host"
+    # In development, it's helpful if the server restarts automatically when
+    # we change the Python code, but Docker copies the code once at build time.
+    # To fix this, we map the host's backend folder directly into the container.
     volumes:
-      - neo4j_data:/data
-      # ^ Stores the graph database files permanently (survives container restarts)
-      - neo4j_logs:/logs
-      # ^ Stores Neo4j logs for debugging
+      - .:/app
+      - ../islamqa.info-offline:/data/islamqa
+      - ../darulifta-deoband.com-offline:/data/deoband
+    # Override the default command to enable Uvicorn's live-reload feature
+    command: ["uvicorn", "fastapi_server:app", "--host", "0.0.0.0", "--port", "8000", "--reload"]
 
+  # [Sprint 2.5] Qdrant Service
+  # This runs our Vector Database for semantic search (finding fatwas).
+  # Unlike a normal SQL database, a vector database stores "meaning" so we can
+  # search by concept, not just exact keywords.
+  qdrant:
+    image: qdrant/qdrant:latest
+    container_name: rushd_qdrant
+    ports:
+      # Port 6333 is the main API port for Qdrant (also hosts the Web UI dashboard)
+      - "6333:6333"
+      # Port 6334 is for gRPC (faster communication), useful for Python clients later
+      - "6334:6334"
+    networks:
+      - rushd-network
+    volumes:
+      # We mount the named volume 'qdrant_data' (defined at the bottom of this file)
+      # to the container's internal storage path. This ensures our scraped
+      # Islamic fatwas are saved permanently.
+      - qdrant_data:/qdrant/storage
+
+  # [Pending Sprint 5.1] IndicTrans2 Service
+  # This will handle translation between English and Telugu/Urdu.
+  
+  # [Pending Sprint 5.2] Coqui XTTS-v2 Service
+  # This will handle Text-to-Speech (reading answers aloud).
+  
+  # [Pending Sprint 6.2] faster-whisper Service
+  # This will convert user's spoken voice into text using the GPU.
+
+# ----------------------------------------------------------------------------
+# NETWORKS
+# ----------------------------------------------------------------------------
+networks:
+  # We create a custom private network called 'rushd-network'.
+  # This allows all our containers (like FastAPI and Qdrant) to talk to 
+  # each other securely using their service names instead of IP addresses.
+  rushd-network:
+    driver: bridge # 'bridge' creates a virtual local network for the containers.
+
+# ----------------------------------------------------------------------------
+# VOLUMES
+# ----------------------------------------------------------------------------
 volumes:
-  # Add these to your existing volumes section (or create the section if it doesn't exist)
-  neo4j_data:
-    # ^ Docker will create and manage this storage volume automatically
-  neo4j_logs:
-    # ^ Docker will create and manage this storage volume automatically
+  # Volumes are like permanent USB drives for Docker containers.
+  # If we don't use volumes, all data is deleted when a container stops.
+  
+  # This volume saves the downloaded AI models (like Qwen) so Ollama 
+  # doesn't have to re-download a multi-gigabyte file every time we restart.
+  ollama_data:
+  
+  # This volume saves our Islamic knowledge base. If we restart Qdrant, 
+  # we won't lose all the embedded fatwas we scraped.
+  qdrant_data:

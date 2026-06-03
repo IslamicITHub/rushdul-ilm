@@ -1,0 +1,38 @@
+# ----------------------------------------------------------------------------
+# Rushd-ul-Ilm (رشد العلم) — Backend Dependencies
+# 
+# What is this file?
+# This is like Gradle for Python. It lists all the external libraries our
+# Python backend needs. When we build the Docker container, Docker will run
+# 'pip install -r requirements.txt' to install them.
+# ----------------------------------------------------------------------------
+
+# FastAPI is a modern, fast web framework for building APIs with Python.
+# We use this to create the endpoints the Android app will call.
+fastapi
+
+# Uvicorn is the server that actually runs the FastAPI application.
+# Think of FastAPI as the logic, and Uvicorn as the engine that runs it.
+uvicorn
+
+# Requests is a simple HTTP library. We'll use this inside our FastAPI server
+# to talk to the Ollama server (which runs on a different port/container).
+requests
+
+# Pydantic is used for data validation. It ensures the data the Android app
+# sends us (like search queries) is in the correct format.
+pydantic
+
+# Qdrant Client is the library that lets us talk to our Qdrant vector database.
+# We use this to save and search for the "coordinates" (embeddings) of our fatwas.
+qdrant-client
+
+# Sentence Transformers is the library that converts text into vector embeddings.
+# It handles loading the AI models that "understand" the meaning of sentences.
+sentence-transformers
+
+# Torch (PyTorch) is the underlying math engine that runs the AI models.
+# sentence-transformers needs this to perform the heavy calculations on the CPU/GPU.
+torch --index-url https://download.pytorch.org/whl/cpu
+# ^ Note: We use the 'cpu' version to keep the Docker image smaller, as
+# embeddings for 15k fatwas are fast enough on a modern CPU.
