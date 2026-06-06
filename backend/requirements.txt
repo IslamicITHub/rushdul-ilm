@@ -27,7 +27,7 @@ pydantic
 # We use this to save and search for the "coordinates" (embeddings) of our fatwas.
 qdrant-client
 
-# Sentence Transformers is the library that converts text into vector embeddings.
+# sentence-transformers is the library that converts text into vector embeddings.
 # It handles loading the AI models that "understand" the meaning of sentences.
 sentence-transformers
 
@@ -36,3 +36,11 @@ sentence-transformers
 torch --index-url https://download.pytorch.org/whl/cpu
 # ^ Note: We use the 'cpu' version to keep the Docker image smaller, as
 # embeddings for 15k fatwas are fast enough on a modern CPU.
+
+# LlamaIndex core and connectors
+# These libraries help us build the RAG (Retrieval-Augmented Generation) pipeline.
+llama-index-core
+llama-index-vector-stores-qdrant
+llama-index-llms-ollama
+llama-index-embeddings-huggingface
+

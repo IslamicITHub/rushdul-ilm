@@ -22,6 +22,8 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.rushdululilm.app.model.RelatedVideo
 import com.rushdululilm.app.ui.theme.IslamicGreen
+import androidx.compose.ui.semantics.semantics
+import androidx.compose.ui.semantics.contentDescription
 
 /**
  * A horizontal card displaying a video thumbnail, title, scholar, and duration.
@@ -32,7 +34,11 @@ fun VideoCard(video: RelatedVideo, onClick: () -> Unit) {
         modifier = Modifier
             .fillMaxWidth()
             .shadow(8.dp, RoundedCornerShape(8.dp))
-            .clickable { onClick() },
+            .clickable { onClick() }
+            .semantics(mergeDescendants = true) {
+                // Grouping details so screen reader reads the whole card contextually
+                contentDescription = "Video by ${video.scholarName}, Title: ${video.title}"
+            },
         colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
         shape = RoundedCornerShape(8.dp)
     ) {

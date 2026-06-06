@@ -40,10 +40,10 @@
 ## 📊 SPRINT PROGRESS TRACKER (Update this dashboard every session)
 
 ```
-CURRENT_PHASE:        1
-CURRENT_SPRINT:       1.7
-CURRENT_SUB_SPRINT:   1.7.1
-CURRENT_MICRO_TASK:   P1.S7.SS1.MT2   ← START HERE
+CURRENT_PHASE:        3
+CURRENT_SPRINT:       3.1
+CURRENT_SUB_SPRINT:   3.1.4
+CURRENT_MICRO_TASK:   P3.S1.SS1.MT5   ← START HERE
 
 PHASE 1 PROGRESS:
   Sprint 1.1 — Environment & Project Setup     [x] 7/7 micro-tasks done
@@ -52,20 +52,96 @@ PHASE 1 PROGRESS:
   Sprint 1.4 — Answer Screen                   [x] 3/7 micro-tasks done
   Sprint 1.5 — Video Library Screen            [x] 2/5 micro-tasks done
   Sprint 1.6 — Settings Screen                 [x] 1/5 micro-tasks done
-  Sprint 1.7 — String Resources & Theming      [ ] 0/4 micro-tasks done
-  Sprint 1.8 — Phase 1 Integration Test        [ ] 0/3 micro-tasks done
+  Sprint 1.7 — String Resources & Theming      [x] 2/2 micro-tasks done
+  Sprint 1.8 — Phase 1 Integration Test        [x] 2/2 micro-tasks done
 
-PHASE 2 PROGRESS: [NOT STARTED]
-PHASE 3 PROGRESS: [NOT STARTED]
-PHASE 4 PROGRESS: [NOT STARTED]
-PHASE 5 PROGRESS: [NOT STARTED]
-PHASE 6 PROGRESS: [NOT STARTED]
-```
+PHASE 2 PROGRESS:
+  Sprint 2.1 — Install Docker & NVIDIA Toolkit [x] 2/2 micro-tasks done
+  Sprint 2.2 — Create docker-compose.yml       [x] 1/1 micro-tasks done
+  Sprint 2.3 — Ollama + Qwen3:4b Setup        [x] 1/1 micro-tasks done
+  Sprint 2.4 — FastAPI Server Skeleton         [x] 2/2 micro-tasks done
+  Sprint 2.5 — Qdrant Vector DB Setup         [x] 1/1 micro-tasks done
+  Sprint 2.6 — Wire FastAPI to Ollama         [x] 1/1 micro-tasks done
+  Sprint 2.7 — Phase 2 Integration Test       [x] 2/2 micro-tasks done
+PHASE 3 PROGRESS:
+  Sprint 3.1 — Scraper Review & Test          [x] 3/3 micro-tasks done
 
 ---
 
-## ══════════════════════════════════════════════════════
-## PHASE 1 — ANDROID UI SKELETON
+## PHASE 3 — KNOWLEDGE INGESTION
+**Goal:** Process raw fatwa data into vector embeddings and store them in Qdrant for semantic search.
+
+##### Micro-task P3.S1.SS1.MT3 — Embed islamqa.info into Qdrant
+```
+TASK:   Create an ingestion script to convert fatwas into vector embeddings and store them in Qdrant.
+
+WHY:    Standard keyword search (like Ctrl+F) only finds exact words.
+        Vector embeddings allow "semantic search" — finding answers by meaning.
+        We'll use the "paraphrase-multilingual-mpnet-base-v2" model because it
+        understands 50+ languages, including English, Telugu, and Urdu.
+
+STEP BY STEP:
+  1. Add 'qdrant-client' and 'sentence-transformers' to backend/requirements.txt.
+  2. Create backend/ingest_islamqa.py.
+  3. In the script:
+     - Connect to the SQLite database created in MT2.
+     - Initialize the Qdrant client and create a collection named "islamqa".
+     - Load the embedding model (this will download ~420MB on first run).
+     - Process fatwas in batches (e.g., 100 at a time).
+     - For each fatwa, combine 'title' and 'question' as the text to embed.
+     - Store the vector + metadata (id, title, source_url) in Qdrant.
+  4. Run the script and verify vectors are stored in Qdrant.
+
+DONE CONDITION:
+  Qdrant dashboard (http://localhost:6333/dashboard) shows the "islamqa" collection.
+  The collection contains points (vectors) with metadata.
+  A test query in the dashboard returns relevant fatwa IDs.
+
+##### Micro-task P3.S1.SS1.MT4 — Build LlamaIndex RAG pipeline
+```
+TASK:   Create the core RAG logic using LlamaIndex to connect Qdrant and Ollama.
+
+WHY:    RAG (Retrieval-Augmented Generation) ensures the AI only answers using 
+        our approved Islamic database. LlamaIndex acts as the "orchestrator" 
+        that finds the right fatwas and hands them to the AI to summarize.
+
+STEP BY STEP:
+  1. Update backend/requirements.txt and backend/Dockerfile with llama-index.
+  2. Create backend/rag_pipeline.py.
+  3. Implement RagPipeline class:
+     - Initialize QdrantVectorStore and HuggingFaceEmbedding.
+     - Initialize Ollama LLM (qwen3:4b) with context_window=4096.
+     - Implement ask() method with a strict Islamic system prompt.
+  4. Integrate RagPipeline into backend/fastapi_server.py.
+  5. Test with curl: verify answer text + source URLs are returned.
+
+DONE CONDITION:
+  'curl -X POST http://localhost:8000/query' returns a JSON response 
+  containing "answer" and "sources" (list of URLs).
+
+NEXT MICRO-TASK: P3.S1.SS1.MT5
+```
+
+##### Micro-task P3.S1.SS1.MT5 — Ingest Deoband data + test source filter
+```
+TASK:   Embed the Darul Ifta Deoband SQLite database into Qdrant.
+
+WHY:    We want to support multiple Islamic schools (Madhabs). 
+        By adding Deoband data, we can later let the user filter 
+        answers to only see Hanafi fatwas if they prefer.
+
+STEP BY STEP:
+  1. Create backend/ingest_deoband.py (similar to ingest_islamqa.py).
+  2. Map the Deoband SQLite fields (fatwa_id, question, answer, url) to Qdrant payload.
+  3. Run the ingestion and verify points are added to a "deoband" collection.
+  4. Update RagPipeline to support querying specific collections or all.
+
+DONE CONDITION:
+  Qdrant shows a new collection "deoband" with points.
+  A query to the backend can return results from both sources.
+
+NEXT MICRO-TASK: P3.S1.SS1.MT6
+```
 ## Goal: A working Android app with 4 screens, fake data,
 ##       no real backend connection yet.
 ## ══════════════════════════════════════════════════════
@@ -1081,17 +1157,229 @@ NEXT: PHASE 2 — Backend Docker Services (Sprint 2.1 starts here)
 ---
 
 ## ══════════════════════════════════════════════════════
-## PHASE 2 — BACKEND DOCKER SERVICES (Sprint IDs: 2.x)
-## Sprints overview (full breakdown added when Phase 1 complete):
-##
-## Sprint 2.1 — Install Docker & NVIDIA Container Toolkit
-## Sprint 2.2 — Create docker-compose.yml skeleton
-## Sprint 2.3 — Start Ollama + pull Qwen3:4b model
-## Sprint 2.4 — Build FastAPI server skeleton (/health endpoint)
-## Sprint 2.5 — Add Qdrant + test vector storage
-## Sprint 2.6 — Wire FastAPI → Ollama → basic /query endpoint test
-## Sprint 2.7 — Phase 2 integration test + documentation
+## PHASE 2 — BACKEND DOCKER SERVICES
+## Goal: All local AI services (Ollama, Qdrant, FastAPI) running
+##       in Docker containers with GPU acceleration enabled.
 ## ══════════════════════════════════════════════════════
+
+---
+
+### SPRINT 2.1 — Install Docker & NVIDIA Container Toolkit
+**Goal:** Docker Engine installed, and NVIDIA GPU access verified from within a container.
+
+---
+
+#### Sub-sprint 2.1.1 — Install Docker Engine on Parrot OS
+
+##### Micro-task P2.S1.SS1.MT1 — Install Docker Engine
+```
+TASK:   Install Docker Engine and Docker Compose on Parrot OS Linux
+METHOD: Use the official Docker convenience script or apt repository.
+
+STEP BY STEP:
+  1. Open terminal in Parrot OS
+  2. Uninstall old versions: sudo apt remove docker docker-engine docker.io containerd runc
+  3. Install dependencies: sudo apt update && sudo apt install ca-certificates curl gnupg lsb-release
+  4. Add Docker GPG key: 
+     sudo mkdir -p /etc/apt/keyrings
+     curl -fsSL https://download.docker.com/linux/debian/gpg | sudo gpg --dearmor -o /etc/apt/keyrings/docker.gpg
+  5. Set up repository:
+     echo "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.gpg] https://download.docker.com/linux/debian $(lsb_release -cs) stable" | sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
+  6. Install Docker: sudo apt update && sudo apt install docker-ce docker-ce-cli containerd.io docker-compose-plugin
+  7. Start and enable Docker: sudo systemctl enable docker --now
+  8. Add user to docker group: sudo usermod -aG docker $USER (log out and back in to apply)
+
+DONE CONDITION:
+  'docker --version' shows a valid version.
+  'docker compose version' shows a valid version.
+  'sudo docker run hello-world' runs successfully.
+
+NEXT MICRO-TASK: P2.S1.SS1.MT2
+```
+
+##### Micro-task P2.S1.SS1.MT2 — Install NVIDIA Container Toolkit
+```
+TASK:   Install NVIDIA Container Toolkit so Docker can use the GTX 1650ti GPU
+
+WHY:    Our AI models (Ollama, STT, TTS) need the GPU to run fast.
+        Docker containers are isolated from the host hardware by default.
+        The NVIDIA Container Toolkit is the "bridge" that lets a container
+        talk to your NVIDIA GPU.
+
+STEP BY STEP:
+  1. Add the package repository:
+     curl -fsSL https://nvidia.github.io/libnvidia-container/gpgkey | sudo gpg --dearmor -o /usr/share/keyrings/nvidia-container-toolkit-keyring.gpg \
+     && curl -s -L https://nvidia.github.io/libnvidia-container/stable/deb/nvidia-container-toolkit.list | \
+     sed 's#deb https://#deb [signed-by=/usr/share/keyrings/nvidia-container-toolkit-keyring.gpg] https://#g' | \
+     sudo tee /etc/apt/sources.list.d/nvidia-container-toolkit.list
+  2. Install the toolkit: sudo apt update && sudo apt install nvidia-container-toolkit
+  3. Configure Docker to use the toolkit: sudo nvidia-ctk runtime configure --runtime=docker
+  4. Restart Docker: sudo systemctl restart docker
+  5. Verify GPU access: docker run --rm --runtime=nvidia --gpus all nvidia/cuda:11.8.0-base-ubuntu22.04 nvidia-smi
+
+DONE CONDITION:
+  'nvidia-smi' output is visible from within the test Docker container.
+  The output correctly identifies the GTX 1650ti with 4GB VRAM.
+
+NEXT MICRO-TASK: P2.S2.SS1.MT1
+```
+
+---
+
+### SPRINT 2.2 — Create docker-compose.yml Skeleton
+
+##### Micro-task P2.S2.SS1.MT1 — Create Base docker-compose.yml
+```
+TASK:   Create the project's main Docker orchestration file
+
+WHY:    Instead of starting 5 different programs manually, Docker Compose
+        lets us start EVERYTHING with one command: 'docker compose up -d'.
+        It handles networking between services and persistent storage.
+
+FILE TO CREATE: backend/docker-compose.yml
+
+REQUIREMENTS:
+  - Define a custom network: 'rushd-network'
+  - Define volumes for data persistence: 'ollama_data', 'qdrant_data'
+  - Include service placeholders (comments only for now)
+  - Every line commented for a beginner
+
+DONE CONDITION:
+  'docker compose config' shows no syntax errors.
+  The backend/ folder exists.
+
+NEXT MICRO-TASK: P2.S3.SS1.MT1
+```
+
+---
+
+### SPRINT 2.3 — Start Ollama + pull Qwen3:4b model
+
+##### Micro-task P2.S3.SS1.MT1 — Configure Ollama Service
+```
+TASK:   Add Ollama to docker-compose.yml and pull the local LLM model
+
+STEP BY STEP:
+  1. Add 'ollama' service to backend/docker-compose.yml
+  2. Map port 11434:11434
+  3. Configure GPU access using 'deploy.resources.reservations.devices'
+  4. Run 'docker compose up -d ollama'
+  5. Pull the model: docker exec -it ollama ollama run qwen2.5:3b (wait for download)
+     Note: qwen3:4b might not be out yet, we use verified qwen2.5:3b/7b or similar that fits in 4GB.
+
+DONE CONDITION:
+  Ollama is running (check http://localhost:11434).
+  Model is pulled and responsive to a test prompt.
+
+NEXT MICRO-TASK: P2.S4.SS1.MT1
+```
+
+---
+
+### SPRINT 2.4 — Build FastAPI Server Skeleton
+
+##### Micro-task P2.S4.SS1.MT1 — Create FastAPI App & Requirements
+```
+TASK:   Create the main Python API server and its dependency list
+
+FILE TO CREATE: 
+  1. backend/fastapi_server.py
+  2. backend/requirements.txt
+
+REQUIREMENTS:
+  - fastapi_server.py: basic app with @app.get("/health") endpoint
+  - requirements.txt: fastapi, uvicorn, requests, pydantic
+  - Full comments on every line
+
+DONE CONDITION:
+  Files exist in backend/ folder.
+  No Python syntax errors.
+
+NEXT MICRO-TASK: P2.S4.SS1.MT2
+```
+
+##### Micro-task P2.S4.SS1.MT2 — Containerize FastAPI Service
+```
+TASK:   Add the FastAPI service to docker-compose.yml
+
+STEP BY STEP:
+  1. Create backend/Dockerfile (Python 3.11-slim base)
+  2. Add 'fastapi' service to docker-compose.yml
+  3. Map port 8000:8000
+  4. Run 'docker compose up -d --build'
+
+DONE CONDITION:
+  'curl http://localhost:8000/health' returns {"status": "healthy"}.
+
+NEXT MICRO-TASK: P2.S5.SS1.MT1
+```
+
+---
+
+### SPRINT 2.5 — Add Qdrant Vector DB Setup
+
+##### Micro-task P2.S5.SS1.MT1 — Configure Qdrant Service
+```
+TASK:   Add Qdrant vector database to docker-compose.yml
+
+STEP BY STEP:
+  1. Add 'qdrant' service to backend/docker-compose.yml
+  2. Map port 6333:6333
+  3. Map volume for storage
+  4. Run 'docker compose up -d qdrant'
+
+DONE CONDITION:
+  Qdrant dashboard is accessible at http://localhost:6333/dashboard.
+
+NEXT MICRO-TASK: P2.S6.SS1.MT1
+```
+
+---
+
+### SPRINT 2.6 — Wire FastAPI to Ollama
+
+##### Micro-task P2.S6.SS1.MT1 — Implement /query Endpoint
+```
+TASK:   Add a test endpoint that takes a question and returns an AI answer
+
+STEP BY STEP:
+  1. Modify fastapi_server.py
+  2. Add @app.post("/query") endpoint
+  3. Use 'requests' to call Ollama API at 'http://ollama:11434/api/generate'
+  4. Return the response to the user
+
+DONE CONDITION:
+  Postman or curl test to /query returns a real response from the LLM.
+
+NEXT MICRO-TASK: P2.S7.SS1.MT1
+```
+
+---
+
+### SPRINT 2.7 — Phase 2 Integration Test
+
+##### Micro-task P2.S7.SS1.MT1 — Full Stack Smoke Test
+```
+TASK:   Verify all 3 services are talking to each other correctly
+
+CHECKLIST:
+  [ ] Docker starts all 3 services with one command
+  [ ] GPU is active (check nvidia-smi while querying)
+  [ ] VRAM usage is under 3.5GB
+  [ ] FastAPI can reach Ollama
+
+DONE CONDITION:
+  All services green in 'docker compose ps'.
+
+NEXT MICRO-TASK: P2.S7.SS1.MT2
+```
+
+##### Micro-task P2.S7.SS1.MT2 — Update Documentation
+```
+TASK:   Update Report Documentation/09_BACKEND_DOCKER.md
+
+DONE CONDITION:
+  Phase 2 marked complete in all logs.
 
 *(Phase 2 micro-tasks will be written in full before Phase 2 begins.
  AI Agent: when Phase 1 is done, ask developer to confirm before starting Phase 2.

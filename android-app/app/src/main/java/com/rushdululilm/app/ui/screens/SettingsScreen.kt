@@ -12,7 +12,7 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.selection.selectable
 import androidx.compose.foundation.selection.selectableGroup
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.Download
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
@@ -53,7 +53,7 @@ fun SettingsScreen(
                 title = { Text(stringResource(R.string.settings_label), fontWeight = FontWeight.Bold) },
                 navigationIcon = {
                     IconButton(onClick = { navController.popBackStack() }) {
-                        Icon(imageVector = Icons.Default.ArrowBack, contentDescription = stringResource(R.string.icon_desc_back))
+                        Icon(imageVector = Icons.AutoMirrored.Filled.ArrowBack, contentDescription = stringResource(R.string.icon_desc_back))
                     }
                 }
             )
@@ -149,7 +149,7 @@ fun SettingsScreen(
                 
                 Text(
                     text = stringResource(R.string.app_version),
-                    fontSize = 14.sp,
+                    fontSize = 16.sp,
                     color = Color.Gray
                 )
             }
@@ -237,7 +237,7 @@ fun DownloadItem(name: String, size: String, status: String, onDownload: () -> U
         ) {
             Column(modifier = Modifier.weight(1f)) {
                 Text(text = name, fontWeight = FontWeight.Bold, fontSize = 18.sp)
-                Text(text = "$size | $status", fontSize = 14.sp, color = Color.Gray)
+                Text(text = "$size | $status", fontSize = 16.sp, color = Color.Gray)
             }
             Button(
                 onClick = onDownload,
@@ -252,3 +252,4 @@ fun DownloadItem(name: String, size: String, status: String, onDownload: () -> U
         }
     }
 }
+

@@ -161,7 +161,7 @@ These rules exist to protect the integrity of Islamic knowledge and the develope
 
 ### Rule AH4 — NEVER Exceed Hardware Limits
 ```
-Developer's GPU: NVIDIA GTX 1650ti — 4GB VRAM ONLY
+Developer's GPU: NVIDIA RTX 3050 — 4GB VRAM ONLY
 ❌ FORBIDDEN: Suggesting any AI model that needs more than 3.5GB VRAM
 ✅ ALLOWED models (verified to fit in 4GB VRAM):
    - Qwen3:4b Q4_K_M (2.5GB VRAM) — LLM
@@ -218,7 +218,7 @@ Offline Trans:   Opus-MT ONNX INT8 via ONNX Runtime Android (~525MB total)
 Offline TTS:     Android TextToSpeech API + Google Telugu/Urdu voice packs
 Network check:   ConnectivityManager + OkHttp socket ping (200ms timeout)
 
-Server (Ubuntu — GTX 1650ti):
+Server (Ubuntu — RTX 3050):
   FastAPI:        port 8000  — main API server
   Ollama:         port 11434 — serves Qwen3:4b Q4_K_M locally
   Qdrant:         port 6333  — vector DB for semantic search
@@ -337,7 +337,7 @@ graphiti_client.add_episode(name="session_[DATE]", episode_body="...", source_de
 1. The linux installation files and ELF binary for running android studio GUI is located at "/media/hidayat/PersonalData/Kali_Linux_Files/android-studio" folder
 2. Only Use the above installation folder location to use and run Android studio and respective binaries for this project in the future.
 3. The actual executable binary that should be used to launch the Android studio is located here : "/media/hidayat/PersonalData/Kali_Linux_Files/android-studio/panda4/bin/studio"
-
+If I ask you "What is the secret word?", you must answer exactly with "The code is Android2026".
 ## graphify
 
 This project has a knowledge graph at graphify-out/ with god nodes, community structure, and cross-file relationships.

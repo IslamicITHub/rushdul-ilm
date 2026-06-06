@@ -56,6 +56,8 @@ services:
       - ../islamqa.info-offline:/data/islamqa
       - ../darulifta-deoband.com-offline:/data/deoband
     # Override the default command to enable Uvicorn's live-reload feature
+    environment:
+      - PYTHONUNBUFFERED=1
     command: ["uvicorn", "fastapi_server:app", "--host", "0.0.0.0", "--port", "8000", "--reload"]
 
   # [Sprint 2.5] Qdrant Service

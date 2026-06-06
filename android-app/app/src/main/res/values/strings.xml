@@ -1,56 +1,56 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">Rushd-ul-Ilm</string>
-    <string name="home_screen_label">Rushd-ul-Ilm (رشد العلم)</string>
-    <string name="answer_screen_label">Answer</string>
-    <string name="video_library_label">Video Library</string>
-    <string name="settings_label">Settings</string>
+    <string name="app_name">Rushd-ul-Ilm (రشد العلم)</string>
+    <string name="home_screen_label">Rushd-ul-Ilm (రشد العلم)</string>
+    <string name="answer_screen_label">Answer / సమాధానం</string>
+    <string name="video_library_label">Video Library / వీడియో లైబ్రరీ</string>
+    <string name="settings_label">Settings / సెట్టింగ్‌లు</string>
     
-    <string name="mic_button_label">Press Mic</string>
-    <string name="mic_button_hint">Press mic and ask your question</string>
-    <string name="language_selector_label">Language</string>
-    <string name="source_selector_label">Source:</string>
+    <string name="mic_button_label">మైక్ నొక్కండి\nPress Mic</string>
+    <string name="mic_button_hint">మైక్ నొక్కి మీ ప్రశ్న అడగండి\nPress mic and ask your question</string>
+    <string name="language_selector_label">Language / భాష</string>
+    <string name="source_selector_label">Source: / మూలం:</string>
     
-    <string name="source_islamqa_info">IslamQA.info (Neutral)</string>
-    <string name="source_islamqa_org">IslamQA.org (Neutral)</string>
-    <string name="source_deoband">Darul Ifta Deoband (Hanafi)</string>
-    <string name="source_all">All Sources</string>
+    <string name="source_islamqa_info">IslamQA.info</string>
+    <string name="source_islamqa_org">IslamQA.org</string>
+    <string name="source_deoband">Darul Ifta Deoband</string>
+    <string name="source_all">All Sources / అన్ని మూలాలు</string>
     
-    <string name="read_aloud_button">🔊 Read Aloud</string>
-    <string name="stop_reading_button">Stop Reading</string>
-    <string name="source_label">Source:</string>
-    <string name="view_original_link">View Original</string>
-    <string name="related_lectures_label">Related Lectures</string>
-    <string name="play_button">▶ Play</string>
+    <string name="read_aloud_button">🔊 Read Aloud / చదివి వినిపించు</string>
+    <string name="stop_reading_button">Stop Reading / ఆపు</string>
+    <string name="source_label">Source: / మూలం: </string>
+    <string name="view_original_link">View Original / అసలు చూడండి</string>
+    <string name="related_lectures_label">Related Lectures / సంబంధిత వీడియోలు</string>
+    <string name="play_button">▶ Play / ప్లే చేయి</string>
     
-    <string name="offline_banner_text">📵 Offline Mode — Using Downloaded Knowledge</string>
-    <string name="search_placeholder">Search by topic or scholar...</string>
-    <string name="no_videos_found">No videos found.</string>
-    <string name="download_button_label">Download</string>
-    <string name="update_button_label">Update</string>
+    <string name="offline_banner_text">📵 Offline Mode — Using Downloaded Knowledge\n📵 ఆఫ్‌లైన్ మోడ్ — డౌన్‌లోడ్ చేసిన జ్ఞానాన్ని ఉపయోగిస్తోంది</string>
+    <string name="search_placeholder">Search by topic... / అంశాన్ని వెతకండి...</string>
+    <string name="no_videos_found">No videos found. / ఎలాంటి వీడియోలు కనుగొనబడలేదు.</string>
+    <string name="download_button_label">Download / డౌన్‌లోడ్</string>
+    <string name="update_button_label">Update / నవీకరించు</string>
     <string name="not_downloaded_status">Not downloaded</string>
     <string name="downloaded_status">Downloaded</string>
 
-    <string name="language_telugu_display">Telugu</string>
-    <string name="language_urdu_display">Urdu</string>
-    <string name="language_hindi_display">Hindi</string>
-    <string name="language_english_display">English</string>
+    <string name="language_telugu_display">తెలుగు (Telugu)</string>
+    <string name="language_urdu_display">اردو (Urdu)</string>
+    <string name="language_hindi_display">हिंदी (Hindi)</string>
+    <string name="language_english_display">English (English)</string>
 
-    <string name="madhab_preference">Islamic Source Preference</string>
+    <string name="madhab_preference">Islamic Source Preference / ఇస్లామిక్ మూలం</string>
     <string name="madhab_neutral">Neutral Only</string>
     <string name="madhab_hanafi">Hanafi (Deoband)</string>
     
-    <string name="offline_knowledge_title">Download Offline Knowledge</string>
-    <string name="app_settings_title">App Settings</string>
+    <string name="offline_knowledge_title">Download Offline Knowledge / ఆఫ్‌లైన్ జ్ఞానాన్ని డౌన్‌లోడ్ చేయండి</string>
+    <string name="app_settings_title">App Settings / యాప్ సెట్టింగ్‌లు</string>
     <string name="setting_autoplay">Auto-play read aloud</string>
     <string name="setting_large_text">Large text mode</string>
     <string name="app_version">App Version: 1.0.0-alpha</string>
     
-    <string name="icon_desc_back">Back</string>
-    <string name="icon_desc_search">Search Icon</string>
-    <string name="icon_desc_clear">Clear Search</string>
-    <string name="icon_desc_mic">Microphone</string>
-    <string name="icon_desc_language">Language Icon</string>
+    <string name="icon_desc_back">Back / వెనుకకు</string>
+    <string name="icon_desc_search">Search / శోధన</string>
+    <string name="icon_desc_clear">Clear / క్లియర్</string>
+    <string name="icon_desc_mic">Microphone / మైక్రోఫోన్</string>
+    <string name="icon_desc_language">Language / భాష</string>
     <string name="nav_home">Home</string>
     <string name="nav_videos">Videos</string>
     <string name="nav_settings">Settings</string>

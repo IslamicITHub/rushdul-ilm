@@ -64,7 +64,7 @@ Run through this checklist at the start of EVERY session. Check each item in ord
 | Offline Translation | ONNX Runtime Android | 1.17.3 | Opus-MT ONNX INT8 models |
 | Offline TTS | Android TextToSpeech | — | Google Telugu + Urdu packs |
 
-### Server (Ubuntu machine with GTX 1650ti → any Linux VPS)
+### Server (Ubuntu machine with RTX 3050 → any Linux VPS)
 
 | Service | Docker Image | Port | GPU | Purpose |
 |---------|-------------|------|-----|---------|
@@ -77,7 +77,7 @@ Run through this checklist at the start of EVERY session. Check each item in ord
 | Neo4j (Graphiti) | neo4j:5-community | 7474/7687 | No | Knowledge graph memory |
 | Mem0 | custom Python 3.11 | 8100 | No | Cross-session agent memory |
 
-**HARDWARE LIMIT: GTX 1650ti = 4GB VRAM. Never load more than 3.5GB of models simultaneously.**
+**HARDWARE LIMIT: RTX 3050 = 4GB VRAM. Never load more than 3.5GB of models simultaneously.**
 
 ---
 

@@ -36,6 +36,8 @@ import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.compose.ui.semantics.semantics
+import androidx.compose.ui.semantics.contentDescription
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import androidx.compose.ui.res.stringResource
@@ -79,6 +81,31 @@ fun AnswerScreen(
                     navigationIconContentColor = MaterialTheme.colorScheme.onPrimary
                 )
             )
+        },
+        bottomBar = {
+            // Read Aloud Button - MUST be prominent and easily accessible without scrolling
+            Surface(
+                color = MaterialTheme.colorScheme.background,
+                shadowElevation = 8.dp
+            ) {
+                Box(modifier = Modifier.padding(16.dp)) {
+                    Button(
+                        onClick = { answerViewModel.onReadAloudPressed() },
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .heightIn(min = 56.dp), // Large touch target
+                        // Change color if it is currently reading
+                        colors = ButtonDefaults.buttonColors(
+                            containerColor = if (isReadingAloud) Color.Gray else IslamicGreen
+                        )
+                    ) {
+                        Text(
+                            text = if (isReadingAloud) stringResource(R.string.stop_reading_button) else stringResource(R.string.read_aloud_button),
+                            style = MaterialTheme.typography.bodyLarge // 18sp
+                        )
+                    }
+                }
+            }
         }
     ) { innerPadding ->
         // LazyColumn is used because answers might be longer than the screen.
@@ -167,27 +194,6 @@ fun AnswerScreen(
                     HorizontalDivider() // A thin line separating sections
                     Spacer(modifier = Modifier.height(16.dp))
 
-                    // Read Aloud Button - MUST be prominent and easily accessible
-                    Button(
-                        onClick = { answerViewModel.onReadAloudPressed() },
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .heightIn(min = 56.dp), // Large touch target
-                        // Change color if it is currently reading
-                        colors = ButtonDefaults.buttonColors(
-                            containerColor = if (isReadingAloud) Color.Gray else IslamicGreen
-                        )
-                    ) {
-                        Text(
-                            text = if (isReadingAloud) stringResource(R.string.stop_reading_button) else stringResource(R.string.read_aloud_button),
-                            style = MaterialTheme.typography.bodyLarge // 18sp
-                        )
-                    }
-
-                    Spacer(modifier = Modifier.height(16.dp))
-                    HorizontalDivider()
-                    Spacer(modifier = Modifier.height(16.dp))
-
                     // Related Videos Section Header
                     Text(
                         text = stringResource(R.string.related_lectures_label),
@@ -222,7 +228,10 @@ fun AnswerVideoCard(video: RelatedVideo, onPlayClick: () -> Unit) {
     Card(
         modifier = Modifier
             .width(280.dp) // Fixed width so they look like horizontal cards
-            .shadow(4.dp, RoundedCornerShape(8.dp)),
+            .shadow(4.dp, RoundedCornerShape(8.dp))
+            .semantics(mergeDescendants = true) {
+                contentDescription = "Related Video by ${video.scholarName}, Title: ${video.title}"
+            },
         colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface)
     ) {
         Column(modifier = Modifier.padding(12.dp)) {

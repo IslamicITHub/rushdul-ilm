@@ -11,5 +11,6 @@ android-app/.gradle/
 android-app/app/build/
 android-app/.idea
 android-app/local.properties
+backend/local_models/
 
 
