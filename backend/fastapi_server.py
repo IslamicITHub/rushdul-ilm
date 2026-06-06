@@ -27,8 +27,10 @@ app = FastAPI(
 rag = RagPipeline()
 
 # Define a "Data Model" for the query request.
+# We include 'chat_history' as an optional list to support multi-turn clarifying questions.
 class QueryRequest(BaseModel):
     question: str
+    chat_history: list = [] # Format: [{"role": "user", "content": "..."}, {"role": "assistant", "content": "..."}]
 
 @app.get("/health")
 def health_check():
@@ -36,10 +38,9 @@ def health_check():
 
 @app.post("/query")
 def ask_question(request: QueryRequest):
-    # Call the RAG pipeline to get a source-cited answer.
-    # This replaces the old simple Ollama call with a smart search + answer.
+    # Call the RAG pipeline with both the current question and the history.
     try:
-        result = rag.ask(request.question)
+        result = rag.ask(request.question, chat_history=request.chat_history)
         return result
     except Exception as e:
         return {"error": f"RAG Pipeline Error: {str(e)}"}

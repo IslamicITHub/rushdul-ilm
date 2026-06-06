@@ -32,6 +32,10 @@ from llama_index.core.postprocessor.types import BaseNodePostprocessor
 from llama_index.core.schema import NodeWithScore
 from typing import List
 
+# The python modules for the upgraded code logic.
+from llama_index.core.memory import ChatMemoryBuffer
+from llama_index.core.llms import ChatMessage, MessageRole
+
 import json
 import os
 
@@ -139,49 +143,63 @@ class RagPipeline:
         )
         Settings.embed_model = self.embed_model
 
-    def ask(self, user_question: str):
+    def ask(self, user_question: str, chat_history: list = None):
         """
-        Main interface method. Accepts a natural language string query from the user, 
-        performs semantic search against Qdrant, packages context, and asks the NVIDIA NIM model for the answer.
+        Main interface method upgraded to a Chat Engine.
+        Accepts a natural language question and an optional list of previous chat history.
+        The Chat Engine allows the LLM to ask clarifying questions back to the user.
         """
         # Step 1: Open an access portal to the data.
-        # This builds a virtual search grid over your pre-populated Qdrant vector database storage.
-        # It does NOT re-ingest or re-upload your files; it just initializes an operational interface.
         index = VectorStoreIndex.from_vector_store(vector_store=self.vector_store)
         
-        # Step 2: Define System Prompt Rules (The Guardrails).
-        # This tells the model how it must behave, ensuring it stays grounded purely within the documents we provide.
-        # (Note: Fixed a small typo from the original text 'contnext' -> 'context' for cleaner prompting)
+        # Step 2: Define the Clarification-Aware System Prompt.
+        # We explicitly instruct the model to ask for more details if the user's input is ambiguous.
         system_prompt = (
             "You are an expert Islamic scholar assistant. "
-            "The user will provide you the context and a question. You have to analyze the context and then give answer to the question based on that context.\n"
-            "Answer ONLY from the provided context. Do NOT use your own training data. "
+            "If the user's question is vague, incomplete, or lacks necessary details to give a precise fatwa/ruling, "
+            "do NOT guess. Instead, politely ask the user 1 or 2 clarifying questions to understand their exact situation.\n"
+            "Once you clearly understand the question, answer ONLY from the provided context. Do NOT use your own training data. "
             "If the answer is not in the context, say: 'I could not find an answer in the approved Islamic sources. Please consult a qualified scholar.'\n"
             "Always include the source URL at the end of your answer."
         )
         
-        # Step 3: Create a Query Engine Interface.
-        # similarity_top_k=3 tells LlamaIndex to run a vector search and grab the top 3 closest matching records from Qdrant.
-        query_engine = index.as_query_engine(
-            similarity_top_k=5,
+        # Step 3: Prepare Chat History (Conversational Memory).
+        # Convert raw dictionaries from the API request into LlamaIndex ChatMessage objects.
+        history_msgs = []
+        if chat_history:
+            for msg in chat_history:
+                # Map "user" and "assistant" roles to LlamaIndex constants
+                role = MessageRole.USER if msg["role"] == "user" else MessageRole.ASSISTANT
+                history_msgs.append(ChatMessage(role=role, content=msg["content"]))
+
+        # Step 4: Set up the Memory Buffer.
+        # This keeps the last few messages in context without hitting the model's token limit.
+        memory = ChatMemoryBuffer.from_defaults(token_limit=8000)
+        
+        # Step 5: Initialize the Chat Engine.
+        # 'condense_plus_context' mode is efficient: it rewrites the question based on history 
+        # before searching, then answers using the retrieved context.
+        chat_engine = index.as_chat_engine(
+            chat_mode="condense_plus_context",
+            memory=memory,
             system_prompt=system_prompt,
+            similarity_top_k=5,
             node_postprocessors=[CombineQAPostprocessor()]
         )
         
-        # Step 4: Execute the complete RAG Query Cycle.
-        # Behind the scenes, LlamaIndex automates the heavy lifting:
-        #  a) It passes the `user_question` to `self.embed_model` to generate its search vector.
-        #  b) It searches Qdrant for the top 3 most semantically similar text payload paragraphs.
-        #  c) It compiles those 3 texts, your system prompt, and the question into one clean prompt package.
-        #  d) It passes that package over the internet to the NVIDIA NIM endpoint.
-        #  e) It receives and wraps the clean final string response.
-        response = query_engine.query(user_question)
+        # Step 6: Execute the Chat Cycle.
+        # Pass the history explicitly so the engine understands the full conversation state.
+        response = chat_engine.chat(user_question, chat_history=history_msgs)
         
-        # Step 5: Extract data and return results to the calling frontend framework.
-        # We return a standard python dictionary containing the generated answer string and reference URLs.
+        # Step 7: Extract results.
+        # If the LLM is asking a clarifying question, source_nodes might be empty.
+        sources = []
+        if response.source_nodes:
+            sources = list(set([node.node.metadata.get("url") for node in response.source_nodes]))
+
         return {
             "answer": str(response),
-            "sources": [node.node.metadata.get("url") for node in response.source_nodes]
+            "sources": sources
         }
 
 
@@ -191,7 +209,7 @@ if __name__ == "__main__":
     print("[*] Initializing RAG Pipeline with NVIDIA NIM Integration...")
     pipeline = RagPipeline()
     
-    test_q = "What is the ruling on taking interest from savings account from banks in India and taking loans from bank accounts in India?"
+    test_q = "What about prayer?"
     print(f"[*] Testing query: {test_q}")
     
     result = pipeline.ask(test_q)

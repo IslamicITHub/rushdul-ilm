@@ -1784,3 +1784,45 @@ NOTES_FOR_NEXT_AGENT:
 
 GRAPHITI_UPDATED: NO
 MEM0_UPDATED:     NO
+
+---
+
+## Session 2026-06-06 12:00
+AGENT: Gemini CLI
+PHASE: 3 — Knowledge Ingestion
+SPRINT: 3.1
+SUB_SPRINT: 3.1.5 (Ad-hoc Upgrade)
+MICRO_TASK_COMPLETED: none
+MICRO_TASK_DESCRIPTION: Upgrade RAG pipeline for conversational clarification (ask-back logic)
+SESSION_DURATION: 40 minutes
+
+TASKS_COMPLETED:
+  - Transitioned RAG pipeline from a one-shot Query Engine to a conversational Chat Engine.
+  - Implemented 'as_chat_engine' with 'condense_plus_context' mode in 'rag_pipeline.py'.
+  - Updated the system prompt to explicitly instruct the LLM to ask clarifying questions for vague inputs.
+  - Upgraded 'fastapi_server.py' to support 'chat_history' in the request payload.
+  - Fixed a typo in the system prompt ('contnext' -> 'context').
+  - Verified logic by reviewing 'rag_pipeline_upgraded.py' and merging best practices.
+
+FILES_CREATED:
+  - None
+
+FILES_MODIFIED:
+  - backend/rag_pipeline.py — Switched to ChatEngine, added history support and clarification prompt.
+  - backend/fastapi_server.py — Updated QueryRequest model and ask_question endpoint to handle chat history.
+
+DONE_CONDITION_MET: YES — Pipeline now supports multi-turn clarification as requested.
+
+CURRENT_MICRO_TASK: P3.S1.SS1.MT4 (Last official)
+NEXT_MICRO_TASK: P3.S1.SS1.MT5
+NEXT_MICRO_TASK_DESCRIPTION: Embed the Darul Ifta Deoband SQLite database into Qdrant.
+
+BLOCKERS: None.
+
+NOTES_FOR_NEXT_AGENT:
+  - The 'ask' method now requires/accepts 'chat_history' (list of dicts).
+  - The Android app should now keep track of chat history and send it with every request to maintain context.
+  - The 'condense_plus_context' mode ensures that the LLM understands the "conversation so far" before retrieving new data.
+
+GRAPHITI_UPDATED: NO
+MEM0_UPDATED:     NO
