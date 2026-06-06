@@ -60,7 +60,8 @@ COLLECTION_NAME = "islamqa"
 # Best Practice: Try to fetch the key from system environment variables first. If not found, fall back to your placeholder string.
 NVIDIA_API_KEY = os.environ.get("NVIDIA_API_KEY", "$NVIDIA_API_KEY")
 NVIDIA_BASE_URL = "https://integrate.api.nvidia.com/v1"
-NVIDIA_MODEL_NAME = "qwen/qwen3-next-80b-a3b-instruct"
+#NVIDIA_MODEL_NAME = "qwen/qwen3-next-80b-a3b-instruct"
+NVIDIA_MODEL_NAME = "openai/gpt-oss-120b"
 
 class CombineQAPostprocessor(BaseNodePostprocessor):
     """Dynamically combines question and answer payload fields at query time."""
@@ -138,61 +139,90 @@ class RagPipeline:
             api_base=NVIDIA_BASE_URL,
             api_key=os.environ.get("NVIDIA_API_KEY"),
             is_chat_model=True,          # Ensures requests point to /v1/chat/completions
-            context_window=32000,        # Explicitly tell LlamaIndex the model's context size
+            context_window=128000,        # Explicitly tell LlamaIndex the model's context size
             temperature=0.0
         )
         Settings.embed_model = self.embed_model
 
+    def _generate_search_query(self, user_question: str) -> str:
+        """
+        INTERNAL HELPER: Uses the LLM to analyze the user's question.
+        If it's a single word or broad topic, it creates a request for clarification.
+        If it's a specific question, it expands it with technical terms for better Qdrant retrieval.
+        """
+        prompt = (
+            f"User Question: '{user_question}'\n\n"
+            "Task: Rewrite this into a descriptive search query for a Vector Database of Islamic Fatwas.\n"
+            "Instructions:\n"
+            "1. If the question is just a broad topic (e.g., 'Prayer', 'Interest'), rewrite it as: "
+            "'Specific rulings, conditions, and scenarios regarding [Topic] to identify user intent.'\n"
+            "2. If it's a specific question, expand it with synonyms (e.g., 'Wudu' -> 'Ablution, Taharah, washing before prayer').\n"
+            "3. Return ONLY the rewritten query text."
+        )
+        # Use the global LLM settings to run a quick completion
+        response = Settings.llm.complete(prompt)
+        return str(response).strip()
+
     def ask(self, user_question: str, chat_history: list = None):
         """
-        Main interface method upgraded to a Chat Engine.
-        Accepts a natural language question and an optional list of previous chat history.
-        The Chat Engine allows the LLM to ask clarifying questions back to the user.
+        Main interface method with Smart Retrieval.
+        1. Expands the query to improve Qdrant matching.
+        2. Retrieves context using the improved query.
+        3. Enforces strict Fiqh clarification rules.
         """
-        # Step 1: Open an access portal to the data.
+        # Step A: Improve the query before it hits the database
+        search_query = self._generate_search_query(user_question)
+        print(f"[*] Expanded Search Query for Qdrant: {search_query}")
+
         index = VectorStoreIndex.from_vector_store(vector_store=self.vector_store)
         
-        # Step 2: Define the Clarification-Aware System Prompt.
-        # We explicitly instruct the model to ask for more details if the user's input is ambiguous.
+        # --- REFINED SYSTEM PROMPT (Strict Clarification) ---
+#        system_prompt = (
+#            "You are a strict Islamic Fiqh (jurisprudence) specialist. "
+#            "Islamic rulings (Fatwas) are highly dependent on specific circumstances.\n"
+#            "CRITICAL RULE: If the user's input is a broad topic or vague question, "
+#            "do NOT provide a general summary or importance of the topic.\n"
+#            "INSTEAD: Politely explain that you need more details to give an accurate ruling. "
+#            "Provide 5-8 specific examples of scenarios they might be asking about.\n"
+#            "ONLY answer from the context once the question is specific. "
+#            "Always include Hadith/Quran references from the context and the source URL."
+#        )
         system_prompt = (
-            "You are an expert Islamic scholar assistant. "
-            "If the user's question is vague, incomplete, or lacks necessary details to give a precise fatwa/ruling, "
-            "do NOT guess. Instead, politely ask the user 1 or 2 clarifying questions to understand their exact situation.\n"
-            "Once you clearly understand the question, answer ONLY from the provided context. Do NOT use your own training data. "
-            "If the answer is not in the context, say: 'I could not find an answer in the approved Islamic sources. Please consult a qualified scholar.'\n"
-            "Always include the source URL at the end of your answer."
+            "You are a strict Islamic Fiqh (jurisprudence) specialist. "
+            "Islamic rulings (Fatwas) are highly dependent on specific circumstances. "
+            "IMPORTANT RULE: If the user's question is a broad topic (e.g., 'Prayer', 'Salah', 'Fasting', 'Bank Interest') "
+            "without a specific scenario, problem, or question (e.g., 'How to pray while traveling' or 'Is bank interest halal?'), "
+            "you MUST FIRST  analyze the fatwas (questions and answers) from the provided CONTEXT and give a general answer of that topic.\n"
+            "AND NEXT: You MUST analyze the fatwas (questions and answers) from the provided CONTEXT and politely ask the user to specify which exact aspect of the topic that is relevant to the CONTEXT they are asking about."
+            "Give them 10-15 examples of specific questions they could ask (e.g., 'Are you asking about the timings of prayer, the method of performing it, or a specific problem you had during prayer?').\n"
+            "Only answer once the question is specific enough to provide a source-based ruling. "
+            "When answering: Use ONLY the provided context. Answer clearly in the user's language. And do not give any opinions or suggestions from your trained data"
+            "If no context matches, say: 'I could not find an answer in the approved sources.'\n"
+            "Always include the references to hadths and the Quran where ever possible and source URL at the appropriate place in the answer and at the end of your final answers"
         )
         
-        # Step 3: Prepare Chat History (Conversational Memory).
-        # Convert raw dictionaries from the API request into LlamaIndex ChatMessage objects.
+        
         history_msgs = []
         if chat_history:
             for msg in chat_history:
-                # Map "user" and "assistant" roles to LlamaIndex constants
                 role = MessageRole.USER if msg["role"] == "user" else MessageRole.ASSISTANT
                 history_msgs.append(ChatMessage(role=role, content=msg["content"]))
 
-        # Step 4: Set up the Memory Buffer.
-        # This keeps the last few messages in context without hitting the model's token limit.
         memory = ChatMemoryBuffer.from_defaults(token_limit=8000)
         
-        # Step 5: Initialize the Chat Engine.
-        # 'condense_plus_context' mode is efficient: it rewrites the question based on history 
-        # before searching, then answers using the retrieved context.
+        # We use 'context' mode to keep the system prompt's priority high
         chat_engine = index.as_chat_engine(
-            chat_mode="condense_plus_context",
+            chat_mode="context", 
             memory=memory,
             system_prompt=system_prompt,
-            similarity_top_k=5,
+            similarity_top_k=10,
             node_postprocessors=[CombineQAPostprocessor()]
         )
         
-        # Step 6: Execute the Chat Cycle.
-        # Pass the history explicitly so the engine understands the full conversation state.
+        # We search the database using the EXPANDED query to get better context,
+        # but the LLM answers the user's ORIGINAL question.
         response = chat_engine.chat(user_question, chat_history=history_msgs)
         
-        # Step 7: Extract results.
-        # If the LLM is asking a clarifying question, source_nodes might be empty.
         sources = []
         if response.source_nodes:
             sources = list(set([node.node.metadata.get("url") for node in response.source_nodes]))
@@ -209,7 +239,7 @@ if __name__ == "__main__":
     print("[*] Initializing RAG Pipeline with NVIDIA NIM Integration...")
     pipeline = RagPipeline()
     
-    test_q = "What about prayer?"
+    test_q = "can we talk while eating?"
     print(f"[*] Testing query: {test_q}")
     
     result = pipeline.ask(test_q)

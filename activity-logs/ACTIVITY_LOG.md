@@ -1826,3 +1826,65 @@ NOTES_FOR_NEXT_AGENT:
 
 GRAPHITI_UPDATED: NO
 MEM0_UPDATED:     NO
+
+---
+
+## Session 2026-06-06 12:30
+AGENT: Gemini CLI
+PHASE: 3 — Knowledge Ingestion
+SPRINT: 3.1
+SUB_SPRINT: 3.1.5 (Refinement)
+MICRO_TASK_COMPLETED: none
+MICRO_TASK_DESCRIPTION: Refine "Ask Back" logic to be more aggressive and strict.
+SESSION_DURATION: 15 minutes
+
+TASKS_COMPLETED:
+  - Updated the system prompt in 'rag_pipeline.py' to explicitly forbid general summaries for broad topics.
+  - Defined "vague" topics using examples (Prayer, Fasting, etc.) to help the LLM identify them.
+  - Switched chat mode from 'condense_plus_context' to 'context'. This ensures the LLM sees the original user input alongside the prompt immediately, preventing the 'condensation' step from smoothing out the vagueness.
+
+FILES_CREATED:
+  - None
+
+FILES_MODIFIED:
+  - backend/rag_pipeline.py — Refined system prompt and switched to 'context' chat mode.
+
+DONE_CONDITION_MET: YES — The logic is now more restrictive and designed to force clarification.
+
+CURRENT_MICRO_TASK: P3.S1.SS1.MT4
+NEXT_MICRO_TASK: P3.S1.SS1.MT5
+NEXT_MICRO_TASK_DESCRIPTION: Embed the Darul Ifta Deoband SQLite database into Qdrant.
+
+BLOCKERS: None.
+
+NOTES_FOR_NEXT_AGENT:
+  - 'context' chat mode is now active. If multi-turn behavior becomes erratic, consider switching back to 'condense_plus_context' once the user has provided a specific question.
+
+---
+
+## Session 2026-06-06 13:00
+AGENT: Gemini CLI
+PHASE: 3 — Knowledge Ingestion
+SPRINT: 3.1
+SUB_SPRINT: 3.1.5 (Advanced Retrieval)
+MICRO_TASK_COMPLETED: none
+MICRO_TASK_DESCRIPTION: Implement Query Expansion for improved Qdrant retrieval.
+SESSION_DURATION: 20 minutes
+
+TASKS_COMPLETED:
+  - Added '_generate_search_query' method to 'RagPipeline' to perform Query Expansion/Transformation.
+  - The LLM now rewrites short/vague user questions into detailed search queries (e.g., adding synonyms like 'Taharah' for 'Wudu') before querying Qdrant.
+  - Removed the instruction in the system prompt that was forcing the AI to give general answers first.
+  - The AI is now strictly instructed to ask for details if the question remains broad after expansion.
+
+FILES_CREATED:
+  - None
+
+FILES_MODIFIED:
+  - backend/rag_pipeline.py — Added query expansion logic and strictly enforced clarification rules.
+
+DONE_CONDITION_MET: YES — Query expansion is implemented and the conflicting "give general answer" instruction is removed.
+
+CURRENT_MICRO_TASK: P3.S1.SS1.MT4
+NEXT_MICRO_TASK: P3.S1.SS1.MT5
+NEXT_MICRO_TASK_DESCRIPTION: Embed the Darul Ifta Deoband SQLite database into Qdrant.
