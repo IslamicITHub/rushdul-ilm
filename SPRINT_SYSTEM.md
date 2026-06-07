@@ -42,8 +42,8 @@
 ```
 CURRENT_PHASE:        3
 CURRENT_SPRINT:       3.1
-CURRENT_SUB_SPRINT:   3.1.4
-CURRENT_MICRO_TASK:   P3.S1.SS1.MT5   ← START HERE
+CURRENT_SUB_SPRINT:   3.1.5
+CURRENT_MICRO_TASK:   P3.S1.SS1.MT6   ← START HERE
 
 PHASE 1 PROGRESS:
   Sprint 1.1 — Environment & Project Setup     [x] 7/7 micro-tasks done
@@ -64,7 +64,7 @@ PHASE 2 PROGRESS:
   Sprint 2.6 — Wire FastAPI to Ollama         [x] 1/1 micro-tasks done
   Sprint 2.7 — Phase 2 Integration Test       [x] 2/2 micro-tasks done
 PHASE 3 PROGRESS:
-  Sprint 3.1 — Scraper Review & Test          [x] 3/3 micro-tasks done
+  Sprint 3.1 — Scraper Review & Test          [x] 5/5 micro-tasks done
 
 ---
 

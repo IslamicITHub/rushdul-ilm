@@ -49,7 +49,7 @@ from sentence_transformers import SentenceTransformer
 
 # --- CONFIGURATION ---
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
-MODEL_NAME = os.path.join(BASE_DIR, "local_models", "paraphrase-multilingual-MiniLM-L12-v2")
+MODEL_NAME = os.path.join(BASE_DIR, "local_models", "qwen3_embedding_06b_local")
 
 # We use 'paraphrase-multilingual-MiniLM-L12-v2' (420MB) instead of MPNET (1.1GB)
 # to avoid download timeouts, while still supporting Telugu and Urdu.
@@ -57,10 +57,10 @@ MODEL_NAME = os.path.join(BASE_DIR, "local_models", "paraphrase-multilingual-Min
 
 # The size of the vector depends entirely on the AI model used. 
 # Our chosen MiniLM model outputs exactly 384 numbers per sentence.
-VEC_SIZE = 384
+VEC_SIZE = 1024
 
 # The file path where our traditional SQLite database is stored
-SQLITE_DB_PATH = "/data/islamqa/islamqa_database.sqlite"
+SQLITE_DB_PATH = "../islamqa.info-offline/islamqa_database.sqlite"
 
 # The address and port where the Qdrant server is running
 QDRANT_HOST = "localhost"
@@ -79,7 +79,7 @@ def ingest():
 
     print(f"[*] Loading embedding model: {MODEL_NAME}...")
     # Load the AI model into memory. (It will download from the internet on the first run)
-    model = SentenceTransformer(MODEL_NAME)
+    model = SentenceTransformer(MODEL_NAME, device='cuda')
 
     print(f"[*] Setting up Qdrant collection: {COLLECTION_NAME}...")
     # A "collection" in Qdrant is like a "table" in SQL. 
@@ -110,7 +110,7 @@ def ingest():
     print(f"[+] Found {len(rows)} fatwas.")
 
     # We process the data in small chunks (batches) so we don't run out of computer memory
-    batch_size = 100
+    batch_size = 1
     
     # Loop through the list of rows, jumping by 'batch_size' (0, 100, 200, etc.)
     for i in range(0, len(rows), batch_size):
@@ -141,7 +141,7 @@ def ingest():
                         "id": f_id,
                         "url": f_url,
                         "source": "IslamQA.info",
-                        "question": f_question[:2000], # Store the text so we can read it later (capped at 2000 chars to save space)
+                        "question": f_question, # Store the text so we can read it later (capped at 2000 chars to save space)
                         "answer" : f_answer  
                     }
                 )
@@ -172,12 +172,13 @@ def test_qdrant_search(client, model, test_query):
     # using the exact same AI model we used during ingestion.
     query_vector = model.encode(test_query).tolist()
 
-    # Step 2: Search Qdrant for the closest matching vectors
-    search_results = client.search(
-        collection_name=COLLECTION_NAME,
-        query_vector=query_vector,
-        limit=3  # Ask Qdrant to return the top 3 closest matches
+    search_response = client.query_points(
+        collection_name="islamqa",
+        query=query_vector,
+        limit=3  # Fetch the top 3 closest matching fatwas
     )
+    # Step 2: Search Qdrant for the closest matching vectors
+    search_results = search_response.points
 
     # Step 3: Print out the results so we can see them
     if not search_results:
@@ -192,7 +193,6 @@ def test_qdrant_search(client, model, test_query):
         print(f"  Answer   : {result.payload.get('answer')}")
         #print(f"  Snippet: {result.payload.get('text')[:150]}...") # Print first 150 chars of the text
         print("-" * 50)
-
 
 # This is the standard entry point for a Python script.
 # It ensures the code inside only runs if the script is executed directly 

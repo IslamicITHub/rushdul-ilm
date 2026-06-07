@@ -31,6 +31,7 @@ rag = RagPipeline()
 class QueryRequest(BaseModel):
     question: str
     chat_history: list = [] # Format: [{"role": "user", "content": "..."}, {"role": "assistant", "content": "..."}]
+    sources: list = ["islamqa", "deoband"] # Filter for specific sources (default to all)
 
 @app.get("/health")
 def health_check():
@@ -40,7 +41,7 @@ def health_check():
 def ask_question(request: QueryRequest):
     # Call the RAG pipeline with both the current question and the history.
     try:
-        result = rag.ask(request.question, chat_history=request.chat_history)
+        result = rag.ask(request.question, chat_history=request.chat_history, sources=request.sources)
         return result
     except Exception as e:
         return {"error": f"RAG Pipeline Error: {str(e)}"}

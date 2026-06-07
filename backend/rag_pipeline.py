@@ -29,7 +29,8 @@ from llama_index.llms.ollama import Ollama
 from llama_index.llms.openai_like import OpenAILike
 # Import these three libraries to combine different text_key parameters like question and answer by Defining a Custom Postprocessor class near the top of the script:
 from llama_index.core.postprocessor.types import BaseNodePostprocessor
-from llama_index.core.schema import NodeWithScore
+from llama_index.core.schema import NodeWithScore, TextNode
+from llama_index.core.retrievers import BaseRetriever
 from typing import List
 
 # The python modules for the upgraded code logic.
@@ -50,11 +51,11 @@ BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 
 # Golden Rule of RAG: You must use the exact same embedding model for ingestion (indexing) and querying (searching).
 # This points directly to your locally downloaded multilingual text embedding model.
-EMBED_MODEL_NAME = os.path.join(BASE_DIR, "local_models", "paraphrase-multilingual-MiniLM-L12-v2")
+EMBED_MODEL_NAME = os.path.join(BASE_DIR, "local_models", "qwen3_embedding_06b_local")
 
 # Constant definitions for tracking your collections and legacy model fallbacks
 LLM_MODEL_NAME = "qwen3:4b"
-COLLECTION_NAME = "islamqa"
+COLLECTION_NAME = "deoband"
 
 # --- NEW: NVIDIA NIM API CONFIGURATIONS ---
 # Best Practice: Try to fetch the key from system environment variables first. If not found, fall back to your placeholder string.
@@ -78,6 +79,48 @@ class CombineQAPostprocessor(BaseNodePostprocessor):
             
         return nodes
 
+class MultiCollectionRetriever(BaseRetriever):
+    """Custom Retriever to search across multiple Qdrant collections."""
+    def __init__(self, client: QdrantClient, collections: List[str], embed_model, similarity_top_k: int = 10):
+        self.client = client
+        self.collections = collections
+        self.embed_model = embed_model
+        self.similarity_top_k = similarity_top_k
+        super().__init__()
+
+    def _retrieve(self, query_bundle, **kwargs) -> List[NodeWithScore]:
+        query_vector = self.embed_model.get_query_embedding(query_bundle.query_str)
+        all_points = []
+        for coll in self.collections:
+            search_res = self.client.query_points(
+                collection_name=coll, 
+                query=query_vector, 
+                limit=self.similarity_top_k
+            )
+            all_points.extend(search_res.points)
+        
+        # Sort all results by score (descending)
+        all_points.sort(key=lambda x: x.score, reverse=True)
+        # Keep top k overall
+        all_points = all_points[:self.similarity_top_k]
+        
+        nodes = []
+        for p in all_points:
+            # Combine question and answer if available for the node text
+            question = p.payload.get("question", "")
+            answer = p.payload.get("answer", "")
+            text = p.payload.get("text", "") # Fallback for old schema
+            
+            combined_text = ""
+            if question or answer:
+                combined_text = f"Question: {question}\nAnswer: {answer}"
+            else:
+                combined_text = text
+                
+            node = TextNode(text=combined_text, metadata=p.payload)
+            nodes.append(NodeWithScore(node=node, score=p.score))
+        return nodes
+
 class RagPipeline:
     def __init__(self):
         """
@@ -98,7 +141,8 @@ class RagPipeline:
         
         # Step C: Load the Local Embedding Translation Model.
         # This will turn any future string questions from users into vector coordinates for database matching.
-        self.embed_model = HuggingFaceEmbedding(model_name=EMBED_MODEL_NAME)
+        # We force 'device=\"cpu\"' to save GPU VRAM for the main LLM (Ollama).
+        self.embed_model = HuggingFaceEmbedding(model_name=EMBED_MODEL_NAME, device="cuda")
         
         # ----------------------------------------------------------------------------------
         # Step D: Set up the Large Language Model (The Reasoning Brain)
@@ -133,15 +177,24 @@ class RagPipeline:
         
         # Step E: Register Global Configurations.
         # Tells LlamaIndex to plug these models by default into every search engine and query loop we generate next.
-        #Settings.llm = self.llm
-        Settings.llm = OpenAILike(
-            model=NVIDIA_MODEL_NAME,
-            api_base=NVIDIA_BASE_URL,
-            api_key=os.environ.get("NVIDIA_API_KEY"),
-            is_chat_model=True,          # Ensures requests point to /v1/chat/completions
-            context_window=128000,        # Explicitly tell LlamaIndex the model's context size
-            temperature=0.0
-        )
+        if os.environ.get("NVIDIA_API_KEY"):
+            Settings.llm = OpenAILike(
+                model=NVIDIA_MODEL_NAME,
+                api_base=NVIDIA_BASE_URL,
+                api_key=os.environ.get("NVIDIA_API_KEY"),
+                is_chat_model=True,          # Ensures requests point to /v1/chat/completions
+                context_window=128000,        # Explicitly tell LlamaIndex the model's context size
+                temperature=0.0
+            )
+        else:
+            print("[!] NVIDIA_API_KEY not found in environment. Falling back to local Ollama...")
+            Settings.llm = Ollama(
+                model=LLM_MODEL_NAME, 
+                base_url="http://localhost:11434", 
+                request_timeout=300.0,
+                context_window=2048,
+                temperature=0.0
+            )
         Settings.embed_model = self.embed_model
 
     def _generate_search_query(self, user_question: str) -> str:
@@ -163,44 +216,41 @@ class RagPipeline:
         response = Settings.llm.complete(prompt)
         return str(response).strip()
 
-    def ask(self, user_question: str, chat_history: list = None):
+    def ask(self, user_question: str, chat_history: list = None, sources: list = None):
         """
         Main interface method with Smart Retrieval.
         1. Expands the query to improve Qdrant matching.
-        2. Retrieves context using the improved query.
+        2. Retrieves context using the improved query from requested sources.
         3. Enforces strict Fiqh clarification rules.
         """
+        if not sources:
+            #sources = ["islamqa", "deoband"]
+            sources = ["islamqa","deoband"]
+
         # Step A: Improve the query before it hits the database
         search_query = self._generate_search_query(user_question)
         print(f"[*] Expanded Search Query for Qdrant: {search_query}")
 
-        index = VectorStoreIndex.from_vector_store(vector_store=self.vector_store)
+        retriever = MultiCollectionRetriever(
+            client=self.client,
+            collections=sources,
+            embed_model=self.embed_model,
+            similarity_top_k=10
+        )
         
-        # --- REFINED SYSTEM PROMPT (Strict Clarification) ---
-#        system_prompt = (
-#            "You are a strict Islamic Fiqh (jurisprudence) specialist. "
-#            "Islamic rulings (Fatwas) are highly dependent on specific circumstances.\n"
-#            "CRITICAL RULE: If the user's input is a broad topic or vague question, "
-#            "do NOT provide a general summary or importance of the topic.\n"
-#            "INSTEAD: Politely explain that you need more details to give an accurate ruling. "
-#            "Provide 5-8 specific examples of scenarios they might be asking about.\n"
-#            "ONLY answer from the context once the question is specific. "
-#            "Always include Hadith/Quran references from the context and the source URL."
-#        )
         system_prompt = (
             "You are a strict Islamic Fiqh (jurisprudence) specialist. "
             "Islamic rulings (Fatwas) are highly dependent on specific circumstances. "
             "IMPORTANT RULE: If the user's question is a broad topic (e.g., 'Prayer', 'Salah', 'Fasting', 'Bank Interest') "
             "without a specific scenario, problem, or question (e.g., 'How to pray while traveling' or 'Is bank interest halal?'), "
-            "you MUST FIRST  analyze the fatwas (questions and answers) from the provided CONTEXT and give a general answer of that topic.\n"
-            "AND NEXT: You MUST analyze the fatwas (questions and answers) from the provided CONTEXT and politely ask the user to specify which exact aspect of the topic that is relevant to the CONTEXT they are asking about."
-            "Give them 10-15 examples of specific questions they could ask (e.g., 'Are you asking about the timings of prayer, the method of performing it, or a specific problem you had during prayer?').\n"
+            "you MUST FIRST analyze the fatwas (questions and answers) from the provided CONTEXT and give a general answer of that topic.\n"
+            "AND NEXT: You MUST politely ask the user to specify which exact aspect of the topic that is relevant to the CONTEXT they are asking about. "
+            "Give them 10-15 examples of specific questions they could ask.\n"
             "Only answer once the question is specific enough to provide a source-based ruling. "
-            "When answering: Use ONLY the provided context. Answer clearly in the user's language. And do not give any opinions or suggestions from your trained data"
+            "When answering: Use ONLY the provided context. Answer clearly in the user's language. And do not give any opinions or suggestions from your trained data.\n"
             "If no context matches, say: 'I could not find an answer in the approved sources.'\n"
-            "Always include the references to hadths and the Quran where ever possible and source URL at the appropriate place in the answer and at the end of your final answers"
+            "Always include references to hadiths and the Quran wherever possible and source URL at the appropriate place in the answer and at the end of your final answers."
         )
-        
         
         history_msgs = []
         if chat_history:
@@ -210,26 +260,26 @@ class RagPipeline:
 
         memory = ChatMemoryBuffer.from_defaults(token_limit=8000)
         
-        # We use 'context' mode to keep the system prompt's priority high
-        chat_engine = index.as_chat_engine(
-            chat_mode="context", 
+        from llama_index.core.chat_engine import ContextChatEngine
+        
+        chat_engine = ContextChatEngine.from_defaults(
+            retriever=retriever,
             memory=memory,
             system_prompt=system_prompt,
-            similarity_top_k=10,
-            node_postprocessors=[CombineQAPostprocessor()]
+            llm=Settings.llm
         )
         
         # We search the database using the EXPANDED query to get better context,
         # but the LLM answers the user's ORIGINAL question.
         response = chat_engine.chat(user_question, chat_history=history_msgs)
         
-        sources = []
+        source_urls = []
         if response.source_nodes:
-            sources = list(set([node.node.metadata.get("url") for node in response.source_nodes]))
+            source_urls = list(set([node.node.metadata.get("url") for node in response.source_nodes if node.node.metadata.get("url")]))
 
         return {
             "answer": str(response),
-            "sources": sources
+            "sources": source_urls
         }
 
 
@@ -239,7 +289,7 @@ if __name__ == "__main__":
     print("[*] Initializing RAG Pipeline with NVIDIA NIM Integration...")
     pipeline = RagPipeline()
     
-    test_q = "can we talk while eating?"
+    test_q = "Can I read the Qur’an with meaning while traveling?"
     print(f"[*] Testing query: {test_q}")
     
     result = pipeline.ask(test_q)

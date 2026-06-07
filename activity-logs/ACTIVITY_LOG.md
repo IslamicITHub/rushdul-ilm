@@ -34,7 +34,7 @@
 CURRENT_PHASE:          3 — Knowledge Ingestion
 CURRENT_SPRINT:         3.1 — Scraper Review & Test
 CURRENT_SUB_SPRINT:     3.1.4
-CURRENT_MICRO_TASK:     P3.S1.SS1.MT5  ← NEXT AGENT STARTS HERE
+CURRENT_MICRO_TASK:     P3.S1.SS1.MT6  ← NEXT AGENT STARTS HERE
 OVERALL_STATUS:         ✅ PHASE 2 COMPLETE — RAG Pipeline Operational
 
 PHASE 1 SPRINT PROGRESS:
@@ -57,7 +57,7 @@ PHASE 2 SPRINT PROGRESS:
   Sprint 2.7 — Phase 2 Integration Test       [x] 2/2 micro-tasks done
 
 PHASE 3 PROGRESS:
-  Sprint 3.1 — Scraper Review & Test          [x] 4/4 micro-tasks done
+  Sprint 3.1 — Scraper Review & Test          [x] 5/5 micro-tasks done
 
 ```
 
@@ -1888,3 +1888,52 @@ DONE_CONDITION_MET: YES — Query expansion is implemented and the conflicting "
 CURRENT_MICRO_TASK: P3.S1.SS1.MT4
 NEXT_MICRO_TASK: P3.S1.SS1.MT5
 NEXT_MICRO_TASK_DESCRIPTION: Embed the Darul Ifta Deoband SQLite database into Qdrant.
+
+---
+
+## Session 2026-06-06 14:00
+AGENT: Gemini CLI
+PHASE: 3 — Knowledge Ingestion
+SPRINT: 3.1
+SUB_SPRINT: 3.1.5
+MICRO_TASK_COMPLETED: P3.S1.SS1.MT5
+MICRO_TASK_DESCRIPTION: Embed the Darul Ifta Deoband SQLite database into Qdrant.
+SESSION_DURATION: 40 minutes
+
+TASKS_COMPLETED:
+  - Reviewed the Deoband offline SQLite database schema.
+  - Created backend/ingest_deoband.py to connect to the Deoband SQLite offline database.
+  - Successfully ingested 8781 Deoband fatwas into the 'deoband' Qdrant collection using paraphrase-multilingual-MiniLM-L12-v2.
+  - Fixed an issue where the initial ingestion script missed the 'answer' field; re-ingested with properly structured payloads.
+  - Upgraded RagPipeline in backend/rag_pipeline.py with a custom MultiCollectionRetriever.
+  - Fixed AttributeError: 'QdrantClient' object has no attribute 'search' by switching to the newer `query_points` API.
+  - Fixed CUDA Out Of Memory errors by forcing the embedding model to load on CPU (saving GPU VRAM for Ollama).
+  - Fixed "Vector dimension error" by ensuring the 'deoband' collection matches the 384-dimension schema of 'islamqa'.
+  - Added a local Ollama fallback in RagPipeline for environments where NVIDIA_API_KEY is not set.
+  - The pipeline now searches across multiple collections ("islamqa" and "deoband" by default) and combines the results sorted by similarity score.
+  - Updated QueryRequest in backend/fastapi_server.py to accept an optional 'sources' list, allowing the Android app to dynamically filter which Islamic sources to query.
+
+FILES_CREATED:
+  - backend/ingest_deoband.py — Script to generate vectors from the Deoband database.
+
+FILES_MODIFIED:
+  - backend/rag_pipeline.py — Added MultiCollectionRetriever for multi-source search support.
+  - backend/fastapi_server.py — Updated QueryRequest payload model to accept a list of sources.
+  - activity-logs/ACTIVITY_LOG.md — Added this session entry.
+
+DONE_CONDITION_MET: YES — Deoband database successfully embedded into Qdrant. RagPipeline supports querying specific collections.
+
+CURRENT_MICRO_TASK: P3.S1.SS1.MT5
+NEXT_MICRO_TASK: P3.S1.SS1.MT6
+NEXT_MICRO_TASK_DESCRIPTION: Final RAG Integration Testing and Documentation for Phase 3
+
+BLOCKERS: None.
+
+NOTES_FOR_NEXT_AGENT:
+  - Qdrant now has two collections: 'islamqa' and 'deoband' (both 384 dim).
+  - MultiCollectionRetriever combines results from both sources and sorts them by score.
+  - Embedding model is forced to CPU to prevent OOM when Ollama is active.
+  - Use `unset NVIDIA_API_KEY` to test with local Ollama fallback if needed.
+
+GRAPHITI_UPDATED: NO
+MEM0_UPDATED: NO

@@ -15,23 +15,30 @@ We use vector embeddings to represent the meaning of fatwas as mathematical coor
 Qdrant stores our embeddings and their associated metadata (titles, URLs, snippets).
 
 **Collection Details:**
-- **Name:** `islamqa`
+- **Collections:** `islamqa` (Neutral) and `deoband` (Hanafi)
 - **Vector Size:** 384
 - **Distance Metric:** Cosine Similarity
 
 ## 3. Ingestion Process
-The `backend/ingest_islamqa.py` script performs the following:
-1. Connects to the SQLite database containing scraped fatwas.
-2. Loads the multilingual embedding model.
-3. Iterates through fatwas in batches of 100.
-4. Combines 'title' and 'question' for semantic context.
-5. Generates vectors and upserts them to Qdrant.
+The `backend/ingest_islamqa.py` and `backend/ingest_deoband.py` scripts perform the following:
+1. Connect to the respective SQLite databases containing scraped fatwas.
+2. Load the multilingual embedding model.
+3. Iterate through fatwas in batches of 100.
+4. Combine 'title' and 'question' (and 'answer' for Deoband) for semantic context.
+5. Generate vectors and upsert them to Qdrant.
 
 **Stats:**
-- **Total Fatwas Ingested:** 15,739
-- **Ingestion Time:** ~2 minutes on developer hardware.
+- **Total Fatwas Ingested (IslamQA):** 15,739
+- **Total Fatwas Ingested (Deoband):** 8,781
+- **Ingestion Time:** ~2 minutes per source on developer hardware.
 
-## 4. Verification
+## 4. Multi-Source Search (MultiCollectionRetriever)
+To support filtering by Islamic school of thought, the RAG pipeline (`backend/rag_pipeline.py`) implements a custom `MultiCollectionRetriever`.
+- It receives a list of allowed sources from the Android app (e.g., `["islamqa", "deoband"]` or `["deoband"]`).
+- It concurrently queries the requested Qdrant collections.
+- It aggregates, sorts by similarity score, and feeds the top `k` most relevant nodes to the `ContextChatEngine` for answer generation.
+
+## 5. Verification
 Semantic search has been verified via internal testing.
 - **Example Query:** "How to perform wudu?"
 - **Top Result:** "Adhkaar al-Wudu (du`as to be recited when doing Wudu)"

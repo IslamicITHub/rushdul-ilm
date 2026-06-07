@@ -33,7 +33,9 @@ RUN pip install --default-timeout=1000 --no-cache-dir \
     llama-index-core \
     llama-index-vector-stores-qdrant \
     llama-index-llms-ollama \
-    llama-index-embeddings-huggingface
+    llama-index-embeddings-huggingface \
+    llama-index-llms-openai-like \
+    
 
 # 5. Copy Code: Copy all the rest of our Python code (like fastapi_server.py)
 # from the host machine into the /app folder in the container.
