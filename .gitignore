@@ -13,5 +13,6 @@ android-app/.idea
 android-app/local.properties
 backend/local_models/
 gemini_chat_history/
+knowledge-graph/venv
 
 

@@ -1930,10 +1930,65 @@ NEXT_MICRO_TASK_DESCRIPTION: Final RAG Integration Testing and Documentation for
 BLOCKERS: None.
 
 NOTES_FOR_NEXT_AGENT:
-  - Qdrant now has two collections: 'islamqa' and 'deoband' (both 384 dim).
+  - Qdrant now has two collections: 'islamqa' and 'deoband' (both 1024 dim).
   - MultiCollectionRetriever combines results from both sources and sorts them by score.
-  - Embedding model is forced to CPU to prevent OOM when Ollama is active.
+  - Embedding model is forced to CUDA to prevent OOM when Ollama is active.
   - Use `unset NVIDIA_API_KEY` to test with local Ollama fallback if needed.
 
 GRAPHITI_UPDATED: NO
 MEM0_UPDATED: NO
+
+## [2026-06-08] - Virtual Environment Relocation
+**AGENT_USED:** Gemini CLI
+**TASKS_COMPLETED:**
+- Moved `knowledge-graph/venv` directory to `/media/hidayat/PersonalData/parrot/venv` to save space on primary Linux partition.
+- Created symbolic link at `knowledge-graph/venv` pointing to the new location on the NTFS partition.
+**FILES_CHANGED:**
+- (Symlink created) `knowledge-graph/venv`
+**NEXT_TASK:** P3.S1.SS1.MT6 (Final RAG Integration Testing)
+**BLOCKERS:** None.
+
+---
+
+## Session 2026-06-08 11:59
+AGENT: Gemini CLI
+PHASE: 3 — Knowledge Ingestion
+SPRINT: 3.1
+SUB_SPRINT: 3.1.6
+MICRO_TASK_COMPLETED: P3.S1.SS1.MT6
+MICRO_TASK_DESCRIPTION: Final RAG Integration Testing and Documentation for Phase 3
+SESSION_DURATION: 30 minutes
+
+TASKS_COMPLETED:
+  - Verified NVIDIA NIM API integration in the FastAPI container.
+  - Performed comprehensive integration testing of the /query endpoint.
+  - Test Case 1 (Specific Question): Verified high-quality answer with tables and citations for "How to perform wudu?".
+  - Test Case 2 (Broad Topic): Verified "ask-back" clarification logic for "Salah" and "Interest".
+  - Test Case 3 (Source Filtering): Verified that results can be limited to specific collections (e.g., Deoband only).
+  - Test Case 4 (Multi-turn Chat): Verified that context is maintained across follow-up questions.
+  - Updated Report Documentation/03_KNOWLEDGE_INGESTION.md with latest pipeline features (ChatEngine, Query Expansion, NIM API).
+  - Marked Phase 3 as 100% COMPLETE.
+
+FILES_CREATED:
+  - None
+
+FILES_MODIFIED:
+  - Report Documentation/03_KNOWLEDGE_INGESTION.md — Added details for advanced RAG features.
+  - SPRINT_SYSTEM.md — Updated progress tracker and current micro-task.
+  - activity-logs/ACTIVITY_LOG.md — (This entry).
+
+DONE_CONDITION_MET: YES — All integration tests passed, and documentation is up-to-date.
+
+CURRENT_MICRO_TASK: P3.S1.SS1.MT6
+NEXT_MICRO_TASK: P4.S1.SS1.MT1
+NEXT_MICRO_TASK_DESCRIPTION: Create Retrofit API service interface in the Android app
+
+BLOCKERS: None.
+
+NOTES_FOR_NEXT_AGENT:
+  - Phase 3 is complete. The backend is fully operational with high-speed NVIDIA NIM inference.
+  - The Android app should now be updated to connect to the /query endpoint using Retrofit.
+  - Ensure the app sends 'chat_history' and 'sources' in the payload to leverage the new backend capabilities.
+
+GRAPHITI_UPDATED: NO
+MEM0_UPDATED:     NO

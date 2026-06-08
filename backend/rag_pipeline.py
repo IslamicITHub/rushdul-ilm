@@ -56,6 +56,7 @@ EMBED_MODEL_NAME = os.path.join(BASE_DIR, "local_models", "qwen3_embedding_06b_l
 # Constant definitions for tracking your collections and legacy model fallbacks
 LLM_MODEL_NAME = "qwen3:4b"
 COLLECTION_NAME = "deoband"
+QDRANT_HOST = "localhost"
 
 # --- NEW: NVIDIA NIM API CONFIGURATIONS ---
 # Best Practice: Try to fetch the key from system environment variables first. If not found, fall back to your placeholder string.
@@ -129,7 +130,7 @@ class RagPipeline:
         """
         # Step A: Initialize the Qdrant Client connection over the network.
         # This tells Python where your database is running (localhost) and on what network port (6333).
-        self.client = QdrantClient(host="localhost", port=6333)
+        self.client = QdrantClient(host=QDRANT_HOST, port=6333)
         
         # Step B: Set up the Vector Store Storage Link.
         # Tells LlamaIndex exactly where our chunks live, setting text payload reads to target the "answer" field.
@@ -142,7 +143,7 @@ class RagPipeline:
         # Step C: Load the Local Embedding Translation Model.
         # This will turn any future string questions from users into vector coordinates for database matching.
         # We force 'device=\"cpu\"' to save GPU VRAM for the main LLM (Ollama).
-        self.embed_model = HuggingFaceEmbedding(model_name=EMBED_MODEL_NAME, device="cuda")
+        self.embed_model = HuggingFaceEmbedding(model_name=EMBED_MODEL_NAME, device="cpu")
         
         # ----------------------------------------------------------------------------------
         # Step D: Set up the Large Language Model (The Reasoning Brain)

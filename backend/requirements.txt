@@ -43,4 +43,4 @@ llama-index-core
 llama-index-vector-stores-qdrant
 llama-index-llms-ollama
 llama-index-embeddings-huggingface
-
+llama-index-llms-openai-like

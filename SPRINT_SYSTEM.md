@@ -43,7 +43,7 @@
 CURRENT_PHASE:        3
 CURRENT_SPRINT:       3.1
 CURRENT_SUB_SPRINT:   3.1.5
-CURRENT_MICRO_TASK:   P3.S1.SS1.MT6   ← START HERE
+CURRENT_MICRO_TASK:   P4.S1.SS1.MT1   ← START HERE
 
 PHASE 1 PROGRESS:
   Sprint 1.1 — Environment & Project Setup     [x] 7/7 micro-tasks done
@@ -64,7 +64,7 @@ PHASE 2 PROGRESS:
   Sprint 2.6 — Wire FastAPI to Ollama         [x] 1/1 micro-tasks done
   Sprint 2.7 — Phase 2 Integration Test       [x] 2/2 micro-tasks done
 PHASE 3 PROGRESS:
-  Sprint 3.1 — Scraper Review & Test          [x] 5/5 micro-tasks done
+  Sprint 3.1 — Scraper Review & Test          [x] 6/6 micro-tasks done
 
 ---
 
@@ -141,6 +141,28 @@ DONE CONDITION:
   A query to the backend can return results from both sources.
 
 NEXT MICRO-TASK: P3.S1.SS1.MT6
+```
+
+##### Micro-task P3.S1.SS1.MT6 — Final RAG Integration Testing
+```
+TASK:   Perform end-to-end testing of the RAG pipeline and document results.
+
+WHY:    Verify that all Phase 3 components (Scrapers, Ingestion, Qdrant, LlamaIndex, NVIDIA NIM) 
+        work together seamlessly to provide accurate, source-cited Islamic answers.
+
+STEP BY STEP:
+  1. Start backend services (FastAPI, Qdrant).
+  2. Verify NVIDIA NIM API integration.
+  3. Test specific queries, broad topics (for clarification), and source filtering.
+  4. Verify citations and markdown formatting.
+  5. Update Report Documentation/03_KNOWLEDGE_INGESTION.md.
+
+DONE CONDITION:
+  Integration tests pass for all test cases.
+  Documentation is updated with latest pipeline improvements.
+
+PHASE 3 IS COMPLETE.
+NEXT: PHASE 4 — Connect Android to Backend
 ```
 ## Goal: A working Android app with 4 screens, fake data,
 ##       no real backend connection yet.
