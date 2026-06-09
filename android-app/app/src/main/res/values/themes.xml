@@ -6,5 +6,5 @@
     Layer: Layer 1 — Android App
     Created: 2026-05-30 | Developer: Shaik Hidayatullah
     -->
-    <style name="Theme.RushdulIlm" parent="android:Theme.Material.Light.NoActionBar" />
+    <style name="Theme.RushdulIlm" parent="Theme.AppCompat.Light.NoActionBar" />
 </resources>

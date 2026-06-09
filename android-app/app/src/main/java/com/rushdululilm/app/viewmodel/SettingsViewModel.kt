@@ -12,6 +12,8 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import javax.inject.Inject
+import androidx.appcompat.app.AppCompatDelegate
+import androidx.core.os.LocaleListCompat
 
 /**
  * SettingsViewModel is the 'brain' for the Settings Screen.
@@ -45,9 +47,25 @@ class SettingsViewModel @Inject constructor() : ViewModel() {
     // --- ACTIONS ---
 
     // Called when the user taps a different language.
+
     fun onLanguageSelected(language: String) {
         _selectedLanguage.value = language
-        println("Settings: Language changed to $language")
+
+        // 1. Map the display name to the ISO language code
+        val languageCode = when (language) {
+            "Telugu" -> "te"
+            "Urdu" -> "ur"
+            "Hindi" -> "hi"
+            "English" -> "en"
+            else -> "en"
+        }
+
+        // 2. Tell Android to change the app's language
+        // This will cause the UI to redraw using the correct strings.xml file
+        val appLocale: LocaleListCompat = LocaleListCompat.forLanguageTags(languageCode)
+        AppCompatDelegate.setApplicationLocales(appLocale)
+
+        println("Settings: Language changed to $language ($languageCode)")
     }
 
     // Called when the user taps a different Madhab/Source preference.

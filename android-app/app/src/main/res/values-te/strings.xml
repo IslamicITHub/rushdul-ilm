@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Telugu Bilingual Strings (Telugu + English) -->
+    <string name="app_name">Rushd-ul-Ilm (రشد العلم)</string>
+    <string name="home_screen_label">Rushd-ul-Ilm (రشد العلم)</string>
+    <string name="answer_screen_label">సమాధానం / Answer</string>
+    <string name="video_library_label">వీడియో లైబ్రరీ / Video Library</string>
+    <string name="settings_label">సెట్టింగ్‌లు / Settings</string>
+    
+    <string name="mic_button_label">మైక్ నొక్కండి / Press Mic</string>
+    <string name="mic_button_hint">మైక్ నొక్కి మీ ప్రశ్న అడగండి / Press mic and ask your question</string>
+    <string name="language_selector_label">భాష / Language</string>
+    <string name="source_selector_label">మూలం / Source</string>
+    
+    <string name="source_all">అన్ని మూలాలు / All Sources</string>
+    
+    <string name="read_aloud_button">🔊 చదివి వినిపించు / Read Aloud</string>
+    <string name="stop_reading_button">ఆపు / Stop Reading</string>
+    <string name="source_label">మూలం: / Source: </string>
+    <string name="view_original_link">అసలు చూడండి / View Original</string>
+    <string name="related_lectures_label">సంబంధిత వీడియోలు / Related Videos</string>
+    <string name="play_button">▶ ప్లే చేయి / Play</string>
+    
+    <string name="offline_banner_text">📵 ఆఫ్‌లైన్ మోడ్ — డౌన్‌లోడ్ చేసిన జ్ఞానాన్ని ఉపయోగిస్తోంది\n📵 Offline Mode — Using Downloaded Knowledge</string>
+    <string name="search_placeholder">అంశాన్ని వెతకండి... / Search by topic...</string>
+    <string name="no_videos_found">ఎలాంటి వీడియోలు కనుగొనబడలేదు. / No videos found.</string>
+    <string name="download_button_label">డౌన్‌లోడ్ / Download</string>
+    <string name="update_button_label">నవీకరించు / Update</string>
+    <string name="not_downloaded_status">డౌన్‌లోడ్ చేయలేదు / Not downloaded</string>
+    <string name="downloaded_status">డౌన్‌లోడ్ చేయబడింది / Downloaded</string>
+
+    <string name="madhab_preference">ఇస్లామిక్ మూలం / Islamic Source Preference</string>
+    <string name="madhab_neutral">తటస్థంగా మాత్రమే / Neutral Only</string>
+    <string name="madhab_hanafi">హనఫీ (దేవబంద్) / Hanafi (Deoband)</string>
+    
+    <string name="offline_knowledge_title">ఆఫ్‌లైన్ జ్ఞానాన్ని డౌన్‌లోڈ చేయండి / Download Offline Knowledge</string>
+    <string name="app_settings_title">యాప్ సెట్టింగ్‌లు / App Settings</string>
+    <string name="setting_autoplay">ఆటో-ప్లే / Auto-play</string>
+    <string name="setting_large_text">పెద్ద వచనం మోడ్ / Large text mode</string>
+    <string name="app_version">యాప్ వెర్షన్: 1.0.0-alpha / App Version: 1.0.0-alpha</string>
+    
+    <string name="icon_desc_back">వెనుకకు / Back</string>
+    <string name="icon_desc_search">శోధన / Search</string>
+    <string name="icon_desc_clear">క్లియర్ / Clear</string>
+    <string name="icon_desc_mic">మైక్రోఫోన్ / Microphone</string>
+    <string name="icon_desc_language">భాష / Language</string>
+    
+    <string name="nav_home">హోమ్ / Home</string>
+    <string name="nav_videos">వీడియోలు / Videos</string>
+    <string name="nav_settings">సెట్టింగ్‌లు / Settings</string>
+</resources>

@@ -150,7 +150,8 @@ fun AnswerScreen(
                     // Clickable Source URL Row
                     Row(verticalAlignment = Alignment.CenterVertically) {
                         Text(
-                            text = "మూలం / Source: ",
+                            // 🌍 Pulls "Source: / మూలం:" dynamically based on language
+                            text = stringResource(R.string.source_label),
                             style = MaterialTheme.typography.bodyMedium, // 16sp
                             color = Color.Gray
                         )

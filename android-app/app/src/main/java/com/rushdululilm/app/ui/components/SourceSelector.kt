@@ -41,7 +41,7 @@ fun SourceSelector(
     // List of sources mapping ID to display name
     val sources = listOf(
         "all" to stringResource(R.string.source_all),
-        "islamqa_info" to stringResource(R.string.source_islamqa_info),
+        "islamqa" to stringResource(R.string.source_islamqa_info),
         "islamqa_org" to stringResource(R.string.source_islamqa_org),
         "deoband" to stringResource(R.string.source_deoband)
     )

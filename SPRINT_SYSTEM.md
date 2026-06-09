@@ -40,10 +40,10 @@
 ## 📊 SPRINT PROGRESS TRACKER (Update this dashboard every session)
 
 ```
-CURRENT_PHASE:        3
-CURRENT_SPRINT:       3.1
-CURRENT_SUB_SPRINT:   3.1.5
-CURRENT_MICRO_TASK:   P4.S1.SS1.MT1   ← START HERE
+CURRENT_PHASE:        4
+CURRENT_SPRINT:       4.3
+CURRENT_SUB_SPRINT:   4.3.1
+CURRENT_MICRO_TASK:   P4.S4.SS1.MT1   ← START HERE
 
 PHASE 1 PROGRESS:
   Sprint 1.1 — Environment & Project Setup     [x] 7/7 micro-tasks done
@@ -65,6 +65,12 @@ PHASE 2 PROGRESS:
   Sprint 2.7 — Phase 2 Integration Test       [x] 2/2 micro-tasks done
 PHASE 3 PROGRESS:
   Sprint 3.1 — Scraper Review & Test          [x] 6/6 micro-tasks done
+PHASE 4 PROGRESS:
+  Sprint 4.1 — Network Layer & Repository      [x] 2/2 micro-tasks done
+  Sprint 4.2 — Wire Home Screen to Backend     [x] 1/1 micro-tasks done
+  Sprint 4.3 — Display Real Answer on Screen   [x] 1/1 micro-tasks done
+  Sprint 4.4 — Network Tier Detection          [ ] 0/1 micro-tasks done
+  Sprint 4.5 — Phase 4 Integration Test        [ ] 0/1 micro-tasks done
 
 ---
 
@@ -1420,12 +1426,121 @@ DONE CONDITION:
 ##   3.5 Test RAG with source-cited answers
 ##   3.6 Ingest Deoband data + test source filter
 ##
-## Phase 4 — Connect Android to Backend (Sprints 4.1–4.5)
-##   4.1 Create Retrofit API service interface
-##   4.2 Wire mic button → /transcribe endpoint
-##   4.3 Display real RAG answer on AnswerScreen
-##   4.4 Implement network tier detection
-##   4.5 Integration test + documentation
+## PHASE 4 — CONNECT ANDROID TO BACKEND
+**Goal:** Connect the Android UI to the FastAPI backend and display real AI-generated answers.
+
+---
+
+### SPRINT 4.1 — Network Layer & Repository
+**Goal:** Set up Retrofit and the Repository pattern to handle API communication.
+
+##### Micro-task P4.S1.SS1.MT1 — Create Retrofit API service interface
+```
+TASK:   Create the Retrofit interface and Hilt NetworkModule.
+
+WHY:    Retrofit turns our FastAPI endpoints into Kotlin functions. 
+        Hilt provides these functions to our ViewModels automatically.
+
+DONE CONDITION:
+  ApiService.kt and NetworkModels.kt exist in data/remote/.
+  NetworkModule.kt exists in di/.
+  The project compiles successfully.
+```
+
+##### Micro-task P4.S1.SS1.MT2 — Create the Repository Layer
+```
+TASK:   Create a Repository class to handle data fetching logic.
+
+WHY:    In MVVM, ViewModels shouldn't talk to the API directly. 
+        A Repository acts as a "Data Manager" that decides whether to get 
+        data from the Internet (Retrofit) or the local cache (Room).
+
+STEP BY STEP:
+  1. Create data/repository/MainRepository.kt.
+  2. Inject ApiService into the repository.
+  3. Implement askQuestion() function that calls ApiService.askQuestion().
+  4. Wrap the response in a 'Result' or 'Resource' class to handle success/error.
+
+DONE CONDITION:
+  MainRepository.kt exists and is injected via Hilt.
+  The app compiles successfully.
+```
+
+---
+
+### SPRINT 4.2 — Wire Home Screen to Backend
+**Goal:** Tapping the Mic button (simulating a query) sends a request to the backend.
+
+##### Micro-task P4.S2.SS1.MT1 — Update HomeViewModel for API Calls
+```
+TASK:   Modify HomeViewModel to call the Repository when the mic is pressed.
+
+WHY:    We need to bridge the UI interaction to the network layer.
+
+STEP BY STEP:
+  1. Inject MainRepository into HomeViewModel.
+  2. In onMicPressed(), instead of just toggling a boolean, call repository.askQuestion().
+  3. For now, use a hardcoded test question: "How to perform wudu?"
+  4. Update the uiState to Processing while waiting, and Error if it fails.
+
+DONE CONDITION:
+  HomeViewModel correctly calls the repository.
+  Logs show the API request being sent when the mic is pressed.
+```
+
+---
+
+### SPRINT 4.3 — Display Real Answer on AnswerScreen
+**Goal:** Pass the real AI answer from Home Screen to Answer Screen and display it.
+
+##### Micro-task P4.S3.SS1.MT1 — Update AnswerViewModel to accept real data
+```
+TASK:   Modify AnswerViewModel to display data passed from the Home Screen.
+
+WHY:    Currently, AnswerScreen only shows hardcoded placeholder data. 
+        We need it to show the actual answer we got from the backend.
+
+STEP BY STEP:
+  1. Update NavGraph to pass the answer as a navigation argument (or shared ViewModel).
+  2. Update AnswerViewModel to observe the passed data.
+  3. Update AnswerScreen to display the real text and sources.
+
+DONE CONDITION:
+  The Answer Screen shows the real AI response from the backend /query endpoint.
+  Citations are clickable.
+```
+
+---
+
+### SPRINT 4.4 — Network Tier Detection
+**Goal:** Implement the 3-tier detection logic (Internet / LAN / Offline).
+
+##### Micro-task P4.S4.SS1.MT1 — Implement NetworkUtils
+```
+TASK:   Create a utility class to detect if the user is on Internet, LAN, or Offline.
+
+WHY:    This is a core mandate. The app must know if it can reach the 
+        local Ubuntu server (LAN) or needs the cloud/offline fallback.
+
+DONE CONDITION:
+  NetworkUtils.kt exists with detectNetworkTier() function.
+  The Home Screen shows the correct connection status.
+```
+
+---
+
+### SPRINT 4.5 — Phase 4 Integration Test
+**Goal:** Final verification of the Android-to-Backend connection.
+
+##### Micro-task P4.S5.SS1.MT1 — Full Stack Smoke Test (Android + Docker)
+```
+TASK:   Test the full flow from Android Emulator to local Docker FastAPI.
+
+DONE CONDITION:
+  Tapping the mic in the app results in a real AI answer displayed on the screen.
+  Documentation is updated.
+```
+
 ##
 ## Phase 5 — Multilingual + Offline (Sprints 5.1–5.7)
 ##   5.1 IndicTrans2 Docker service

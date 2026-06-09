@@ -7,12 +7,15 @@ package com.rushdululilm.app.viewmodel
 // Created: 2026-05-31 | Developer: Shaik Hidayatullah
 
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import com.rushdululilm.app.data.repository.MainRepository
 import com.rushdululilm.app.model.FatwaAnswer
 import com.rushdululilm.app.model.RelatedVideo
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 /**
@@ -22,14 +25,27 @@ import javax.inject.Inject
  * @Inject constructor() tells Hilt how to build it.
  */
 @HiltViewModel
-class AnswerViewModel @Inject constructor() : ViewModel() {
+class AnswerViewModel @Inject constructor(
+    private val repository: MainRepository
+) : ViewModel() {
 
     // --- StateFlow Properties ---
     // StateFlow acts as a "live variable". When its value updates, the UI automatically redraws.
 
-    // Holds the currently displayed fatwa answer. It starts as null, but we'll load the placeholder.
+    // Holds the currently displayed fatwa answer.
     private val _currentAnswer = MutableStateFlow<FatwaAnswer?>(FatwaAnswer.PLACEHOLDER)
     val currentAnswer: StateFlow<FatwaAnswer?> = _currentAnswer.asStateFlow()
+
+    init {
+        // Observe the latest answer from the repository whenever the ViewModel is created
+        viewModelScope.launch {
+            repository.latestAnswer.collect { answer ->
+                if (answer != null) {
+                    _currentAnswer.value = answer
+                }
+            }
+        }
+    }
 
     // Holds a list of related video lectures to show at the bottom.
     // For now, we populate it with 2 fake (placeholder) videos.

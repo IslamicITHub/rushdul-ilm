@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Hindi Bilingual Strings (Hindi + English) -->
+    <string name="app_name">Rushd-ul-Ilm (रشد العلم)</string>
+    <string name="home_screen_label">Rushd-ul-Ilm (रشد العلم)</string>
+    <string name="answer_screen_label">उत्तर / Answer</string>
+    <string name="video_library_label">वीडियो लाइब्रेरी / Video Library</string>
+    <string name="settings_label">सेटिंग्स / Settings</string>
+    
+    <string name="mic_button_label">माइक दबाएं / Press Mic</string>
+    <string name="mic_button_hint">माइक दबाकर अपना प्रश्न पूछें / Press mic and ask your question</string>
+    <string name="language_selector_label">भाषा / Language</string>
+    <string name="source_selector_label">स्रोत / Source</string>
+    
+    <string name="source_all">सभी स्रोत / All Sources</string>
+    
+    <string name="read_aloud_button">🔊 बोलकर सुनाएं / Read Aloud</string>
+    <string name="stop_reading_button">पढ़ना बंद करें / Stop Reading</string>
+    <string name="source_label">स्रोत: / Source: </string>
+    <string name="view_original_link">मूल देखें / View Original</string>
+    <string name="related_lectures_label">संबंधित वीडियो / Related Videos</string>
+    <string name="play_button">▶ चलाएं / Play</string>
+    
+    <string name="offline_banner_text">📵 ऑफलाइन मोड — डाउनलोड किए गए ज्ञान का उपयोग\n📵 Offline Mode — Using Downloaded Knowledge</string>
+    <string name="search_placeholder">विषय के अनुसार खोजें... / Search by topic...</string>
+    <string name="no_videos_found">कोई वीडियो नहीं मिला। / No videos found.</string>
+    <string name="download_button_label">डाउनलोड / Download</string>
+    <string name="update_button_label">अपडेट / Update</string>
+    <string name="not_downloaded_status">डाउनलोड नहीं किया गया / Not downloaded</string>
+    <string name="downloaded_status">डाउनलोड किया गया / Downloaded</string>
+
+    <string name="madhab_preference">इस्लामी स्रोत वरीयता / Islamic Source Preference</string>
+    <string name="madhab_neutral">केवल तटस्थ / Neutral Only</string>
+    <string name="madhab_hanafi">हनफी (देवबंद) / Hanafi (Deoband)</string>
+    
+    <string name="offline_knowledge_title">ऑफलाइन ज्ञान डाउनलोड करें / Download Offline Knowledge</string>
+    <string name="app_settings_title">ऐप सेटिंग्स / App Settings</string>
+    <string name="setting_autoplay">ऑटो-प्ले / Auto-play</string>
+    <string name="setting_large_text">बड़े टेक्स्ट मोड / Large text mode</string>
+    <string name="app_version">ऐप वर्जन: 1.0.0-alpha / App Version: 1.0.0-alpha</string>
+    
+    <string name="icon_desc_back">पीछे / Back</string>
+    <string name="icon_desc_search">खोज / Search</string>
+    <string name="icon_desc_clear">साफ करें / Clear</string>
+    <string name="icon_desc_mic">माइक्रोफोन / Microphone</string>
+    <string name="icon_desc_language">भाषा / Language</string>
+
+    <string name="nav_home">होम / Home</string>
+    <string name="nav_videos">वीडियो / Videos</string>
+    <string name="nav_settings">सेटिंग्स / Settings</string>
+</resources>

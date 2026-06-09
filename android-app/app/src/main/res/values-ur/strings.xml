@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Urdu Bilingual Strings (Urdu + English) -->
+    <string name="app_name">Rushd-ul-Ilm (رشد العلم)</string>
+    <string name="home_screen_label">رشد العلم (Rushd-ul-Ilm)</string>
+    <string name="answer_screen_label">جواب / Answer</string>
+    <string name="video_library_label">ویڈیو لائبریری / Video Library</string>
+    <string name="settings_label">سیٹنگز / Settings</string>
+    
+    <string name="mic_button_label">مائیک دبائیں / Press Mic</string>
+    <string name="mic_button_hint">مائیک دبا کر اپنا سوال پوچھیں / Press mic and ask your question</string>
+    <string name="language_selector_label">زبان / Language</string>
+    <string name="source_selector_label">ماخذ / Source</string>
+    
+    <string name="source_all">تمام ذرائع / All Sources</string>
+    
+    <string name="read_aloud_button">🔊 بلند آواز سے پڑھیں / Read Aloud</string>
+    <string name="stop_reading_button">پڑھنا بند کریں / Stop Reading</string>
+    <string name="source_label">ماخذ: / Source: </string>
+    <string name="view_original_link">اصل دیکھیں / View Original</string>
+    <string name="related_lectures_label">متعلقہ ویڈیوز / Related Videos</string>
+    <string name="play_button">▶ پلے / Play</string>
+    
+    <string name="offline_banner_text">📵 آف لائن موڈ — ڈاؤن لوڈ کردہ علم کا استعمال\n📵 Offline Mode — Using Downloaded Knowledge</string>
+    <string name="search_placeholder">موضوع کے لحاظ سے تلاش کریں / Search by topic...</string>
+    <string name="no_videos_found">کوئی ویڈیو نہیں ملی۔ / No videos found.</string>
+    <string name="download_button_label">ڈاؤن لوڈ / Download</string>
+    <string name="update_button_label">اپ ڈیٹ / Update</string>
+    <string name="not_downloaded_status">ڈاؤن لوڈ نہیں کیا گیا / Not downloaded</string>
+    <string name="downloaded_status">ڈاؤن لوڈ کیا گیا / Downloaded</string>
+
+    <string name="madhab_preference">اسلامی ماخذ کی ترجیح / Islamic Source Preference</string>
+    <string name="madhab_neutral">صرف غیر جانبدار / Neutral Only</string>
+    <string name="madhab_hanafi">حنفی (دیوبند) / Hanafi (Deoband)</string>
+    
+    <string name="offline_knowledge_title">آف لائن علم ڈاؤن لوڈ کریں / Download Offline Knowledge</string>
+    <string name="app_settings_title">ایپ کی ترجیحات / App Settings</string>
+    <string name="setting_autoplay">خودکار پلے / Auto-play</string>
+    <string name="setting_large_text">بڑے متن کا موڈ / Large text mode</string>
+    <string name="app_version">ایپ ورژن: 1.0.0-alpha / App Version: 1.0.0-alpha</string>
+    
+    <string name="icon_desc_back">پیچھے / Back</string>
+    <string name="icon_desc_search">تلاش / Search</string>
+    <string name="icon_desc_clear">صاف کریں / Clear</string>
+    <string name="icon_desc_mic">مائیکروفون / Microphone</string>
+    <string name="icon_desc_language">زبان / Language</string>
+
+    <string name="nav_home">ہوم / Home</string>
+    <string name="nav_videos">ویڈیوز / Videos</string>
+    <string name="nav_settings">سیٹنگز / Settings</string>
+</resources>

@@ -280,7 +280,9 @@ class RagPipeline:
 
         return {
             "answer": str(response),
-            "sources": source_urls
+            "sources": source_urls,
+            "is_clarification": False, # Future: detect this from LLM response
+            "error": None
         }
 
 

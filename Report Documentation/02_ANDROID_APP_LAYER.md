@@ -678,3 +678,26 @@ Phase 1 has been successfully completed. The Android UI Skeleton is fully functi
 - [x] No hardcoded strings (all moved to `strings.xml`).
 
 **Phase 1 is now locked. Ready to proceed to Phase 2: Backend Docker Services.**
+
+## 🛠️ Phase 4 — Connect Android to Backend
+**Status:** 🟡 IN PROGRESS
+
+### 1. Network Layer Implementation (Sprint 4.1)
+Established the communication bridge between Android and the FastAPI server.
+- **ApiService.kt**: Defined the interface for `/health` and `/query` endpoints.
+- **NetworkModels.kt**: Defined the `QueryRequest`, `ChatMessage`, and `QueryResponse` data classes.
+- **NetworkModule.kt**: Configured Hilt to provide Retrofit with Gson converter and a shared OkHttpClient with 30s timeouts.
+
+### 2. Repository Pattern (Sprint 4.1)
+Implemented a clean data abstraction layer.
+- **MainRepository.kt**: Injects `ApiService` and provides a `askQuestion` method.
+- **Resource.kt**: A generic wrapper class to handle Success/Error/Loading states in the UI.
+
+### 3. HomeViewModel Wiring (Sprint 4.2)
+Connected the UI to the backend for the first time.
+- **HomeViewModel.kt**: Now injects `MainRepository`.
+- **Mic Button Action**: Toggling the mic now triggers a test query ("How to perform wudu?") to the server.
+- **UI State Management**: Handles `Processing` and `Error` states from the repository.
+
+**Verification:**
+The project was successfully compiled with `./gradlew assembleDebug`. Hilt successfully injects the repository into the ViewModel.

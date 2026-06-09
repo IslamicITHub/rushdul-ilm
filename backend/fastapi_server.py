@@ -41,7 +41,18 @@ def health_check():
 def ask_question(request: QueryRequest):
     # Call the RAG pipeline with both the current question and the history.
     try:
-        result = rag.ask(request.question, chat_history=request.chat_history, sources=request.sources)
-        return result
+            if request.sources[0] == "all":
+                request.sources = ['islamqa', 'deoband']
+                result = rag.ask(request.question, chat_history=request.chat_history, sources=request.sources)
+                return result
+            else:
+                result = rag.ask(request.question, chat_history=request.chat_history, sources=request.sources)
+                return result
     except Exception as e:
-        return {"error": f"RAG Pipeline Error: {str(e)}"}
+        # ⚠️ Return a structured error so the Android app doesn't crash
+        return {
+            "answer": None,
+            "sources": [],
+            "is_clarification": False,
+            "error": f"RAG Pipeline Error: {str(e)}"
+        }

@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- 
+File: network_security_config.xml
+Purpose: Tells Android that it's okay to talk to our local development server without HTTPS
+Layer: Layer 1 — Android App
+Created: 2026-06-08 | Developer: Shaik Hidayatullah
+-->
+<network-security-config>
+    <!-- 'domain-config' defines rules for a specific web address -->
+    <domain-config cleartextTrafficPermitted="true">
+        <!-- 10.0.2.2 is the special IP address that the Android Emulator 
+             uses to talk to your Ubuntu host machine. -->
+        <domain includeSubdomains="true">10.0.2.2</domain>
+        <!-- Also adding localhost just in case -->
+        <domain includeSubdomains="true">localhost</domain>
+        <!-- Also adding the static local wifi IP address that is assisgned to the parrot linux machine and can be accessed by other local devices in the network just in case -->
+        <domain includeSubdomains="true">192.168.0.102</domain>
+    </domain-config>
+</network-security-config>

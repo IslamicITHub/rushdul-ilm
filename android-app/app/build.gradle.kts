@@ -123,6 +123,7 @@ dependencies {
     // 🧠 OFFLINE AI (ONNX)
     // This lets us run the translation model directly on the phone
     implementation(libs.onnx.runtime.android)
+    implementation(libs.androidx.appcompat)
 
     // 🧪 TESTING TOOLS
     testImplementation(libs.junit)

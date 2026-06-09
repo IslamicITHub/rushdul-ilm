@@ -33,7 +33,12 @@ import com.rushdululilm.app.R
 import com.rushdululilm.app.ui.components.LanguageSelector
 import com.rushdululilm.app.ui.components.MicButton
 import com.rushdululilm.app.ui.components.SourceSelector
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.foundation.layout.Box
+import com.rushdululilm.app.ui.theme.IslamicGreen
 import com.rushdululilm.app.ui.theme.OfflineOrange
+import com.rushdululilm.app.viewmodel.HomeUiState
 import com.rushdululilm.app.viewmodel.HomeViewModel
 
 /**
@@ -56,6 +61,17 @@ fun HomeScreen(
     val selectedLanguage by homeViewModel.selectedLanguage.collectAsState()
     val selectedSource by homeViewModel.selectedSource.collectAsState()
     val isRecording by homeViewModel.isRecording.collectAsState()
+    val uiState by homeViewModel.uiState.collectAsState()
+
+    // 🚀 Effect that runs when uiState changes
+    LaunchedEffect(uiState) {
+        if (uiState is HomeUiState.NavigatingToAnswer) {
+            // Tell the NavController to go to the Answer Screen
+            navController.navigate(Routes.ANSWER)
+            // Reset the state so we don't navigate again if the user presses back
+            homeViewModel.resetUiState()
+        }
+    }
 
     // Fake offline status for now — will be connected to real detection in Phase 4.
     val isOffline = false 
@@ -67,7 +83,8 @@ fun HomeScreen(
             CenterAlignedTopAppBar(
                 title = {
                     Text(
-                        text = "Rushd-ul-Ilm (రشد العلم)",
+                        // 🌍 Using stringResource ensures this title changes when the language changes
+                        text = stringResource(R.string.home_screen_label),
                         fontWeight = FontWeight.Bold,
                         style = MaterialTheme.typography.titleLarge
                     )
@@ -96,7 +113,8 @@ fun HomeScreen(
                     modifier = Modifier.fillMaxWidth()
                 ) {
                     Text(
-                        text = "📵 ఆఫ్‌లైన్ మోడ్ — డౌన్‌లోడ్ చేసిన జ్ఞానాన్ని ఉపయోగిస్తోంది\n📵 Offline Mode — Using Downloaded Knowledge",
+                        // 🌍 Bilingual offline text from strings.xml
+                        text = stringResource(R.string.offline_banner_text),
                         modifier = Modifier.padding(8.dp),
                         textAlign = TextAlign.Center,
                         style = MaterialTheme.typography.labelSmall, // 16sp
@@ -126,18 +144,34 @@ fun HomeScreen(
             Spacer(modifier = Modifier.weight(1f))
 
             // 4. Large Microphone Button (The heart of the screen)
-            MicButton(
-                isRecording = isRecording,
-                onClick = { homeViewModel.onMicPressed() }
-            )
+            if (uiState is HomeUiState.Processing) {
+                // Show a loading spinner instead of the mic button when fetching from the server
+                Box(
+                    modifier = Modifier.fillMaxWidth().height(150.dp),
+                    contentAlignment = Alignment.Center
+                ) {
+                    CircularProgressIndicator(color = IslamicGreen)
+                }
+            } else {
+                MicButton(
+                    isRecording = isRecording,
+                    onClick = { homeViewModel.onMicPressed() }
+                )
+            }
 
             Spacer(modifier = Modifier.weight(0.5f))
 
-            // 5. Instruction Text (Telugu + English)
+            // 5. Instruction/Error Text (Telugu + English)
+            val instructionText = if (uiState is HomeUiState.Error) {
+                (uiState as HomeUiState.Error).message
+            } else {
+                stringResource(R.string.mic_button_hint)
+            }
+            
             Text(
-                text = stringResource(R.string.mic_button_hint),
+                text = instructionText,
                 style = MaterialTheme.typography.bodyLarge, // 18sp minimum
-                color = MaterialTheme.colorScheme.onBackground,
+                color = if (uiState is HomeUiState.Error) MaterialTheme.colorScheme.error else MaterialTheme.colorScheme.onBackground,
                 textAlign = TextAlign.Center,
                 lineHeight = 24.sp,
                 modifier = Modifier
