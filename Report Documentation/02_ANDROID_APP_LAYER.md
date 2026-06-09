@@ -701,3 +701,44 @@ Connected the UI to the backend for the first time.
 
 **Verification:**
 The project was successfully compiled with `./gradlew assembleDebug`. Hilt successfully injects the repository into the ViewModel.
+
+---
+
+## Multiple Source Support & Transparency (2026-06-09)
+
+The app now supports displaying multiple Islamic sources for a single answer and provides transparency into the AI's search process.
+
+### 1. Multi-Source Data Model (`AnswerModels.kt`)
+- **`FatwaSource`**: A new data class to hold both the source name (e.g., "IslamQA.info") and its unique URL.
+- **`FatwaAnswer` Refactor**: Updated the `sources` field to a `List<FatwaSource>`, allowing the app to credit all websites that contributed to the generated answer.
+
+### 2. AI Search Transparency
+- **Original Question Display**: The `AnswerScreen` now clearly shows the user's original question at the top to confirm what the AI is responding to.
+- **Expanded Search Query**: The screen includes an "AI Search Logic" card. This provides a layman-friendly explanation of how the AI expanded the user's simple question with technical Islamic terms (e.g., "Wudu" -> "Ablution, Taharah") to find more accurate data in the vector database.
+
+### 3. Repository Mapping (`MainRepository.kt`)
+- The repository now processes the full list of source URLs from the backend.
+- It dynamically assigns human-readable names to these URLs based on known Islamic databases (IslamQA.info, Darul Ifta Deoband, etc.).
+
+---
+
+## Global Madhab Filtering & User Preferences (2026-06-09)
+
+Implemented a centralized preference system to allow users to filter answers based on their preferred school of thought (Madhab).
+
+### 1. `UserPreferencesRepository.kt`
+- Acts as the "Single Source of Truth" for app settings.
+- Maps UI choices ("Hanafi", "Neutral") to backend-specific collection names ("deoband", "islamqa").
+- Uses a Singleton pattern to ensure all screens (Home, Settings) stay in sync.
+
+### 2. Guided Settings Experience
+- **Layman Explanations**: The `SettingsScreen` now features informational "Lightbulb" cards (💡).
+- These cards explain in simple, bilingual language (Telugu + English) what each choice means (e.g., "The Hanafi option focuses on rulings from the school of thought common in South Asia").
+
+### 3. Integrated Home Screen Logic
+- The `SourceSelector` chips on the Home screen are now synced with the global settings.
+- When a user asks a question, the `HomeViewModel` fetches the user's preference and automatically restricts the backend search to the selected Madhab sources.
+
+### 4. Code Quality & Beginner Guidance
+- All new logic includes detailed, line-by-line comments.
+- Uses stable internal "keys" (`all`, `neutral`, `hanafi`) to prevent bugs when switching between Telugu and English UI languages.

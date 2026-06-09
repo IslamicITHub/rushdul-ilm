@@ -9,9 +9,12 @@ package com.rushdululilm.app.ui.screens
 
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.selection.selectable
 import androidx.compose.foundation.selection.selectableGroup
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
+
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.Download
 import androidx.compose.material3.*
@@ -91,18 +94,51 @@ fun SettingsScreen(
             // --- SECTION 2: MADHAB PREFERENCE ---
             item {
                 SettingsSectionTitle(stringResource(R.string.madhab_preference))
-                val madhabs = listOf(
-                    stringResource(R.string.source_all),
-                    stringResource(R.string.madhab_neutral),
-                    stringResource(R.string.madhab_hanafi)
+                
+                // Observe the description text from the ViewModel
+                val madhabDescription by viewModel.madhabDescription.collectAsState()
+
+                // List of options with their internal keys and display labels
+                val madhabOptions = listOf(
+                    "all" to stringResource(R.string.source_all),
+                    "neutral" to stringResource(R.string.madhab_neutral),
+                    "hanafi" to stringResource(R.string.madhab_hanafi)
                 )
                 
                 Column(Modifier.selectableGroup()) {
-                    madhabs.forEach { madhab ->
+                    madhabOptions.forEach { (key, label) ->
                         SettingsRadioButton(
-                            label = madhab,
-                            selected = selectedMadhab == madhab,
-                            onClick = { viewModel.onMadhabSelected(madhab) }
+                            label = label,
+                            selected = selectedMadhab == key,
+                            onClick = { viewModel.onMadhabSelected(key) }
+                        )
+                    }
+                }
+
+                // 📚 LAYMAN EXPLANATION SPACE
+                // This card provides a simple explanation of what the current choice means.
+                Card(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(top = 12.dp),
+                    colors = CardDefaults.cardColors(
+                        containerColor = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.5f)
+                    ),
+                    shape = RoundedCornerShape(12.dp)
+                ) {
+                    Row(
+                        modifier = Modifier.padding(16.dp),
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        // Icon to make it look like a "tip" or "info" box
+                        Text("💡", fontSize = 24.sp)
+                        Spacer(modifier = Modifier.width(12.dp))
+                        // The actual explanation text in the user's language
+                        Text(
+                            text = stringResource(madhabDescription),
+                            fontSize = 16.sp,
+                            color = MaterialTheme.colorScheme.onSurfaceVariant,
+                            lineHeight = 22.sp
                         )
                     }
                 }

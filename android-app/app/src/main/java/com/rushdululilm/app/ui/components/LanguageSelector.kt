@@ -113,13 +113,15 @@ fun LanguageSelector(
 }
 
 // Preview to test the UI locally
+/*
 @Preview(showBackground = true)
 @Composable
 fun LanguageSelectorPreview() {
     RushdulIlmTheme {
         LanguageSelector(
-            selectedLanguage = "Telugu",
+            selectedLanguage = "English",
             onLanguageSelected = {}
         )
     }
 }
+*/

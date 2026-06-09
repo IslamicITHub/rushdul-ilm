@@ -31,6 +31,12 @@ data class QueryResponse(
     // The main text of the Islamic answer. 
     // Nullable because it might be missing if there's an error.
     @SerializedName("answer") val answer: String? = null,
+
+    // The original question received by the server.
+    @SerializedName("question") val question: String? = null,
+
+    // The expanded version of the question used for database search.
+    @SerializedName("expanded_search_query") val expandedSearchQuery: String? = null,
     
     // A list of clickable URLs for the sources used.
     @SerializedName("sources") val sources: List<String>? = null,

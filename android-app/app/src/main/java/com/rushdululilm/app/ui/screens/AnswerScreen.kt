@@ -121,18 +121,40 @@ fun AnswerScreen(
             currentAnswer?.let { answer ->
                 
                 item {
-                    // Source Name Badge (e.g., IslamQA.info)
-                    Box(
-                        modifier = Modifier
-                            .clip(RoundedCornerShape(16.dp)) // Pill shape
-                            .background(QuranicBlue)
-                            .padding(horizontal = 12.dp, vertical = 6.dp)
+                    // --- YOUR QUESTION SECTION ---
+                    Text(
+                        text = stringResource(R.string.your_question_label),
+                        style = MaterialTheme.typography.labelSmall, // 16sp
+                        color = IslamicGreen,
+                        fontWeight = FontWeight.Bold
+                    )
+                    Text(
+                        text = answer.questionText,
+                        style = MaterialTheme.typography.bodyMedium, // 16sp
+                        color = MaterialTheme.colorScheme.onBackground,
+                        modifier = Modifier.padding(bottom = 16.dp)
+                    )
+
+                    // Source Name Badges (e.g., IslamQA.info, Darul Ifta Deoband)
+                    // We use a Row with scroll if there are many sources
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.spacedBy(8.dp)
                     ) {
-                        Text(
-                            text = answer.sourceName,
-                            color = Color.White,
-                            style = MaterialTheme.typography.labelSmall // 16sp minimum
-                        )
+                        answer.sources.forEach { source ->
+                            Box(
+                                modifier = Modifier
+                                    .clip(RoundedCornerShape(16.dp)) // Pill shape
+                                    .background(QuranicBlue)
+                                    .padding(horizontal = 12.dp, vertical = 6.dp)
+                            ) {
+                                Text(
+                                    text = source.name,
+                                    color = Color.White,
+                                    style = MaterialTheme.typography.labelSmall // 16sp minimum
+                                )
+                            }
+                        }
                     }
 
                     Spacer(modifier = Modifier.height(16.dp))
@@ -147,48 +169,88 @@ fun AnswerScreen(
 
                     Spacer(modifier = Modifier.height(24.dp))
 
-                    // Clickable Source URL Row
-                    Row(verticalAlignment = Alignment.CenterVertically) {
-                        Text(
-                            // 🌍 Pulls "Source: / మూలం:" dynamically based on language
-                            text = stringResource(R.string.source_label),
-                            style = MaterialTheme.typography.bodyMedium, // 16sp
-                            color = Color.Gray
-                        )
-                        
-                        // We build an "Annotated String" to make part of the text look like a clickable link
-                        val annotatedLinkString = buildAnnotatedString {
-                            val viewOriginal = stringResource(R.string.view_original_link)
-                            withStyle(
-                                style = SpanStyle(
-                                    color = QuranicBlue,
-                                    textDecoration = TextDecoration.Underline,
-                                    fontSize = 16.sp
+                    // --- AI SEARCH LOGIC SECTION (Layman friendly) ---
+                    answer.expandedQuery?.let { query ->
+                        Card(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(vertical = 8.dp),
+                            colors = CardDefaults.cardColors(
+                                containerColor = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.5f)
+                            ),
+                            shape = RoundedCornerShape(12.dp)
+                        ) {
+                            Column(modifier = Modifier.padding(12.dp)) {
+                                Text(
+                                    text = stringResource(R.string.ai_search_logic_label),
+                                    style = MaterialTheme.typography.labelSmall, // 16sp
+                                    fontWeight = FontWeight.Bold,
+                                    color = QuranicBlue
                                 )
-                            ) {
-                                append(viewOriginal)
+                                Text(
+                                    text = stringResource(R.string.ai_search_logic_desc),
+                                    style = MaterialTheme.typography.bodySmall.copy(fontSize = 14.sp), // Slightly smaller for desc
+                                    color = Color.Gray,
+                                    modifier = Modifier.padding(vertical = 4.dp)
+                                )
+                                // The technical query itself
+                                Text(
+                                    text = "\"$query\"",
+                                    style = MaterialTheme.typography.bodyMedium.copy(fontWeight = FontWeight.Medium),
+                                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                                )
                             }
-                            // Attach the URL to this text segment
-                            addStringAnnotation(
-                                tag = "URL",
-                                annotation = answer.sourceUrl,
-                                start = 0,
-                                end = viewOriginal.length // Length of "View Original"
+                        }
+                        Spacer(modifier = Modifier.height(16.dp))
+                    }
+
+                    // Clickable Source URL Rows (one for each source)
+                    answer.sources.forEach { source ->
+                        Row(
+                            verticalAlignment = Alignment.CenterVertically,
+                            modifier = Modifier.padding(vertical = 4.dp)
+                        ) {
+                            Text(
+                                // 🌍 Pulls "Source: / మూలం:" dynamically based on language
+                                text = "${source.name}: ",
+                                style = MaterialTheme.typography.bodyMedium, // 16sp
+                                color = Color.Gray
+                            )
+                            
+                            // We build an "Annotated String" to make part of the text look like a clickable link
+                            val annotatedLinkString = buildAnnotatedString {
+                                val viewOriginal = stringResource(R.string.view_original_link)
+                                withStyle(
+                                    style = SpanStyle(
+                                        color = QuranicBlue,
+                                        textDecoration = TextDecoration.Underline,
+                                        fontSize = 16.sp
+                                    )
+                                ) {
+                                    append(viewOriginal)
+                                }
+                                // Attach the URL to this text segment
+                                addStringAnnotation(
+                                    tag = "URL",
+                                    annotation = source.url,
+                                    start = 0,
+                                    end = viewOriginal.length // Length of "View Original"
+                                )
+                            }
+
+                            // ClickableText handles the tap event on the annotated string
+                            ClickableText(
+                                text = annotatedLinkString,
+                                onClick = { offset ->
+                                    annotatedLinkString.getStringAnnotations(tag = "URL", start = offset, end = offset)
+                                        .firstOrNull()?.let { annotation ->
+                                            // Open the browser with the URL
+                                            val intent = Intent(Intent.ACTION_VIEW, Uri.parse(annotation.item))
+                                            context.startActivity(intent)
+                                        }
+                                }
                             )
                         }
-
-                        // ClickableText handles the tap event on the annotated string
-                        ClickableText(
-                            text = annotatedLinkString,
-                            onClick = { offset ->
-                                annotatedLinkString.getStringAnnotations(tag = "URL", start = offset, end = offset)
-                                    .firstOrNull()?.let { annotation ->
-                                        // Open the browser with the URL
-                                        val intent = Intent(Intent.ACTION_VIEW, Uri.parse(annotation.item))
-                                        context.startActivity(intent)
-                                    }
-                            }
-                        )
                     }
 
                     Spacer(modifier = Modifier.height(16.dp))

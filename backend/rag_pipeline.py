@@ -236,7 +236,7 @@ class RagPipeline:
             client=self.client,
             collections=sources,
             embed_model=self.embed_model,
-            similarity_top_k=10
+            similarity_top_k=20
         )
         
         system_prompt = (
@@ -280,6 +280,8 @@ class RagPipeline:
 
         return {
             "answer": str(response),
+            "question": user_question,
+            "expanded_search_query": search_query,
             "sources": source_urls,
             "is_clarification": False, # Future: detect this from LLM response
             "error": None
@@ -292,7 +294,7 @@ if __name__ == "__main__":
     print("[*] Initializing RAG Pipeline with NVIDIA NIM Integration...")
     pipeline = RagPipeline()
     
-    test_q = "Can I read the Qur’an with meaning while traveling?"
+    test_q = "Is **Bitcoin mining** (earning new coins by providing computational power) halal?"
     print(f"[*] Testing query: {test_q}")
     
     result = pipeline.ask(test_q)

@@ -56,4 +56,14 @@
     <string name="nav_home">Home</string>
     <string name="nav_videos">Videos</string>
     <string name="nav_settings">Settings</string>
+
+    <!-- Answer Screen Additional Info -->
+    <string name="your_question_label">Your Question:</string>
+    <string name="ai_search_logic_label">How the AI searched for you:</string>
+    <string name="ai_search_logic_desc">The AI expands your question with technical terms to find the most accurate answers from Islamic databases.</string>
+
+    <!-- Madhab Preference Explanations -->
+    <string name="madhab_all_desc">Includes all sources for a broad range of scholarly opinions.\nఅన్ని మూలాల నుండి సమాధానాలను చూపుతుంది.</string>
+    <string name="madhab_neutral_desc">Focuses on general sources that follow direct evidence.\nసాధారణ పద్ధతిని అనుసరించే మూలాల నుండి సమాధానాలను చూపుతుంది.</string>
+    <string name="madhab_hanafi_desc">Focuses on rulings from the Hanafi school of thought.\nప్రత్యేకంగా హనఫీ పాఠశాల నుండి సమాధానాలను చూపుతుంది.</string>
 </resources>

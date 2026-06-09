@@ -11,6 +11,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.rushdululilm.app.data.remote.QueryRequest
 import com.rushdululilm.app.data.repository.MainRepository
+import com.rushdululilm.app.data.repository.UserPreferencesRepository
 import com.rushdululilm.app.utils.Resource
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -40,7 +41,8 @@ sealed class HomeUiState {
  */
 @HiltViewModel
 class HomeViewModel @Inject constructor(
-    private val repository: MainRepository // 💉 Hilt gives us the Repository automatically
+    private val repository: MainRepository, // 💉 Hilt gives us the Repository automatically
+    private val preferencesRepository: UserPreferencesRepository // 💉 Central source for user choices
 ) : ViewModel() {
 
     // --- StateFlow Properties ---
@@ -48,12 +50,12 @@ class HomeViewModel @Inject constructor(
     // We use a private MutableStateFlow (can be changed) and a public StateFlow (read-only for the UI).
 
     // Tracks the currently selected language
-    private val _selectedLanguage = MutableStateFlow("Telugu")
+    private val _selectedLanguage = MutableStateFlow("English")
     val selectedLanguage: StateFlow<String> = _selectedLanguage.asStateFlow()
 
     // Tracks the currently selected Islamic source database
-    private val _selectedSource = MutableStateFlow("all")
-    val selectedSource: StateFlow<String> = _selectedSource.asStateFlow()
+    // We observe this from the central preferences repository
+    val selectedSource: StateFlow<String> = preferencesRepository.selectedMadhab
 
     // Tracks whether the microphone is currently active
     private val _isRecording = MutableStateFlow(false)
@@ -89,10 +91,14 @@ class HomeViewModel @Inject constructor(
         viewModelScope.launch {
             _uiState.value = HomeUiState.Processing
             
+            // 🔍 We get the actual list of database names based on user settings
+            // For example, if "Hanafi" is picked, this returns ["deoband"]
+            val sourcesToSearch = preferencesRepository.getBackendSources()
+            
             // Create a request with a hardcoded test question
             val request = QueryRequest(
                 question = "How many sunna prayers are there in total on Friday at afternoon?",
-                sources = listOf(_selectedSource.value)
+                sources = sourcesToSearch
             )
             
             // Call the repository to get the answer
@@ -158,7 +164,8 @@ class HomeViewModel @Inject constructor(
      * Called when the user taps a different source chip.
      */
     fun onSourceSelected(source: String) {
-        _selectedSource.value = source
+        // Update the central preference repository
+        preferencesRepository.updateMadhab(source)
         println("Source changed to: $source") 
     }
 }

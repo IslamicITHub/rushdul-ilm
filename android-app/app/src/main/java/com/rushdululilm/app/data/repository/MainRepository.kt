@@ -10,6 +10,7 @@ import com.rushdululilm.app.data.remote.QueryRequest
 import com.rushdululilm.app.data.remote.QueryResponse
 import com.rushdululilm.app.utils.Resource
 import com.rushdululilm.app.model.FatwaAnswer
+import com.rushdululilm.app.model.FatwaSource
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -48,20 +49,22 @@ class MainRepository @Inject constructor(
                 }
                 
                 // Update the shared latestAnswer flow
-                // We use ?. because everything from the network could potentially be null
-                val sourceUrl = responseBody.sources?.firstOrNull() ?: ""
-                val sourceName = if (sourceUrl.contains("islamqa.info")) "IslamQA.info" 
-                                 else if (sourceUrl.contains("deoband")) "Darul Ifta Deoband" 
-                                 else "Islamic Source"
+                // We map all source URLs from the backend to our FatwaSource list
+                val fatwaSources = responseBody.sources?.map { url ->
+                    val name = if (url.contains("islamqa.info")) "IslamQA.info" 
+                               else if (url.contains("deoband")) "Darul Ifta Deoband" 
+                               else "Islamic Source"
+                    FatwaSource(name, url)
+                } ?: emptyList()
                                  
                 _latestAnswer.value = FatwaAnswer(
                     id = System.currentTimeMillis().toString(),
-                    questionText = request.question,
+                    questionText = responseBody.question ?: request.question,
                     answerText = responseBody.answer ?: "No answer received",
-                    sourceUrl = sourceUrl,
-                    sourceName = sourceName,
+                    sources = fatwaSources,
                     language = "en", // We'll detect/set language properly later
-                    isOfflineCache = false
+                    isOfflineCache = false,
+                    expandedQuery = responseBody.expandedSearchQuery
                 )
                 
                 // Return the successful answer
