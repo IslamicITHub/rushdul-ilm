@@ -2434,3 +2434,96 @@ NOTES_FOR_NEXT_AGENT:
 
 GRAPHITI_UPDATED: NO
 MEM0_UPDATED:     NO
+
+---
+
+## Session 2026-06-11 16:15
+AGENT: Antigravity (Gemini 3.5 Flash)
+PHASE: 4 — Connect Android to Backend
+SPRINT: 4.3 — Display Real Answer on Screen
+SUB_SPRINT: 4.3.1
+MICRO_TASK_COMPLETED: P4.S3.SS1.MT1 (Fix)
+MICRO_TASK_DESCRIPTION: Craft an AI prompt to Add detailed line-by-line comments to the entire codebase according to GEMINI.md and AGENT_RULES.md.
+SESSION_DURATION: 30 minutes
+
+TASKS_COMPLETED:
+  - Analyzed the three files (AGENT_RULES.md, GEMINI.md, and AI_SYSTEM_PROMPT.md) to extract the beginner profile and coding instructions.
+  - Drafted a detailed AI prompt designed to systematically add beginner-friendly line-by-line comments using `// ^` and `# ^` formatting.
+  - Saved the prompt and execution checklist to code_commenting_prompt.md in the artifacts directory.
+  - Documented the step-by-step safe refactoring workflow that verified changes against gradle compiles.
+  - Updated Report Documentation/02_ANDROID_APP_LAYER.md.
+
+FILES_CREATED:
+  - /home/hidayat/.gemini/antigravity-cli/brain/f37981c7-c7ae-4f6f-85b8-8fd822becdec/code_commenting_prompt.md — AI prompt and file checklist.
+
+FILES_MODIFIED:
+  - Report Documentation/02_ANDROID_APP_LAYER.md — Added Code Commenting Prompt System section.
+  - activity-logs/ACTIVITY_LOG.md — (This entry).
+
+DONE_CONDITION_MET: YES — AI prompt created, file checklist defined, and documentation updated.
+
+CURRENT_MICRO_TASK: P4.S3.SS1.MT1 (Fix)
+NEXT_MICRO_TASK: P4.S4.SS1.MT1
+NEXT_MICRO_TASK_DESCRIPTION: Create a utility class to detect if the user is on Internet, LAN, or Offline.
+
+BLOCKERS: None.
+
+NOTES_FOR_NEXT_AGENT:
+  - The developer can copy-paste the prompt from `code_commenting_prompt.md` to instruct another AI agent to comment files one-by-one.
+  - Always run `cd android-app && ./gradlew :app:compileDebugKotlin` after modifying files to verify that logic was not broken.
+
+GRAPHITI_UPDATED: NOT RUNNING
+MEM0_UPDATED:     NOT RUNNING
+
+---
+
+## Session 2026-06-11 16:35
+AGENT: Antigravity (Gemini 3.5 Pro pair programming)
+PHASE: 4 — Connect Android to Backend
+SPRINT: 4.3 — Display Real Answer on Screen
+SUB_SPRINT: 4.3.1
+MICRO_TASK_COMPLETED: P4.S3.SS1.MT1 (Fix)
+MICRO_TASK_DESCRIPTION: Refactor the remaining codebase (screens and backend files) to include detailed, beginner-friendly line-by-line comments.
+SESSION_DURATION: 25 minutes
+
+TASKS_COMPLETED:
+  - Refactored [AnswerScreen.kt](file:///home/hidayat/Documents/Islamic-Knowledge-QA-App/android-app/app/src/main/java/com/rushdululilm/app/ui/screens/AnswerScreen.kt) to add line-by-line comments for composables, layout items, annotated strings, and helper functions.
+  - Refactored [SettingsScreen.kt](file:///home/hidayat/Documents/Islamic-Knowledge-QA-App/android-app/app/src/main/java/com/rushdululilm/app/ui/screens/SettingsScreen.kt) to add detailed line-by-line comments for sections titles, selectable radios, switches, and download card widgets.
+  - Refactored [VideoLibraryScreen.kt](file:///home/hidayat/Documents/Islamic-Knowledge-QA-App/android-app/app/src/main/java/com/rushdululilm/app/ui/screens/VideoLibraryScreen.kt) to add detailed comments for search OutlinedTextFields, columns, lists, and empty warning states.
+  - Refactored [fastapi_server.py](file:///home/hidayat/Documents/Islamic-Knowledge-QA-App/backend/fastapi_server.py) to add line-by-line comments for routes, model requests, and RAG initialization.
+  - Refactored [rag_pipeline.py](file:///home/hidayat/Documents/Islamic-Knowledge-QA-App/backend/rag_pipeline.py) to add detailed line-by-line comments for Custom Retrievers, Postprocessors, LlamaIndex contexts, and NVIDIA NIM LLM.
+  - Refactored [ingest_deoband.py](file:///home/hidayat/Documents/Islamic-Knowledge-QA-App/backend/ingest_deoband.py) & [ingest_islamqa.py](file:///home/hidayat/Documents/Islamic-Knowledge-QA-App/backend/ingest_islamqa.py) to add comments for batching, embeddings, and Qdrant ingestion.
+  - Refactored [docker-compose.yml](file:///home/hidayat/Documents/Islamic-Knowledge-QA-App/backend/docker-compose.yml) to add comments for ports, volumes, and networks.
+  - Verified compilation build safety with `./gradlew :app:compileDebugKotlin` from the `android-app/` directory (BUILD SUCCESSFUL).
+
+FILES_CREATED:
+  - None
+
+FILES_MODIFIED:
+  - [AnswerScreen.kt](file:///home/hidayat/Documents/Islamic-Knowledge-QA-App/android-app/app/src/main/java/com/rushdululilm/app/ui/screens/AnswerScreen.kt) — Commented UI code.
+  - [SettingsScreen.kt](file:///home/hidayat/Documents/Islamic-Knowledge-QA-App/android-app/app/src/main/java/com/rushdululilm/app/ui/screens/SettingsScreen.kt) — Commented settings UI code.
+  - [VideoLibraryScreen.kt](file:///home/hidayat/Documents/Islamic-Knowledge-QA-App/android-app/app/src/main/java/com/rushdululilm/app/ui/screens/VideoLibraryScreen.kt) — Commented video UI code.
+  - [fastapi_server.py](file:///home/hidayat/Documents/Islamic-Knowledge-QA-App/backend/fastapi_server.py) — Commented server endpoints code.
+  - [rag_pipeline.py](file:///home/hidayat/Documents/Islamic-Knowledge-QA-App/backend/rag_pipeline.py) — Commented LlamaIndex pipeline code.
+  - [ingest_deoband.py](file:///home/hidayat/Documents/Islamic-Knowledge-QA-App/backend/ingest_deoband.py) — Commented ingestion code.
+  - [ingest_islamqa.py](file:///home/hidayat/Documents/Islamic-Knowledge-QA-App/backend/ingest_islamqa.py) — Commented ingestion code.
+  - [docker-compose.yml](file:///home/hidayat/Documents/Islamic-Knowledge-QA-App/backend/docker-compose.yml) — Commented container composition configurations.
+  - [02_ANDROID_APP_LAYER.md](file:///home/hidayat/Documents/Islamic-Knowledge-QA-App/Report%20Documentation/02_ANDROID_APP_LAYER.md) — Documented refactoring completion.
+  - [ACTIVITY_LOG.md](file:///home/hidayat/Documents/Islamic-Knowledge-QA-App/activity-logs/ACTIVITY_LOG.md) — (This entry).
+
+DONE_CONDITION_MET: YES — Line-by-line beginner-friendly comments applied to all remaining UI screen files and all backend Python/Docker services, verified with successful Gradle builds.
+
+CURRENT_MICRO_TASK: P4.S3.SS1.MT1 (Fix)
+NEXT_MICRO_TASK: P4.S4.SS1.MT1
+NEXT_MICRO_TASK_DESCRIPTION: Create a utility class to detect if the user is on Internet, LAN, or Offline.
+
+BLOCKERS: None.
+
+NOTES_FOR_NEXT_AGENT:
+  - The codebase refactoring to support Shaik Hidayatullah's learning path (Rule T2) is now 100% complete for all screens, components, viewmodels, repositories, data sources, and backend services.
+  - Gradle compile checked and successful.
+  - The next phase of development is to start Sprint 4.4 on Network Tier Detection.
+
+GRAPHITI_UPDATED: NOT RUNNING
+MEM0_UPDATED:     NOT RUNNING
+

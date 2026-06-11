@@ -1,108 +1,162 @@
-// File: SourceSelector.kt
-// Purpose: Allows the user to pick which Islamic database (fatwa source) to query.
-// Layer: Layer 1 — Android App (UI Component)
-// Created: 2026-05-31 | Developer: Shaik Hidayatullah
-
 package com.rushdululilm.app.ui.components
 
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.lazy.LazyRow
-import androidx.compose.foundation.lazy.items
-import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.FilterChip
-import androidx.compose.material3.FilterChipDefaults
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.dp
-import androidx.compose.ui.res.stringResource
-import com.rushdululilm.app.R
-import com.rushdululilm.app.ui.theme.RushdulIlmTheme
+// File: SourceSelector.kt
+// Purpose: Allows the user to pick which Islamic database (fatwa source/Madhab) to query.
+// Layer: Layer 1 — Android App (UI Component)
+// Depends on: strings.xml, Color.kt, Theme.kt, R
+// Created: 2026-05-31 | Modified: 2026-06-11
+// Developer: Shaik Hidayatullah
 
-/**
- * 📚 A horizontal scrolling list of 'chips' (pill-shaped buttons) to select a knowledge source.
- * Analogy: Like choosing a channel on a TV — you pick which "channel" of Islamic info you want.
- *
- * @param selectedSource The internal key of the currently selected source ("all", "neutral", "hanafi").
- * @param onSourceSelected Function called when a new source chip is tapped.
- */
-@OptIn(ExperimentalMaterial3Api::class) // FilterChip is still marked experimental by Google
+import androidx.compose.foundation.layout.Column
+// ^ Compose vertical layout container
+import androidx.compose.foundation.layout.Spacer
+// ^ Composable space filler used to separate layouts
+import androidx.compose.foundation.layout.fillMaxWidth
+// ^ Modifier extension expanding width to match parent layout size
+import androidx.compose.foundation.layout.height
+// ^ Modifier extension setting layout height
+import androidx.compose.foundation.layout.padding
+// ^ Modifier extension adding blank margins around components
+import androidx.compose.foundation.lazy.LazyRow
+// ^ Compose horizontally scrollable container that builds list items dynamically when visible on screen
+import androidx.compose.foundation.lazy.items
+// ^ Lazy layout extension that populates dynamic lists from collection data types (like List)
+import androidx.compose.material3.ExperimentalMaterial3Api
+// ^ Opt-in annotation for using under-development Material3 library classes
+import androidx.compose.material3.FilterChip
+// ^ Material3 pill-shaped toggle chip button widget used to represent selections
+import androidx.compose.material3.FilterChipDefaults
+// ^ Material3 class containing default styling configurations for FilterChips
+import androidx.compose.material3.MaterialTheme
+// ^ Component providing access to our custom colors, fonts, and shapes theme configurations
+import androidx.compose.material3.Text
+// ^ Composable widget that draws readable text on the screen
+import androidx.compose.runtime.Composable
+// ^ Annotation marking functions that define layout drawing blocks in Jetpack Compose
+import androidx.compose.ui.Modifier
+// ^ Compose builder class to add decorations, clicks, sizes, and padding details to widgets
+import androidx.compose.ui.graphics.Color
+// ^ Compose class defining colors using ARGB Hex values
+import androidx.compose.ui.tooling.preview.Preview
+// ^ Annotation marking parameterless Composable functions to render inside Android Studio preview
+import androidx.compose.ui.unit.dp
+// ^ Extension property converting numbers to density-independent pixels (dp)
+import androidx.compose.ui.res.stringResource
+// ^ Compose utility function to load localized string texts from strings.xml at runtime
+import com.rushdululilm.app.R
+// ^ Imports our app's generated Resource registry
+import com.rushdululilm.app.ui.theme.RushdulIlmTheme
+// ^ Imports our custom theme wrapper function
+
+// 🏛️ CONCEPT: LazyRow implements a horizontally scrolling layout list. 
+//    Unlike a Row that constructs all its items at once, LazyRow is highly optimized, building chips only when visible.
+// 🏛️ ANALOGY: SourceSelector is like choosing a radio presets panel. 
+//    You have a row of buttons (chips: All, Hanafi, Neutral). Pressing one lights it up (turns green) and tunes the search engine to those sources.
+@OptIn(ExperimentalMaterial3Api::class)
+// ^ Opts in to using Experimental Material3 FilterChip APIs
 @Composable
+// ^ Annotation indicating that this function represents a UI Composable drawing layout
 fun SourceSelector(
+// ^ Declares SourceSelector function
     selectedSource: String,
+    // ^ parameter representing the active selection key (e.g. "hanafi", "neutral")
     onSourceSelected: (String) -> Unit
+    // ^ parameter callback invoked when a chip is tapped
 ) {
-    // 📝 This list maps our internal 'code keys' to the human-readable names shown on screen.
-    // 'all' -> Shows all possible fatwa databases.
-    // 'neutral' -> Shows sources that aren't strictly one Madhab.
-    // 'hanafi' -> Shows sources that follow the Hanafi school (like Deoband).
+// ^ Starts SourceSelector body
     val sources = listOf(
+    // ^ Instantiates a read-only list of key-value pairs mapping stable keys to localized display strings
         "all" to stringResource(R.string.source_all),
+        // ^ Maps key "all" to the "All Sources" display string
         "neutral" to stringResource(R.string.madhab_neutral),
+        // ^ Maps key "neutral" to the "Neutral (No Madhab)" display string
         "hanafi" to stringResource(R.string.madhab_hanafi)
+        // ^ Maps key "hanafi" to the "Hanafi (Deoband)" display string
     )
+    // ^ Ends sources list configuration
 
     Column(modifier = Modifier.fillMaxWidth()) {
-        // 🏷️ Section Title: "Source: / మూలం:" (English + Telugu)
+    // ^ Vertical container matching parent width
         Text(
+        // ^ Draws selector section label header
             text = stringResource(R.string.source_selector_label),
-            style = MaterialTheme.typography.bodyLarge, // 18sp
+            // ^ Resolves bilingual label from strings.xml
+            style = MaterialTheme.typography.bodyLarge, 
+            // ^ Applies bodyLarge typography style (18sp accessibility size)
             color = MaterialTheme.colorScheme.onBackground,
+            // ^ Sets text color matching background theme text
             modifier = Modifier.padding(horizontal = 16.dp)
+            // ^ Adds 16dp horizontal margin padding
         )
+        // ^ Ends Text widget
         
         Spacer(modifier = Modifier.height(8.dp))
+        // ^ Adds a fixed blank spacing gap of 8dp below the label header
 
-        // 🏃 LazyRow is a horizontally scrollable list.
-        // It's "Lazy" because it only builds the chips that are actually on the screen.
         LazyRow(
+        // ^ Horizontal scrollable list container
             modifier = Modifier.fillMaxWidth(),
-            // 📏 Add padding so the chips don't touch the very edge of the phone screen
+            // ^ Expands width to match screen width bounds
             contentPadding = androidx.compose.foundation.layout.PaddingValues(horizontal = 16.dp),
-            // ↔️ Add a small gap between each chip
+            // ^ Adds 16dp starting and ending scroll margin offsets so items don't touch screen edges
             horizontalArrangement = androidx.compose.foundation.layout.Arrangement.spacedBy(8.dp)
+            // ^ Configures 8dp horizontal space gaps between chips
         ) {
-            // 'items' loop through our list of sources above
+        // ^ Starts LazyRow body
             items(sources) { (sourceId, sourceName) ->
-                // 💊 FilterChip is the pill-shaped button
+            // ^ Iterates through key-value pairs, extracting key (sourceId) and label (sourceName)
                 FilterChip(
-                    // If this chip's ID matches the selected ID, it turns green
+                // ^ Draws Material3 selectable pill-shaped button
                     selected = selectedSource == sourceId,
-                    // When tapped, tell the ViewModel which one was picked
+                    // ^ Marks chip selected if its key matches active selection
                     onClick = { onSourceSelected(sourceId) },
+                    // ^ Invokes ViewModel callback with the clicked chip key
                     label = { 
-                        // The text inside the chip (e.g., "Hanafi (Deoband)")
+                    // ^ Passes chip label widget block
                         Text(
+                        // ^ Draws display name inside the chip
                             text = sourceName,
-                            style = MaterialTheme.typography.labelSmall // 16sp minimum
+                            // ^ Passes the display name string
+                            style = MaterialTheme.typography.labelSmall
+                            // ^ Applies labelSmall typography style (16sp accessibility size)
                         ) 
+                        // ^ Ends Text widget
                     },
+                    // ^ Ends label parameter
                     colors = FilterChipDefaults.filterChipColors(
-                        // 🎨 When selected: IslamicGreen background with white text
+                    // ^ Customizes color schemes for active and inactive states
                         selectedContainerColor = MaterialTheme.colorScheme.primary,
+                        // ^ Sets selected background fill to primary theme color (IslamicGreen)
                         selectedLabelColor = Color.White
+                        // ^ Sets selected text color to White
                     )
+                    // ^ Ends colors parameter
                 )
+                // ^ Ends FilterChip widget
             }
+            // ^ Ends items loop block
         }
+        // ^ Ends LazyRow container
     }
+    // ^ Ends Column container
 }
+// ^ Ends SourceSelector Composable function
 
-// Preview to test the component
 @Preview(showBackground = true)
+// ^ Preview configuration displaying the source selector on a standard white background in Android Studio
 @Composable
+// ^ Composable annotation
 fun SourceSelectorPreview() {
+// ^ Declares SourceSelectorPreview function
     RushdulIlmTheme {
+    // ^ Wraps in custom theme colors
         SourceSelector(
-            selectedSource = "islamqa_info",
+            selectedSource = "all",
+            // ^ Sets selection preview to "all"
             onSourceSelected = {}
+            // ^ Empty callback
         )
     }
+    // ^ Ends theme wrap
 }
+// ^ Ends SourceSelectorPreview function

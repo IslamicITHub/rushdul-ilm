@@ -1,29 +1,42 @@
 // File: ApiService.kt
 // Purpose: Defines the Retrofit interface for the Rushd-ul-Ilm backend API.
-// Layer: 4 — Connect Android to Backend
-// Created: 2026-06-08 | Developer: Shaik Hidayatullah
+// Layer: Layer 1 — Android App (Data Remote)
+// Depends on: NetworkModels.kt
+// Created: 2026-06-08 | Modified: 2026-06-11
+// Developer: Shaik Hidayatullah
 
 package com.rushdululilm.app.data.remote
 
 import retrofit2.Response
+// ^ Retrofit class that wraps the HTTP response, giving access to the status code, headers, and body data
 import retrofit2.http.Body
+// ^ Retrofit annotation declaring that a parameter should be serialized as the HTTP request body payload
 import retrofit2.http.GET
+// ^ Retrofit annotation specifying an HTTP GET request to retrieve data from a server endpoint
 import retrofit2.http.POST
+// ^ Retrofit annotation specifying an HTTP POST request to send data to a server endpoint
 
-// 📜 This interface acts as the "Menu" for our API.
-// Retrofit will implement these functions for us automatically.
+// 🏛️ CONCEPT: An interface in Kotlin defines a contract of functions without implementing their bodies.
+//    Retrofit takes this interface and dynamically generates the actual HTTP client network code for us.
+//    The 'suspend' keyword indicates that the function is a coroutine, meaning it pauses execution without freezing the app UI thread.
+// 🏛️ ANALOGY: ApiService is like a waiter's order pad. 
+//    You write down the request names (endpoints like "health" or "query"). Retrofit takes this pad to the kitchen (server) and brings back the food (response).
 interface ApiService {
+// ^ Declares an interface named ApiService for network calls
 
-    // 🏥 A simple health check to see if the server is awake.
-    // @GET means we are just "getting" information without sending much.
     @GET("health")
+    // ^ Annotation mapping this function to an HTTP GET request at the "health" endpoint path
     suspend fun checkHealth(): Response<Map<String, String>>
+    // ^ suspend function checkHealth executes a background call and returns an HTTP Response containing key-value string maps
+    // ^ This checks if the local FastAPI backend server is online and running
 
-    // 🤖 The main endpoint to ask Islamic questions.
-    // @POST means we are "posting" (sending) a request body to the server.
-    // 'suspend' means this function runs in the background so the UI doesn't freeze.
     @POST("query")
+    // ^ Annotation mapping this function to an HTTP POST request at the "query" endpoint path
     suspend fun askQuestion(
+    // ^ suspend function askQuestion sends a query request payload and returns the answer response
         @Body request: QueryRequest
+        // ^ @Body passes the serialized QueryRequest object (which contains the question and filters) in the request body
     ): Response<QueryResponse>
+    // ^ Returns an HTTP Response wrapping a QueryResponse object (containing the AI answer and sources)
 }
+// ^ Ends ApiService interface definition

@@ -1,49 +1,65 @@
 // File: NetworkModels.kt
 // Purpose: Defines the JSON data structures for communication with the FastAPI backend.
-// Layer: 4 — Connect Android to Backend
-// Created: 2026-06-08 | Developer: Shaik Hidayatullah
+// Layer: Layer 1 — Android App (Data Remote)
+// Depends on: None (Standalone Data Blueprints)
+// Created: 2026-06-08 | Modified: 2026-06-11
+// Developer: Shaik Hidayatullah
 
 package com.rushdululilm.app.data.remote
 
 import com.google.gson.annotations.SerializedName
+// ^ Gson library annotation that tells Retrofit the exact JSON key name to map to this Kotlin variable
 
-// 📦 This class represents the question we send to the server.
-// It matches the 'QueryRequest' model in our FastAPI server.
+// 🏛️ CONCEPT: Network data models define the structure of JSON data exchanged over HTTP.
+//    @SerializedName maps Kotlin camelCase property names to backend JSON snake_case keys.
+//    Making properties nullable (e.g., String?) protects the app from crashing if fields are missing in responses.
+// 🏛️ ANALOGY: NetworkModels are like standardized mailing label templates. 
+//    They ensure that when we send or receive a package (JSON payload), the labels line up exactly with what the postal carrier (server) expects.
+
 data class QueryRequest(
-    // @SerializedName ensures the name matches the JSON key exactly.
+// ^ data class representing the payload sent in HTTP POST to the backend /query endpoint
     @SerializedName("question") val question: String,
+    // ^ Serializes the 'question' property to the JSON key "question"
+    // ^ val declares a read-only string containing the user's speech-to-text question
     
-    // chat_history is a list of previous messages to keep the conversation context.
     @SerializedName("chat_history") val chatHistory: List<ChatMessage> = emptyList(),
+    // ^ Serializes the 'chatHistory' property to the JSON key "chat_history"
+    // ^ val declares a read-only list of ChatMessage objects to provide context, defaulting to an empty list
     
-    // sources is an optional list of which databases to search (e.g., ["islamqa", "deoband"]).
     @SerializedName("sources") val sources: List<String>? = null
+    // ^ Serializes the 'sources' property to the JSON key "sources"
+    // ^ val declares a nullable read-only list of source names (e.g. ["deoband"]) to filter the RAG database search
 )
+// ^ Ends QueryRequest class definition
 
-// 📦 This represents a single message in the chat history.
 data class ChatMessage(
-    @SerializedName("role") val role: String, // "user" or "assistant"
-    @SerializedName("content") val content: String // The actual text of the message
+// ^ data class representing a single message block in a multi-turn conversation
+    @SerializedName("role") val role: String, 
+    // ^ Serializes the 'role' property to the JSON key "role" (value can be "user" or "assistant")
+    
+    @SerializedName("content") val content: String 
+    // ^ Serializes the 'content' property to the JSON key "content" (holds the message text)
 )
+// ^ Ends ChatMessage class definition
 
-// 📦 This represents the answer we get back from the server.
 data class QueryResponse(
-    // The main text of the Islamic answer. 
-    // Nullable because it might be missing if there's an error.
+// ^ data class representing the backend server response containing the RAG search results
     @SerializedName("answer") val answer: String? = null,
-
-    // The original question received by the server.
+    // ^ Serializes 'answer' to the JSON key "answer". Nullable String represents the generated fatwa answer text.
+    
     @SerializedName("question") val question: String? = null,
-
-    // The expanded version of the question used for database search.
+    // ^ Serializes 'question' to the JSON key "question". Nullable String represents the question string recognized by the server.
+    
     @SerializedName("expanded_search_query") val expandedSearchQuery: String? = null,
+    // ^ Serializes 'expandedSearchQuery' to the JSON key "expanded_search_query". Nullable String represents the expanded search terms.
     
-    // A list of clickable URLs for the sources used.
     @SerializedName("sources") val sources: List<String>? = null,
+    // ^ Serializes 'sources' to the JSON key "sources". Nullable list of strings represents citation source URLs.
     
-    // Whether the AI is asking for more details (clarification logic).
     @SerializedName("is_clarification") val isClarification: Boolean? = false,
+    // ^ Serializes 'isClarification' to the JSON key "is_clarification". Nullable Boolean is true if the LLM needs more details.
     
-    // ⚠️ New: If the server has a Python error, it might send this instead of an answer.
     @SerializedName("error") val error: String? = null
+    // ^ Serializes 'error' to the JSON key "error". Nullable String holds error messages if the backend encounters a failure.
 )
+// ^ Ends QueryResponse class definition

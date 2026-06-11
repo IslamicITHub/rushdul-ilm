@@ -1,208 +1,207 @@
-"""
 # File: backend/ingest_islamqa.py
 # Purpose: Converts IslamQA SQLite fatwas into vector embeddings and saves them in Qdrant.
 # Layer: Phase 3 — Knowledge Ingestion
-# Created: 2026-06-03 | Modified: 2026-06-03
+# Depends on: sqlite3, os, qdrant_client, sentence_transformers
+# Created: 2026-06-03 | Modified: 2026-06-11
 # Developer: Shaik Hidayatullah
 
-===============================================================================
-BEGINNER'S GUIDE TO THE CONCEPTS USED IN THIS SCRIPT
-===============================================================================
-
-1. EMBEDDINGS:
-   Computers don't understand words; they only understand numbers. An "embedding" 
-   is a way to convert text (like a sentence or a paragraph) into a long list of 
-   numbers (called a "vector"). The magic is that sentences with similar meanings 
-   will have similar numbers. This allows the computer to understand "semantic 
-   meaning" rather than just looking for exact keyword matches.
-
-2. VECTOR DATABASE (Vector DB):
-   A traditional database (like SQLite) stores data in rows and columns and is 
-   great for exact matches (e.g., "Find user where ID = 5"). A Vector DB is 
-   designed to store embeddings (those long lists of numbers) and perform 
-   "similarity searches." It allows you to ask: "Find the vectors in the database 
-   that are mathematically closest to the vector of my search query."
-
-3. QDRANT:
-   Qdrant is a specific, highly efficient open-source Vector Database. It stores 
-   our vectors (embeddings) alongside "payloads" (metadata like titles and URLs) 
-   so we can quickly retrieve the original text when we find a mathematical match.
-
-4. COSINE SIMILARITY:
-   This is the mathematical formula Qdrant uses to determine how close two vectors 
-   are to each other. It measures the angle between two lines (vectors) in a 
-   multi-dimensional space. A smaller angle means the texts are more similar in meaning.
-===============================================================================
-"""
-
-# Import the sqlite3 library to interact with our SQLite database file
 import sqlite3
-# Import the os library to check if files exist on our computer's operating system
+# ^ Import sqlite3 to query offline fatwas database records
 import os
-
-# Import Qdrant client to communicate with the Qdrant database server
+# ^ Import os to handle absolute directories and environment variables
 from qdrant_client import QdrantClient
-# Import models from Qdrant to define data structures (like Vectors and Points)
+# ^ Client class driving network requests directly to self-hosted Qdrant server collections
 from qdrant_client.http import models
-# Import SentenceTransformer to load the AI model that creates our text embeddings
+# ^ Imports payload models for structured vector database operations
 from sentence_transformers import SentenceTransformer
+# ^ SentenceTransformer loads vector embedding models to convert text into mathematical coordinates
 
 # --- CONFIGURATION ---
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+# ^ Extracts the absolute directory path of this file to prevent filepath bugs inside Docker containers
 MODEL_NAME = os.path.join(BASE_DIR, "local_models", "qwen3_embedding_06b_local")
-
-# We use 'paraphrase-multilingual-MiniLM-L12-v2' (420MB) instead of MPNET (1.1GB)
-# to avoid download timeouts, while still supporting Telugu and Urdu.
-#MODEL_NAME = 'paraphrase-multilingual-MiniLM-L12-v2'
-
-# The size of the vector depends entirely on the AI model used. 
-# Our chosen MiniLM model outputs exactly 384 numbers per sentence.
+# ^ Chains file paths to target the locally downloaded Qwen multilingual embedding folder
 VEC_SIZE = 1024
-
-# The file path where our traditional SQLite database is stored
+# ^ Enforces vector size parameter to match 1024 dimensions of embedding model
 SQLITE_DB_PATH = "../islamqa.info-offline/islamqa_database.sqlite"
-
-# The address and port where the Qdrant server is running
+# ^ Filepath pointing to local SQLite database containing offline IslamQA fatwa scraping data
 QDRANT_HOST = "localhost"
+# ^ Default network address name mapping connection routes to the local Qdrant server
 QDRANT_PORT = 6333
+# ^ The port address where Qdrant database listens for incoming client requests
 COLLECTION_NAME = "islamqa"
+# ^ Target collection namespace inside Qdrant database for IslamQA fatwas
 
-
+# 🏛️ CONCEPT: Knowledge ingestion pipelines convert unstructured text documents into vector databases.
+#    This process loops through SQLite database records, generates vector arrays, and upserts them to collections.
+# 🏛️ ANALOGY: Ingesting IslamQA fatwas is like cataloging a set of fatwa reference books.
+#    We pick up each volume (SQLite Row), read the contents (Texts), assign a numeric index code (Embeddings),
+#    and slide it into a labeled shelf section (Qdrant IslamQA collection).
 def ingest():
-    """
-    Reads data from SQLite, converts text to embeddings, and uploads to Qdrant.
-    Returns the initialized Qdrant client and AI model so we can use them for testing later.
-    """
+# ^ Declares ingest function orchestrating data indexing operations
     print(f"[*] Connecting to Qdrant at {QDRANT_HOST}:{QDRANT_PORT}...")
-    # Create a connection object to talk to the Qdrant server
+    # ^ Outputs status update to console log
     client = QdrantClient(host=QDRANT_HOST, port=QDRANT_PORT)
+    # ^ Establishes client driver connection targeting Qdrant server port
 
     print(f"[*] Loading embedding model: {MODEL_NAME}...")
-    # Load the AI model into memory. (It will download from the internet on the first run)
+    # ^ Outputs status update to console log
     model = SentenceTransformer(MODEL_NAME, device='cuda')
+    # ^ Instantiates embedding translator model running on CUDA GPU for faster ingestion processing
 
     print(f"[*] Setting up Qdrant collection: {COLLECTION_NAME}...")
-    # A "collection" in Qdrant is like a "table" in SQL. 
-    # 'recreate_collection' will delete the collection if it already exists and make a fresh one.
+    # ^ Outputs status update to console log
     client.recreate_collection(
+    # ^ Deletes existing collection target and creates a clean index structure
         collection_name=COLLECTION_NAME,
-        # We must tell Qdrant how big our vectors are (384) and how to compare them (Cosine)
+        # ^ Target collection name
         vectors_config=models.VectorParams(size=VEC_SIZE, distance=models.Distance.COSINE),
+        # ^ Configures 1024 vector dimensions and Cosine metric formula for semantic distance measurements
     )
+    # ^ Ends recreate_collection call
 
-    # Check if the SQLite file actually exists before we try to open it
     if not os.path.exists(SQLITE_DB_PATH):
+    # ^ Validates if SQLite database exists at target path
         print(f"[!] Error: SQLite database not found at {SQLITE_DB_PATH}")
-        # Return None to indicate failure
+        # ^ Outputs error notification to console log
         return None, None
+        # ^ Returns None tuple to indicate failure to caller
+    # ^ Ends path validation
 
-    # Connect to the SQLite database
     conn = sqlite3.connect(SQLITE_DB_PATH)
-    # Create a cursor object, which is used to execute SQL commands
+    # ^ Opens SQLite connection database reference
     cursor = conn.cursor()
+    # ^ Instantiates cursor engine to execute database SQL statements
 
     print("[*] Fetching fatwas from SQLite...")
-    # Execute an SQL query to get specific columns from the 'fatwas' table
-    #cursor.execute("SELECT id, title, question, url FROM fatwas")
+    # ^ Outputs status update to console log
     cursor.execute("SELECT id, url, question, answer FROM fatwas")
-    # Fetch all the results of the query and store them in a list called 'rows'
+    # ^ Executes SQL query selecting ID, URL, question, and answer text columns
     rows = cursor.fetchall()
+    # ^ Gathers all matching records from SQLite database into memory
     print(f"[+] Found {len(rows)} fatwas.")
+    # ^ Prints count of fetched database rows to console log
 
-    # We process the data in small chunks (batches) so we don't run out of computer memory
     batch_size = 1
-    
-    # Loop through the list of rows, jumping by 'batch_size' (0, 100, 200, etc.)
+    # ^ Sets batch size processing count to limit RAM spikes during embedding generation
     for i in range(0, len(rows), batch_size):
-        # Slice the list to get just the current batch of rows
+    # ^ Loops through the rows in chunks of batch_size steps
         batch = rows[i : i + batch_size]
-        
-        # Combine the question (row[2]) and answer (row[3]) into a single string for the AI to read
+        # ^ Extracts current chunk subset slice of rows
         texts_to_embed = [f"{row[2]} {row[3]}" for row in batch]
+        # ^ Combines question and answer text strings for embedding context
         
         print(f"    [*] Generating embeddings for batch {i//batch_size + 1}...")
-        # Use the AI model to convert our list of text strings into a list of number vectors
+        # ^ Outputs chunk status updates to console log
         embeddings = model.encode(texts_to_embed)
+        # ^ Translates combined string batch into mathematical coordinate vectors
         
-        # Create an empty list to hold the formatted data points for Qdrant
         points = []
-        
-        # Loop through each item in our current batch, getting both its index number (idx) and data (row)
+        # ^ Initializes empty list to collect compiled Qdrant PointStruct points
         for idx, row in enumerate(batch):
-            # Unpack the 4 columns from our SQL query into 4 variables
+        # ^ Loops through row batch indices and values
             f_id, f_url, f_question, f_answer = row
-            
-            # Construct a "PointStruct", which is Qdrant's required format for saving data
+            # ^ Unpacks ID, URL, question, and answer fields
             points.append(
+            # ^ Appends structured search point to batch list
                 models.PointStruct(
-                    id=f_id,                            # The unique ID from SQLite
-                    vector=embeddings[idx].tolist(),    # The mathematical vector (converted to a standard Python list)
-                    payload={                           # Payload is extra info attached to the vector
+                # ^ Instantiates Qdrant PointStruct builder class
+                    id=f_id,
+                    # ^ Enforces unique database ID keys
+                    vector=embeddings[idx].tolist(),
+                    # ^ Converts numpy float coordinates list array into python floats list
+                    payload={
+                    # ^ Appends payload context dictionary mapped to the vector coordinate
                         "id": f_id,
+                        # ^ Unique database record ID integer
                         "url": f_url,
+                        # ^ citation URL link string
                         "source": "IslamQA.info",
-                        "question": f_question, # Store the text so we can read it later (capped at 2000 chars to save space)
+                        # ^ Source website publisher label
+                        "question": f_question,
+                        # ^ Text of user-submitted question payload string
                         "answer" : f_answer  
+                        # ^ Full answer text chunk string
                     }
+                    # ^ Ends payload mapping
                 )
+                # ^ Ends PointStruct instantiation
             )
+            # ^ Ends points append
         
         print(f"    [*] Upserting batch {i//batch_size + 1} to Qdrant...")
-        # Upload the list of points to the Qdrant database. ("Upsert" means Update or Insert)
+        # ^ Outputs chunk status updates to console log
         client.upsert(collection_name=COLLECTION_NAME, points=points)
+        # ^ Upserts points batch directly to active Qdrant vector database collection
+    # ^ Ends batch ingestion loop
 
     print(f"\n[SUCCESS] Ingestion complete. {len(rows)} fatwas are now in Qdrant!")
-    # Always close the database connection when you are done
+    # ^ Prints success summary message to console log
     conn.close()
-    
-    # Return the client and model so we can use them in the test function below
+    # ^ Closes database connection to clean up memory resources
     return client, model
+    # ^ Returns initialized client and model objects back to testing functions
+# ^ Ends ingest function
 
-
+# 🏛️ CONCEPT: Semantic searches verify ingestion databases by mapping string queries into coordinate vectors.
+#    Nearest-neighbor lookups fetch matching payloads sorted by coordinate proximity.
+# 🏛️ ANALOGY: test_qdrant_search is like checking if a directory search tool actually finds files.
+#    We enter a key word (search query), translate it, check the catalog indexes, and print out the books found.
 def test_qdrant_search(client, model, test_query):
-    """
-    Takes a plain text query, converts it to an embedding, and asks Qdrant 
-    to find the most similar fatwas in the database.
-    """
+# ^ Declares test search diagnostic function accepting clients, models, and query string
     print("\n" + "="*50)
+    # ^ Draws border header line separator
     print(f"[*] RUNNING TEST QUERY: '{test_query}'")
+    # ^ Prints test query description to console log
     print("="*50)
+    # ^ Draws border header line separator
 
-    # Step 1: Convert the user's text question into a mathematical vector
-    # using the exact same AI model we used during ingestion.
     query_vector = model.encode(test_query).tolist()
-
+    # ^ Translates text question into coordinates floats list
     search_response = client.query_points(
+    # ^ Calls direct vector query search from Qdrant
         collection_name="islamqa",
+        # ^ Target collection namespace
         query=query_vector,
-        limit=3  # Fetch the top 3 closest matching fatwas
+        # ^ Supplies coordinate query vector array
+        limit=3
+        # ^ Limits search returns to top 3 matches
     )
-    # Step 2: Search Qdrant for the closest matching vectors
+    # ^ Ends query_points call
     search_results = search_response.points
+    # ^ Gathers matching points list array
 
-    # Step 3: Print out the results so we can see them
     if not search_results:
+    # ^ Conditional check, validating if search response contains matches
         print("[-] No results found. (Is the database empty?)")
+        # ^ Prints empty alert status to console log
         return
+        # ^ Aborts function execution
+    # ^ Ends search_results check
 
     for rank, result in enumerate(search_results, start=1):
-        # result.score shows how similar the match is mathematically
-        # result.payload contains the title, url, and text we saved earlier
+    # ^ Loops through ranked matches
         print(f"Rank {rank} (Similarity Score: {result.score:.4f}):")
+        # ^ Prints rank number and distance score metric to console
         print(f"  URL : {result.payload.get('url')}")
+        # ^ Prints reference source URL from payload dictionary
         print(f"  Answer   : {result.payload.get('answer')}")
-        #print(f"  Snippet: {result.payload.get('text')[:150]}...") # Print first 150 chars of the text
+        # ^ Prints answer contents payload string to terminal console
         print("-" * 50)
+        # ^ Draws line separator between result cards
+    # ^ Ends loops
+# ^ Ends test_qdrant_search function
 
-# This is the standard entry point for a Python script.
-# It ensures the code inside only runs if the script is executed directly 
-# (not if it is imported into another file).
 if __name__ == "__main__":
-    # 1. Run the ingestion process
+# ^ Conditional block executing statements only when python script is run directly in terminal
     qdrant_client, ai_model = ingest()
+    # ^ Triggers data ingestion and gets client/model reference links
     
-    # 2. If ingestion was successful (it didn't return None), run a test query
     if qdrant_client and ai_model:
-        # You can change this string to test different searches based on the IslamQA data
+    # ^ Conditional check verifying that ingestion process completed successfully
         sample_question = "What are the conditions for accepting repentance?"
+        # ^ Sets sample test query string
         test_qdrant_search(qdrant_client, ai_model, sample_question)
+        # ^ Executes diagnostic test search lookup
+    # ^ Ends checking block
+# ^ Ends script execution block

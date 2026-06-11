@@ -1,86 +1,108 @@
-// File: android-app/app/src/main/java/com/rushdululilm/app/viewmodel/SettingsViewModel.kt
+// File: SettingsViewModel.kt
 // Purpose: Manages the state of the Settings Screen
-// Layer: 1 — Android UI Skeleton
-// Depends on: ViewModel, Hilt, StateFlow
-// Created: 2026-05-31 | Modified: 2026-06-10
+// Layer: Layer 1 — Android App (ViewModel)
+// Depends on: UserPreferencesRepository.kt, AppLanguage.kt, StateFlow
+// Created: 2026-05-31 | Modified: 2026-06-11
 // Developer: Shaik Hidayatullah
 
 package com.rushdululilm.app.viewmodel
 
 import androidx.lifecycle.ViewModel
+// ^ Base Android Architecture Component class designed to store and manage UI-related data in a lifecycle-aware way
 import com.rushdululilm.app.R
+// ^ Imports our app's generated Resource registry to access string resource IDs
 import dagger.hilt.android.lifecycle.HiltViewModel
+// ^ Annotation that registers this ViewModel for constructor injection with Hilt
 import kotlinx.coroutines.flow.MutableStateFlow
+// ^ Kotlin Flow class that holds a single state value and supports write access
 import kotlinx.coroutines.flow.StateFlow
+// ^ Kotlin Flow class that holds a single state value and supports read-only access
 import javax.inject.Inject
+// ^ Tells Hilt how to inject constructor dependencies
 import com.rushdululilm.app.data.repository.UserPreferencesRepository
+// ^ Imports the singleton repository managing user preferences
 import com.rushdululilm.app.model.AppLanguage
+// ^ Imports the central supported language Enum definition
 
-/**
- * SettingsViewModel is the 'brain' for the Settings Screen.
- * It holds the user's choices (like which language or Madhab they prefer).
- * Analogy: Like a "Settings" page in a diary, it keeps track of your personal preferences.
- */
+// 🏛️ CONCEPT: SettingsViewModel coordinates preferences state for the Settings screen.
+//    It observes global variables (locale, Madhab) from the UserPreferencesRepository and updates them, while maintaining local-only settings like text size.
+// 🏛️ ANALOGY: SettingsViewModel is like the climate control board on a car dashboard. 
+//    Toggling a switch (like fan speed or temperature) updates the dials on the screen and changes the settings in the engine.
 @HiltViewModel
-class SettingsViewModel @Inject constructor(
-    private val preferencesRepository: UserPreferencesRepository // 💉 Injected to save settings centrally
+// ^ Instructs Hilt dependency injection to manage construction of this ViewModel class
+class SettingsViewModel @Inject constructor( // ^ class SettingsViewModel manages settings state, constructor injected by Hilt
+    private val preferencesRepository: UserPreferencesRepository // ^ central user preferences repository reference
 ) : ViewModel() {
+// ^ SettingsViewModel inherits from base architecture ViewModel class
 
-    // --- SECTION 1: LANGUAGE SETTINGS ---
-    // 'selectedLanguage' stores the shared language selected anywhere in the app.
     val selectedLanguage: StateFlow<AppLanguage> = preferencesRepository.selectedLanguage
+    // ^ Exposes a read-only StateFlow linked to the global app language preference
 
-    // --- SECTION 2: MADHAB PREFERENCE ---
-    // We observe the preference directly from the central repository.
     val selectedMadhab: StateFlow<String> = preferencesRepository.selectedMadhab
+    // ^ Exposes a read-only StateFlow linked to the global Madhab choice string
 
-    // Tracks the description of the selected Madhab to explain it to the user.
     private val _madhabDescription = MutableStateFlow(R.string.madhab_all_desc)
+    // ^ private mutable flow holding the string resource ID of the explanation text for the selected Madhab (defaults to All description)
+    
     val madhabDescription: StateFlow<Int> = _madhabDescription
+    // ^ public read-only StateFlow holding the active description string resource ID
 
-    // --- SECTION 3: APP SETTINGS ---
-    // 'isAutoPlayEnabled' is a true/false toggle for reading aloud automatically.
     private val _isAutoPlayEnabled = MutableStateFlow(false)
+    // ^ private mutable flow tracking whether text-to-speech auto-play is enabled (starts as false)
+    
     val isAutoPlayEnabled: StateFlow<Boolean> = _isAutoPlayEnabled
+    // ^ public read-only StateFlow exposed to the UI for auto-play toggle status
 
-    // 'isLargeTextEnabled' is a toggle for making text even larger for accessibility.
     private val _isLargeTextEnabled = MutableStateFlow(true)
+    // ^ private mutable flow tracking whether large text mode is enabled (starts as true for accessibility)
+    
     val isLargeTextEnabled: StateFlow<Boolean> = _isLargeTextEnabled
+    // ^ public read-only StateFlow exposed to the UI for large text toggle status
 
-    // --- ACTIONS ---
-
-    // Called when the user taps a different language.
     fun onLanguageSelected(language: AppLanguage) {
+    // ^ Triggered when the user selects a language option in the Settings UI list
         preferencesRepository.updateLanguage(language)
+        // ^ Updates the central preference repository, triggering runtime language change
     }
+    // ^ Ends onLanguageSelected function
 
-    /**
-     * Called when the user taps a different Madhab/Source preference.
-     * @param madhabKey The internal key ("all", "neutral", "hanafi")
-     */
     fun onMadhabSelected(madhabKey: String) {
-        // Save the choice in the central repository
+    // ^ Triggered when the user clicks on a Madhab preference option
         preferencesRepository.updateMadhab(madhabKey)
+        // ^ Updates the central repository with the new Madhab key selection
         
-        // Update the explanation text based on the choice
         _madhabDescription.value = when (madhabKey) {
+        // ^ Conditional block updating the explanation text description resource based on the key choice
             "hanafi" -> R.string.madhab_hanafi_desc
+            // ^ Sets description to Hanafi definition if selected
             "neutral" -> R.string.madhab_neutral_desc
+            // ^ Sets description to Neutral definition if selected
             else -> R.string.madhab_all_desc
+            // ^ Defaults to All definition
         }
+        // ^ Ends conditional check
         
         println("Settings: Madhab changed to $madhabKey")
+        // ^ Prints a debug statement to the console
     }
+    // ^ Ends onMadhabSelected function
 
-    // Called when the user toggles the Auto-play switch.
     fun onAutoPlayToggled(enabled: Boolean) {
+    // ^ Triggered when the user toggles the auto-play switch
         _isAutoPlayEnabled.value = enabled
+        // ^ Updates the local state flow value
         println("Settings: Auto-play toggled to $enabled")
+        // ^ Prints a debug log statement
     }
+    // ^ Ends onAutoPlayToggled function
 
-    // Called when the user toggles the Large Text switch.
     fun onLargeTextToggled(enabled: Boolean) {
+    // ^ Triggered when the user toggles the large text accessibility switch
         _isLargeTextEnabled.value = enabled
+        // ^ Updates the local state flow value
         println("Settings: Large text toggled to $enabled")
+        // ^ Prints a debug log statement
     }
+    // ^ Ends onLargeTextToggled function
 }
+// ^ Ends SettingsViewModel class definition

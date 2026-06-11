@@ -2,20 +2,31 @@ package com.rushdululilm.app.ui.screens
 
 // File: Routes.kt
 // Purpose: Defines all the navigation "addresses" (routes) for the app in one place.
-// Layer: Layer 1 — Android App
-// Created: 2026-05-30 | Developer: Shaik Hidayatullah
+// Layer: Layer 1 — Android App (UI)
+// Depends on: None (Standalone Configuration)
+// Created: 2026-05-30 | Modified: 2026-06-11
+// Developer: Shaik Hidayatullah
 
-/**
- * Think of Jetpack Compose Navigation like a city map. 
- * Every screen is a different house, and every house needs an address.
- * 
- * Instead of typing "home" or "settings" manually every time we want to change screens,
- * we store them here as constants (values that never change). 
- * This prevents spelling mistakes and makes the code cleaner.
- */
+// 🏛️ CONCEPT: Routes is a central registry containing the names of all screens in the app.
+//    By centralizing these strings, we ensure that navigating to a screen always uses the correct address.
+// 🏛️ ANALOGY: Routes is like a contact list in your phone. Instead of typing a phone number
+//    manually every time you want to dial, you tap the contact's name (like "HOME" or "SETTINGS").
 object Routes {
-    const val HOME = "home"           // The main starting screen with the big mic button
-    const val ANSWER = "answer"       // The screen that shows the fatwa answer + source URL
-    const val VIDEO_LIBRARY = "video_library"  // The screen showing a searchable list of Islamic video lectures
-    const val SETTINGS = "settings"   // The screen for app preferences and downloading offline databases
+// ^ object creates a Singleton (a single static class instance) in Kotlin
+    const val HOME = "home"
+    // ^ const val defines a read-only constant value known at compile time
+    // ^ HOME is the destination address string for the Home screen (with the mic button)
+    
+    const val ANSWER = "answer"
+    // ^ const val defines a read-only constant value known at compile time
+    // ^ ANSWER is the destination address string for the screen showing RAG answers
+    
+    const val VIDEO_LIBRARY = "video_library"
+    // ^ const val defines a read-only constant value known at compile time
+    // ^ VIDEO_LIBRARY is the destination address string for the video library screen
+    
+    const val SETTINGS = "settings"
+    // ^ const val defines a read-only constant value known at compile time
+    // ^ SETTINGS is the destination address string for the app preferences and offline databases
 }
+// ^ Ends the Routes object

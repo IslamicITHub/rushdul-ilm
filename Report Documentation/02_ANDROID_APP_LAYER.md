@@ -784,3 +784,43 @@ Compiled successfully with:
 ```text
 ./gradlew :app:compileDebugKotlin
 ```
+
+---
+
+## Code Commenting Prompt System (2026-06-11)
+
+Created a comprehensive AI Prompt system to enforce the project's strict line-by-line commenting guidelines across the entire codebase.
+
+### 1. The Commenting Standard (Rule T2)
+To accommodate Shaik Hidayatullah's profile as a beginner in Android Studio and Jetpack Compose, the codebase must adhere to the `Rule T2` commenting standard, where every single line of code is followed by a beginner-friendly comment using:
+- `// ^` format in Kotlin files.
+- `# ^` format in Python and Docker Compose files.
+
+### 2. Prompt Creation
+- Created `code_commenting_prompt.md` in the user's local artifacts directory.
+- This file contains a copy-pasteable master prompt that instructs any coding AI (like Claude or Gemini) to systematically add detailed comments to target files without modifying their logic.
+- It includes templates, rules, target file checklists, and verification instructions.
+
+### 3. Safe Refactoring Workflow
+The documentation details a safe step-by-step workflow:
+1. Copy the master prompt template.
+2. Select 1-2 files at a time.
+3. Feed the prompt and files to the AI agent.
+4. Replace the original file content with the commented version.
+5. Verify build integrity using `./gradlew :app:compileDebugKotlin` from the `android-app/` directory.
+6. Commit changes to Git once verified.
+
+### 4. Codebase Commenting Completion (2026-06-11)
+Successfully applied the beginner-friendly commenting rules (`Rule T1` and `Rule T2`) to all remaining screens in the Android App Layer and all Backend Services:
+- **Android Screens**:
+  - [AnswerScreen.kt](file:///home/hidayat/Documents/Islamic-Knowledge-QA-App/android-app/app/src/main/java/com/rushdululilm/app/ui/screens/AnswerScreen.kt): Added detailed comments for all Composable widgets, Annotated Strings, custom video card layouts, and state observers.
+  - [SettingsScreen.kt](file:///home/hidayat/Documents/Islamic-Knowledge-QA-App/android-app/app/src/main/java/com/rushdululilm/app/ui/screens/SettingsScreen.kt): Added detailed comments for section cards, selectable group Columns, RadioButtons, Switch controls, and database Download items.
+  - [VideoLibraryScreen.kt](file:///home/hidayat/Documents/Islamic-Knowledge-QA-App/android-app/app/src/main/java/com/rushdululilm/app/ui/screens/VideoLibraryScreen.kt): Added detailed comments for search OutlinedTextFields, clear/Search icons, and horizontal list cards.
+- **Backend Services**:
+  - [fastapi_server.py](file:///home/hidayat/Documents/Islamic-Knowledge-QA-App/backend/fastapi_server.py): Commented REST endpoints, Pydantic models, and error handling.
+  - [rag_pipeline.py](file:///home/hidayat/Documents/Islamic-Knowledge-QA-App/backend/rag_pipeline.py): Commented LlamaIndex custom MultiCollectionRetriever, CombineQAPostprocessor, and NVIDIA NIM/Ollama LLM configurations.
+  - [ingest_deoband.py](file:///home/hidayat/Documents/Islamic-Knowledge-QA-App/backend/ingest_deoband.py) & [ingest_islamqa.py](file:///home/hidayat/Documents/Islamic-Knowledge-QA-App/backend/ingest_islamqa.py): Commented SentenceTransformer loading, Qdrant collection recreation, SQLite batching, and payload structures.
+  - [docker-compose.yml](file:///home/hidayat/Documents/Islamic-Knowledge-QA-App/backend/docker-compose.yml): Commented service volumes, environment variables, network bridges, and ports.
+
+Build verified successfully using `./gradlew :app:compileDebugKotlin` in `android-app/` directory.
+
