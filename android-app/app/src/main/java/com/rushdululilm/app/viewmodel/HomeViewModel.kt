@@ -1,21 +1,20 @@
 // File: HomeViewModel.kt
 // Purpose: The "brain" of the Home Screen. It remembers choices (like language) and handles actions (like tapping the mic).
 // Layer: Layer 1 — Android App (ViewModel)
-// Created: 2026-05-31 | Modified: 2026-06-08 | Developer: Shaik Hidayatullah
+// Created: 2026-05-31 | Modified: 2026-06-10 | Developer: Shaik Hidayatullah
 
 package com.rushdululilm.app.viewmodel
 
-import androidx.appcompat.app.AppCompatDelegate
-import androidx.core.os.LocaleListCompat
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.rushdululilm.app.data.remote.QueryRequest
 import com.rushdululilm.app.data.repository.MainRepository
 import com.rushdululilm.app.data.repository.UserPreferencesRepository
+import com.rushdululilm.app.model.AppLanguage
 import com.rushdululilm.app.utils.Resource
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -49,9 +48,8 @@ class HomeViewModel @Inject constructor(
     // StateFlow is like a live variable. When its value changes, the UI automatically redraws.
     // We use a private MutableStateFlow (can be changed) and a public StateFlow (read-only for the UI).
 
-    // Tracks the currently selected language
-    private val _selectedLanguage = MutableStateFlow("English")
-    val selectedLanguage: StateFlow<String> = _selectedLanguage.asStateFlow()
+    // Tracks the currently selected language from the central preferences repository.
+    val selectedLanguage: StateFlow<AppLanguage> = preferencesRepository.selectedLanguage
 
     // Tracks the currently selected Islamic source database
     // We observe this from the central preferences repository
@@ -134,30 +132,8 @@ class HomeViewModel @Inject constructor(
     /**
      * Called when the user selects a new language from the dropdown.
      */
-    /*
-    fun onLanguageSelected(language: String) {
-        _selectedLanguage.value = language
-        println("Language changed to: $language") 
-    }
-    */
-    fun onLanguageSelected(language: String) {
-        _selectedLanguage.value = language
-
-        // 1. Map the display name to the ISO language code
-        val languageCode = when (language) {
-            "Telugu" -> "te"
-            "Urdu" -> "ur"
-            "Hindi" -> "hi"
-            "English" -> "en"
-            else -> "en"
-        }
-
-        // 2. Tell Android to change the app's language
-        // This will cause the UI to redraw using the correct strings.xml file
-        val appLocale: LocaleListCompat = LocaleListCompat.forLanguageTags(languageCode)
-        AppCompatDelegate.setApplicationLocales(appLocale)
-
-        println("Settings: Language changed to $language ($languageCode)")
+    fun onLanguageSelected(language: AppLanguage) {
+        preferencesRepository.updateLanguage(language)
     }
 
     /**

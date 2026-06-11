@@ -1,7 +1,9 @@
 // File: LanguageSelector.kt
 // Purpose: A dropdown menu allowing the user to select their preferred language for questions and answers.
 // Layer: Layer 1 — Android App (UI Component)
-// Created: 2026-05-31 | Developer: Shaik Hidayatullah
+// Depends on: AppLanguage.kt, strings.xml
+// Created: 2026-05-31 | Modified: 2026-06-10
+// Developer: Shaik Hidayatullah
 
 package com.rushdululilm.app.ui.components
 
@@ -23,38 +25,32 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.dp
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.unit.dp
 import com.rushdululilm.app.R
-import com.rushdululilm.app.ui.theme.RushdulIlmTheme
+import com.rushdululilm.app.model.AppLanguage
 
 /**
  * A dropdown component to select the app's language.
  *
- * @param selectedLanguage The currently active language string (e.g., "Telugu").
+ * @param selectedLanguage The currently active app language.
  * @param onLanguageSelected A function that gets called when the user picks a new language.
  */
 @OptIn(ExperimentalMaterial3Api::class) // ExposedDropdownMenuBox is still marked experimental by Google
 @Composable
 fun LanguageSelector(
-    selectedLanguage: String,
-    onLanguageSelected: (String) -> Unit
+    selectedLanguage: AppLanguage,
+    onLanguageSelected: (AppLanguage) -> Unit
 ) {
-    // List of available languages. Each maps a short name to a bilingual display string.
-    val languages = listOf(
-        "Telugu" to stringResource(R.string.language_telugu_display),
-        "Urdu" to stringResource(R.string.language_urdu_display),
-        "Hindi" to stringResource(R.string.language_hindi_display),
-        "English" to stringResource(R.string.language_english_display)
-    )
+    // List of available languages from the central AppLanguage model.
+    val languages = AppLanguage.entries
 
     // State to track whether the dropdown menu is currently open (visible) or closed.
     // 'remember' keeps this true/false value alive across screen redraws.
     var expanded by remember { mutableStateOf(false) }
 
-    // Find the display string for the currently selected language, or default to the first one.
-    val displayLanguage = languages.find { it.first == selectedLanguage }?.second ?: languages[0].second
+    // Find the localized display string for the currently selected language.
+    val displayLanguage = stringResource(selectedLanguage.displayNameRes)
 
     // ExposedDropdownMenuBox is the Google-recommended way to build a dropdown menu in Material3.
     // It automatically handles the complex logic of opening the menu, positioning it, and closing it when tapped outside.
@@ -92,17 +88,17 @@ fun LanguageSelector(
             onDismissRequest = { expanded = false } // Close if user taps outside
         ) {
             // Loop through our language list and create an item for each one
-            languages.forEach { (languageKey, languageDisplay) ->
+            languages.forEach { language ->
                 DropdownMenuItem(
                     text = { 
                         Text(
-                            text = languageDisplay,
+                            text = stringResource(language.displayNameRes),
                             style = MaterialTheme.typography.bodyLarge // Large text for menu items too
                         ) 
                     },
                     onClick = {
                         // When tapped, notify the parent and close the menu
-                        onLanguageSelected(languageKey)
+                        onLanguageSelected(language)
                         expanded = false
                     },
                     modifier = Modifier.heightIn(min = 48.dp) // Accessibility: min touch target inside menu
@@ -119,7 +115,7 @@ fun LanguageSelector(
 fun LanguageSelectorPreview() {
     RushdulIlmTheme {
         LanguageSelector(
-            selectedLanguage = "English",
+            selectedLanguage = AppLanguage.ENGLISH,
             onLanguageSelected = {}
         )
     }

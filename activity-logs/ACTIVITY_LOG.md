@@ -464,6 +464,56 @@ MEM0_UPDATED:     NO
 
 ---
 
+## Session 2026-06-10 13:14
+AGENT: Codex (GPT-5 coding agent)
+PHASE: 4 — Connect Android to Backend
+SPRINT: 4.3 — Display Real Answer on Screen
+SUB_SPRINT: 4.3.1
+MICRO_TASK_COMPLETED: P4.S3.SS1.MT1 (Fix)
+MICRO_TASK_DESCRIPTION: Fix language selector synchronization between Settings and Home, and modularize app language handling.
+SESSION_DURATION: 45 minutes
+
+TASKS_COMPLETED:
+  - Fixed the bug where selecting a language in Settings changed the app locale but did not update the Home screen language selector status.
+  - Added `AppLanguage.kt` as the central supported-language definition for keys, locale tags, and display string resources.
+  - Updated `UserPreferencesRepository.kt` to own the shared `selectedLanguage` StateFlow and apply locale changes through AppCompat.
+  - Refactored `HomeViewModel.kt` and `SettingsViewModel.kt` so both screens observe and update the same language state.
+  - Refactored `LanguageSelector.kt` and `SettingsScreen.kt` to build language UI from `AppLanguage.entries`, reducing duplicated language lists.
+  - Fixed Gradle build compatibility by removing obsolete `MaxPermSize` and pointing Gradle to Android Studio's bundled JBR.
+  - Verified the app compiles successfully with `./gradlew :app:compileDebugKotlin`.
+
+FILES_CREATED:
+  - android-app/app/src/main/java/com/rushdululilm/app/model/AppLanguage.kt — Central enum for all supported app languages.
+
+FILES_MODIFIED:
+  - android-app/app/src/main/java/com/rushdululilm/app/data/repository/UserPreferencesRepository.kt — Added shared language state and locale update logic.
+  - android-app/app/src/main/java/com/rushdululilm/app/viewmodel/HomeViewModel.kt — Replaced local language state with repository-backed shared state.
+  - android-app/app/src/main/java/com/rushdululilm/app/viewmodel/SettingsViewModel.kt — Replaced local language state with repository-backed shared state.
+  - android-app/app/src/main/java/com/rushdululilm/app/ui/components/LanguageSelector.kt — Refactored dropdown to use `AppLanguage`.
+  - android-app/app/src/main/java/com/rushdululilm/app/ui/screens/SettingsScreen.kt — Refactored language radio buttons to use `AppLanguage.entries`.
+  - android-app/gradle.properties — Removed obsolete JVM option and configured Gradle to use Android Studio bundled JBR.
+  - AGENT_RULES.md — Added the Android `model/` package to the documented file tree.
+  - Report Documentation/02_ANDROID_APP_LAYER.md — Documented the language synchronization fix and modular language design.
+  - activity-logs/ACTIVITY_LOG.md — Appended this session entry.
+
+DONE_CONDITION_MET: YES — Language state is centralized, Home and Settings use the same selected language, and `:app:compileDebugKotlin` passes.
+
+CURRENT_MICRO_TASK: P4.S3.SS1.MT1 (Fix)
+NEXT_MICRO_TASK: P4.S4.SS1.MT1
+NEXT_MICRO_TASK_DESCRIPTION: Create a utility class to detect if the user is on Internet, LAN, or Offline.
+
+BLOCKERS: None.
+
+NOTES_FOR_NEXT_AGENT:
+  - Mem0 on port 8100 and Neo4j/Graphiti on port 7474 were not reachable during this session.
+  - Supported app languages are now defined in `AppLanguage.kt`; add/remove languages there and in the matching string resources.
+  - Gradle now uses `/media/hidayat/PersonalData/Kali_Linux_Files/android-studio/panda4/jbr` because system Java 25 is incompatible with the current Kotlin/Gradle setup.
+
+GRAPHITI_UPDATED: NOT RUNNING
+MEM0_UPDATED:     NOT RUNNING
+
+---
+
 ## Session 2026-05-30 12:05
 AGENT: Gemini CLI
 PHASE: 1 — Android UI Skeleton

@@ -742,3 +742,45 @@ Implemented a centralized preference system to allow users to filter answers bas
 ### 4. Code Quality & Beginner Guidance
 - All new logic includes detailed, line-by-line comments.
 - Uses stable internal "keys" (`all`, `neutral`, `hanafi`) to prevent bugs when switching between Telugu and English UI languages.
+
+---
+
+## Global Language Synchronization (2026-06-10)
+
+Fixed the Home screen language selector so it reflects language changes made from the Settings screen.
+
+### 1. Problem
+- `SettingsViewModel.kt` and `HomeViewModel.kt` each kept their own separate `selectedLanguage` state.
+- Selecting a language in Settings changed the app locale, but the Home selector still displayed its older local value.
+- Language options were also duplicated in multiple files, which made future language changes risky.
+
+### 2. Shared Language Model (`AppLanguage.kt`)
+- Added `AppLanguage.kt` in `android-app/app/src/main/java/com/rushdululilm/app/model/`.
+- Each supported language now has:
+  - a stable app key such as `Telugu`
+  - an Android locale tag such as `te`
+  - a string resource ID for the display label
+- To add or remove a language later, update `AppLanguage.kt` and the matching `strings.xml` resources.
+
+### 3. Repository Single Source Of Truth
+- `UserPreferencesRepository.kt` now owns `selectedLanguage` as a shared `StateFlow<AppLanguage>`.
+- `updateLanguage()` updates both:
+  - the shared StateFlow used by Home and Settings
+  - the Android app locale through `AppCompatDelegate.setApplicationLocales()`
+- This means both screens now read the same language value.
+
+### 4. UI Refactor
+- `LanguageSelector.kt` now accepts `AppLanguage` instead of raw strings.
+- `SettingsScreen.kt` now builds its radio list from `AppLanguage.entries`.
+- `HomeViewModel.kt` and `SettingsViewModel.kt` no longer duplicate language-to-locale mapping logic.
+
+### 5. Build Environment Fix
+- Removed old `-XX:MaxPermSize=256m` from `android-app/gradle.properties` because Java 8+ no longer supports PermGen.
+- Added `org.gradle.java.home=/media/hidayat/PersonalData/Kali_Linux_Files/android-studio/panda4/jbr` so Gradle uses Android Studio's bundled Java runtime instead of system Java 25.
+
+### Verification
+Compiled successfully with:
+
+```text
+./gradlew :app:compileDebugKotlin
+```

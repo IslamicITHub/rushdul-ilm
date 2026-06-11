@@ -2,7 +2,7 @@
 // Purpose: Displays the app settings and offline download options
 // Layer: 1 — Android UI Skeleton
 // Depends on: NavGraph.kt, SettingsViewModel.kt, Routes.kt
-// Created: 2026-05-30 | Modified: 2026-05-31
+// Created: 2026-05-30 | Modified: 2026-06-10
 // Developer: Shaik Hidayatullah
 
 package com.rushdululilm.app.ui.screens
@@ -32,6 +32,7 @@ import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.rushdululilm.app.R
+import com.rushdululilm.app.model.AppLanguage
 import com.rushdululilm.app.viewmodel.SettingsViewModel
 
 /**
@@ -73,19 +74,14 @@ fun SettingsScreen(
             // --- SECTION 1: LANGUAGE SETTINGS ---
             item {
                 SettingsSectionTitle(stringResource(R.string.language_selector_label))
-                val languages = listOf(
-                    "Telugu" to stringResource(R.string.language_telugu_display),
-                    "Urdu" to stringResource(R.string.language_urdu_display),
-                    "Hindi" to stringResource(R.string.language_hindi_display),
-                    "English" to stringResource(R.string.language_english_display)
-                )
+                val languages = AppLanguage.entries
                 
                 Column(Modifier.selectableGroup()) {
-                    languages.forEach { (eng, local) ->
+                    languages.forEach { language ->
                         SettingsRadioButton(
-                            label = "$local ($eng)",
-                            selected = selectedLanguage == eng,
-                            onClick = { viewModel.onLanguageSelected(eng) }
+                            label = stringResource(language.displayNameRes),
+                            selected = selectedLanguage == language,
+                            onClick = { viewModel.onLanguageSelected(language) }
                         )
                     }
                 }
@@ -288,4 +284,3 @@ fun DownloadItem(name: String, size: String, status: String, onDownload: () -> U
         }
     }
 }
-

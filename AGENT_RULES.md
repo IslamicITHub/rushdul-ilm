@@ -1,6 +1,6 @@
 # AGENT_RULES.md
 # Rushd-ul-Ilm (رشد العلم) — AI Agent Master Rules File
-# Version 3.1 | Developer: Shaik Hidayatullah, Kurnool, Andhra Pradesh, India
+# Version 3.1 | Developer: Shaik Hidayatullah
 # Updated: 2026-05-28 — Added sprint system integration
 #
 # ⚠️  MANDATORY FOR ALL AI AGENTS: Read this file COMPLETELY before writing a single line of code.
@@ -69,13 +69,11 @@ Run through this checklist at the start of EVERY session. Check each item in ord
 | Service | Docker Image | Port | GPU | Purpose |
 |---------|-------------|------|-----|---------|
 | FastAPI | python:3.11-slim | 8000 | Optional | Main API — /transcribe /translate /tts /query |
-| Ollama | ollama/ollama | 11434 | YES (CUDA) | Serves Qwen3:4b LLM |
+| Ollama | non-docker | 11434 | YES (CUDA) | Serves Qwen3:4b LLM |
 | Qdrant | qdrant/qdrant | 6333 | No | Vector semantic search |
 | IndicTrans2 | custom Python 3.11 | 8001 | YES (CUDA) | Telugu/Urdu ↔ English |
 | Coqui XTTS-v2 | custom Python 3.11 | 8002 | YES (CUDA) | Text-to-Speech |
 | faster-whisper | custom Python 3.11 | 8003 | YES (CUDA) | GPU speech recognition |
-| Neo4j (Graphiti) | neo4j:5-community | 7474/7687 | No | Knowledge graph memory |
-| Mem0 | custom Python 3.11 | 8100 | No | Cross-session agent memory |
 
 **HARDWARE LIMIT: RTX 3050 = 4GB VRAM. Never load more than 3.5GB of models simultaneously.**
 
@@ -149,6 +147,7 @@ rushd-ul-ilm/                          ← Project root
 │       ├── ui/screens/                 ← Jetpack Compose screens
 │       ├── ui/components/              ← Reusable Compose components
 │       ├── viewmodel/                  ← MVVM ViewModels
+│       ├── model/                      ← Shared Kotlin data models and app option definitions
 │       ├── data/local/                 ← Room database entities + DAOs
 │       ├── data/remote/                ← Retrofit API interface
 │       ├── di/                         ← Hilt dependency injection modules
@@ -390,10 +389,6 @@ MEM0_UPDATED:     [YES / NO / NOT RUNNING]
 - Add the code written with full comments
 - Add beginner-friendly explanation of what was built
 - Update architecture diagram if structure changed
-
-**Step 4 (if running) — Graphiti and Mem0:**
-- Graphiti: `python knowledge-graph/graphiti_helper.py save-session "[description]"`
-- Mem0: `python knowledge-graph/mem0_helper.py save "[description]"`
 
 ---
 

@@ -2,21 +2,19 @@
 // Purpose: Manages the state of the Settings Screen
 // Layer: 1 — Android UI Skeleton
 // Depends on: ViewModel, Hilt, StateFlow
-// Created: 2026-05-31 | Modified: 2026-05-31
+// Created: 2026-05-31 | Modified: 2026-06-10
 // Developer: Shaik Hidayatullah
 
 package com.rushdululilm.app.viewmodel
 
 import androidx.lifecycle.ViewModel
+import com.rushdululilm.app.R
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import javax.inject.Inject
-import androidx.appcompat.app.AppCompatDelegate
-import androidx.core.os.LocaleListCompat
-
 import com.rushdululilm.app.data.repository.UserPreferencesRepository
-import com.rushdululilm.app.R
+import com.rushdululilm.app.model.AppLanguage
 
 /**
  * SettingsViewModel is the 'brain' for the Settings Screen.
@@ -29,10 +27,8 @@ class SettingsViewModel @Inject constructor(
 ) : ViewModel() {
 
     // --- SECTION 1: LANGUAGE SETTINGS ---
-    // 'selectedLanguage' stores which language the user has picked.
-    // Default is "Telugu".
-    private val _selectedLanguage = MutableStateFlow("Telugu")
-    val selectedLanguage: StateFlow<String> = _selectedLanguage
+    // 'selectedLanguage' stores the shared language selected anywhere in the app.
+    val selectedLanguage: StateFlow<AppLanguage> = preferencesRepository.selectedLanguage
 
     // --- SECTION 2: MADHAB PREFERENCE ---
     // We observe the preference directly from the central repository.
@@ -54,24 +50,8 @@ class SettingsViewModel @Inject constructor(
     // --- ACTIONS ---
 
     // Called when the user taps a different language.
-    fun onLanguageSelected(language: String) {
-        _selectedLanguage.value = language
-
-        // 1. Map the display name to the ISO language code
-        val languageCode = when (language) {
-            "Telugu" -> "te"
-            "Urdu" -> "ur"
-            "Hindi" -> "hi"
-            "English" -> "en"
-            else -> "en"
-        }
-
-        // 2. Tell Android to change the app's language
-        // This will cause the UI to redraw using the correct strings.xml file
-        val appLocale: LocaleListCompat = LocaleListCompat.forLanguageTags(languageCode)
-        AppCompatDelegate.setApplicationLocales(appLocale)
-
-        println("Settings: Language changed to $language ($languageCode)")
+    fun onLanguageSelected(language: AppLanguage) {
+        preferencesRepository.updateLanguage(language)
     }
 
     /**
