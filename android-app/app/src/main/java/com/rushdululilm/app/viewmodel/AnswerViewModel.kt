@@ -34,10 +34,14 @@ import javax.inject.Inject
 //    We launch coroutines in viewModelScope to collect StateFlow streams from our Repository.
 // 🏛️ ANALOGY: ViewModel is like a flight cockpit instrument panel. Even if the airplane turns
 //    sideways (screen rotation), the dials (StateFlow properties) stay powered on and don't reset.
+import com.rushdululilm.app.data.repository.AnswerHistoryRepository
+import com.rushdululilm.app.data.local.FatwaSourceConverter
+
 @HiltViewModel
 // ^ Tells the Hilt compiler to generate dependency injection code for this ViewModel class
 class AnswerViewModel @Inject constructor( // ^ class AnswerViewModel manages state for the AnswerScreen, constructor injected by Hilt
-    private val repository: MainRepository // ^ central data repository instance for accessing fatwa answers
+    private val repository: MainRepository, // ^ central data repository instance for accessing fatwa answers
+    private val answerHistoryRepository: AnswerHistoryRepository // ^ injected repository for accessing saved local answers
 ) : ViewModel() {
 // ^ AnswerViewModel inherits from standard architecture ViewModel
 
@@ -126,12 +130,40 @@ class AnswerViewModel @Inject constructor( // ^ class AnswerViewModel manages st
     // ^ Function to fetch a specific answer detail from local DB or network API
         _isLoading.value = true
         // ^ Turns on the loading indicator state
-        _currentAnswer.value = FatwaAnswer.PLACEHOLDER
-        // ^ Placeholder: sets the preview answer details
-        _isLoading.value = false
-        // ^ Turns off the loading indicator state
-        println("Loaded answer with ID: $answerId") 
-        // ^ Prints a debug message in the console
+        
+        viewModelScope.launch {
+        // ^ Launches coroutine to fetch data asynchronously
+            val id = answerId.toIntOrNull()
+            // ^ Converts the string ID to an integer safely
+            if (id != null) {
+            // ^ If it is a valid integer, proceed to fetch
+                val savedAnswer = answerHistoryRepository.getAnswerById(id)
+                // ^ Calls the repository to get the saved answer
+                if (savedAnswer != null) {
+                // ^ If the answer exists in the local database
+                    val sourcesList = FatwaSourceConverter().toSourceList(savedAnswer.sourcesJson)
+                    // ^ Converts the JSON string back into a List of FatwaSource objects
+                    
+                    _currentAnswer.value = FatwaAnswer(
+                    // ^ Reconstructs the FatwaAnswer model for the UI
+                        id = savedAnswer.id.toString(),
+                        questionText = savedAnswer.questionText,
+                        answerText = savedAnswer.answerText,
+                        sources = sourcesList,
+                        language = savedAnswer.language,
+                        isOfflineCache = savedAnswer.isOfflineCache,
+                        expandedQuery = null
+                    )
+                    // ^ Ends FatwaAnswer construction
+                }
+                // ^ Ends valid answer check
+            }
+            // ^ Ends integer ID check
+            
+            _isLoading.value = false
+            // ^ Turns off the loading indicator state
+        }
+        // ^ Ends coroutine
     }
     // ^ Ends loadAnswer function
 

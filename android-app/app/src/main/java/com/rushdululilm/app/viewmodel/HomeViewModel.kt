@@ -115,7 +115,7 @@ class HomeViewModel @Inject constructor( // ^ class HomeViewModel manages state,
             
             val request = QueryRequest(
             // ^ Constructs a QueryRequest object
-                question = "How many sunna prayers are there in total on Friday at afternoon?",
+                question = "What is the importance of fasting in the month of muharram?",
                 // ^ Hardcoded question string for integration testing
                 sources = sourcesToSearch
                 // ^ Mapped list of database collection filters

@@ -53,7 +53,7 @@ object NetworkModule {
         // ^ Instantiates the OkHttp builder pattern class
             .connectTimeout(30, TimeUnit.SECONDS)
             // ^ Sets connection timeout to 30 seconds (time allowed to establish socket link to the server)
-            .readTimeout(60, TimeUnit.SECONDS)
+            .readTimeout(120, TimeUnit.SECONDS)
             // ^ Sets read timeout to 60 seconds (time allowed to wait for the server to process and return response data)
             .writeTimeout(30, TimeUnit.SECONDS)
             // ^ Sets write timeout to 30 seconds (time allowed to send bytes to the server)

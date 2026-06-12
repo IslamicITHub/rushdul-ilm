@@ -47,6 +47,12 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 // ^ Observes the navigation backstack as a State flow to identify which screen is active
 import androidx.navigation.compose.rememberNavController
 // ^ Compose function creating a NavController instance that survives screen redraws (recompositions)
+import androidx.navigation.NavType
+// ^ Navigation parameter typing
+import androidx.navigation.navArgument
+// ^ Navigation argument builder
+import androidx.compose.material.icons.filled.List
+// ^ Standard list icon
 import com.rushdululilm.app.R
 // ^ Imports our app's generated Resource registry
 
@@ -110,6 +116,40 @@ fun RushdulIlmNavGraph() {
                     // ^ Ends onClick callback
                 )
                 // ^ Ends Home NavigationBarItem
+
+                NavigationBarItem(
+                // ^ Draws Answers History navigation tab button
+                    icon = { 
+                    // ^ Passes icon widget block
+                        Icon(
+                        // ^ Draws List vector icon
+                            imageVector = Icons.Default.List, 
+                            // ^ standard List icon asset
+                            contentDescription = stringResource(R.string.nav_answers)
+                            // ^ accessibility reader description
+                        ) 
+                    },
+                    label = { Text(stringResource(R.string.nav_answers)) },
+                    // ^ Draws bilingual tab name under the icon
+                    selected = currentDestination?.hierarchy?.any { it.route == Routes.ANSWERS_HISTORY } == true,
+                    // ^ Highlights tab if active destination matches ANSWERS_HISTORY route
+                    onClick = {
+                    // ^ Click callback to navigate to Answers History
+                        navController.navigate(Routes.ANSWERS_HISTORY) {
+                        // ^ Commands controller to load Answers History
+                            popUpTo(navController.graph.findStartDestination().id) {
+                            // ^ Pops history stack back to start destination
+                                saveState = true
+                                // ^ Saves active state
+                            }
+                            launchSingleTop = true
+                            // ^ Avoids duplicates
+                            restoreState = true
+                            // ^ Restores state
+                        }
+                    }
+                )
+                // ^ Ends Answers History NavigationBarItem
 
                 NavigationBarItem(
                 // ^ Draws Video Library navigation tab button
@@ -201,12 +241,23 @@ fun RushdulIlmNavGraph() {
             }
             // ^ Ends HOME composable mapping
 
-            composable(Routes.ANSWER) {
-            // ^ Registers the ANSWER route link
-                AnswerScreen(navController)
+            composable(
+                route = "${Routes.ANSWER}?answerId={answerId}",
+                arguments = listOf(navArgument("answerId") { type = NavType.StringType; nullable = true })
+            ) { backStackEntry ->
+            // ^ Registers the ANSWER route link with optional answerId parameter
+                val answerId = backStackEntry.arguments?.getString("answerId")
+                AnswerScreen(navController, answerId)
                 // ^ Draws the AnswerScreen detail view
             }
             // ^ Ends ANSWER composable mapping
+            
+            composable(Routes.ANSWERS_HISTORY) {
+            // ^ Registers the ANSWERS_HISTORY route link
+                AnswersHistoryScreen(navController)
+                // ^ Draws the AnswersHistoryScreen list view
+            }
+            // ^ Ends ANSWERS_HISTORY composable mapping
 
             composable(Routes.VIDEO_LIBRARY) {
             // ^ Registers the VIDEO_LIBRARY route link

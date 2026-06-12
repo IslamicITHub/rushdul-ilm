@@ -28,5 +28,8 @@ object Routes {
     const val SETTINGS = "settings"
     // ^ const val defines a read-only constant value known at compile time
     // ^ SETTINGS is the destination address string for the app preferences and offline databases
+    
+    const val ANSWERS_HISTORY = "answers_history"
+    // ^ ANSWERS_HISTORY is the destination address string for the saved answers tab
 }
 // ^ Ends the Routes object

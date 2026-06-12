@@ -38,7 +38,9 @@ import javax.inject.Singleton
 @Singleton
 // ^ Tells Hilt to share a single instance of MainRepository globally across the application
 class MainRepository @Inject constructor( // ^ class MainRepository handles RAG server queries, constructor injected by Hilt
-    private val apiService: ApiService // ^ Retrofit-created ApiService interface client reference
+    private val apiService: ApiService, // ^ Retrofit-created ApiService interface client reference
+    private val answerHistoryRepository: AnswerHistoryRepository
+    // ^ Injected repository for saving retrieved answers to the local Room database
 ) {
 // ^ Starts MainRepository body
 
@@ -80,8 +82,8 @@ class MainRepository @Inject constructor( // ^ class MainRepository handles RAG 
                 } ?: emptyList()
                 // ^ Defaults to an empty list if the sources array in response is null
                                  
-                _latestAnswer.value = FatwaAnswer(
-                // ^ Updates the MutableStateFlow state with the new mapped FatwaAnswer
+                val newAnswer = FatwaAnswer(
+                // ^ Constructs a new FatwaAnswer object to hold the retrieved data
                     id = System.currentTimeMillis().toString(),
                     // ^ Generates a unique string ID based on the current timestamp in milliseconds
                     questionText = responseBody.question ?: request.question,
@@ -98,6 +100,12 @@ class MainRepository @Inject constructor( // ^ class MainRepository handles RAG 
                     // ^ Sets the technical expanded query returned by the RAG backend
                 )
                 // ^ Ends FatwaAnswer construction
+                
+                _latestAnswer.value = newAnswer
+                // ^ Updates the MutableStateFlow state with the new mapped FatwaAnswer
+                
+                answerHistoryRepository.saveFatwaAnswer(newAnswer, newAnswer.language, newAnswer.isOfflineCache)
+                // ^ Saves the retrieved answer automatically to the local database for offline history
                 
                 Resource.Success(responseBody)
                 // ^ Returns a Resource.Success object containing the raw network response

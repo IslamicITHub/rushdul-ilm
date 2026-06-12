@@ -48,7 +48,7 @@ NVIDIA_API_KEY = os.environ.get("NVIDIA_API_KEY", "$NVIDIA_API_KEY")
 # ^ Fetches Nvidia developer credentials key from active system environment variables
 NVIDIA_BASE_URL = "https://integrate.api.nvidia.com/v1"
 # ^ Cloud gateway network address routing requests to NVIDIA NIM acceleration endpoint services
-NVIDIA_MODEL_NAME = "openai/gpt-oss-120b"
+NVIDIA_MODEL_NAME = "openai/gpt-oss-20b"
 # ^ Target NVIDIA NIM cloud LLM model name representing the primary 120-billion parameter model
 
 # 🏛️ CONCEPT: Custom post-processors modify retrieved text chunks before passing them to the LLM.
@@ -228,17 +228,11 @@ class RagPipeline:
             f"User Question: '{user_question}'\n\n"
             # ^ Inserts raw user question text inside prompt string context
             "Task: Rewrite this into a descriptive search query for a Vector Database of Islamic Fatwas.\n"
-            # ^ Instructs task goal mapping
             "Instructions:\n"
-            # ^ Starts instructions section
             "1. If the question is just a broad topic (e.g., 'Prayer', 'Salah', 'Fasting', 'Bank Interest'), rewrite it as: "
-            # ^ Instruction rule 1 for broad topics
             "'Specific rulings, conditions, and scenarios regarding [Topic] to identify user intent.'\n"
-            # ^ Example of expected broad topic output
             "2. If it's a specific question, expand it with synonyms (e.g., 'Wudu' -> 'Ablution, Taharah, washing before prayer').\n"
-            # ^ Instruction rule 2 for specific questions
             "3. Return ONLY the rewritten query text."
-            # ^ Instruction rule 3 enforcing raw text output formatting
         )
         # ^ Ends prompt block configuration
         response = Settings.llm.complete(prompt)
@@ -294,7 +288,7 @@ class RagPipeline:
             # ^ Core RAG safety rules preventing model hallucination or opinion generation
             "If no context matches, say: 'I could not find an answer in the approved sources.'\n"
             # ^ Core fallback message requirements
-            "Always include references to hadiths and the Quran wherever possible and source URL at the appropriate place in the answer and at the end of your final answers."
+            "Always include references and citations to hadiths, the Quran and source URL wherever possible at the appropriate place in the answer and at the end of your final answers."
             # ^ Citation URL formatting requirements
         )
         # ^ Ends system prompt block

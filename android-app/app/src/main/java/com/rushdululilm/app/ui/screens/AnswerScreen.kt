@@ -92,6 +92,9 @@ import com.rushdululilm.app.viewmodel.AnswerViewModel
 // 🏛️ ANALOGY: AnswerScreen is like a digital printed scroll of a scholar's answer.
 //    It shows the original question, list of official website sources, and the complete fatwa text.
 //    At the bottom is a speaker assistant (Read Aloud button) and a shelf of reference lecture tapes (Related Videos).
+import androidx.compose.runtime.LaunchedEffect
+// ^ Side-effect API that runs suspend functions when keys change
+
 @OptIn(ExperimentalMaterial3Api::class)
 // ^ Tells compiler we are opting into Experimental Material 3 APIs (like TopAppBar configuration)
 @Composable
@@ -100,10 +103,22 @@ fun AnswerScreen(
 // ^ Declares AnswerScreen composable entry point
     navController: NavController,
     // ^ Parameter carrying NavController for navigating back to previous screens
+    answerId: String? = null,
+    // ^ Optional parameter containing the specific answer ID to load from history
     answerViewModel: AnswerViewModel = hiltViewModel()
     // ^ Supplies the active AnswerViewModel instance injected by Hilt by default
 ) {
 // ^ Starts AnswerScreen body block
+
+    LaunchedEffect(answerId) {
+    // ^ Runs a coroutine side-effect once when the screen loads with a specific answerId
+        if (answerId != null) {
+        // ^ Checks if an ID was passed in
+            answerViewModel.loadAnswer(answerId)
+            // ^ Commands the ViewModel to load the specific answer from the database
+        }
+    }
+    // ^ Ends LaunchedEffect
 
     val currentAnswer by answerViewModel.currentAnswer.collectAsState()
     // ^ Binds currentAnswer state changes to refresh screen text cards dynamically

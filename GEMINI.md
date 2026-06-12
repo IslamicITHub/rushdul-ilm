@@ -99,7 +99,7 @@ services:          # 'services' lists all the programs (containers) we want to r
 ```
 
 ### Rule T3 — Teach File Placement
-Whenever you create a new file, always write the following in the respective files 'Report Documentation' folder and also in the code :
+Whenever you create a new file, always write the following in the respective files 'Report Documentation' folder and also in the code in form of comments:
 - What folder it goes in
 - Why it goes there
 - How it relates to other files already created
@@ -278,9 +278,9 @@ After every coding session, you MUST update documentation:
 | New feature without offline fallback? | REFUSE — implement all three tiers or ask how to |
 
 ## Android Studio installation folder and usage:
-1. The linux installation files and ELF binary for running android studio GUI is located at "/media/hidayat/PersonalData/Kali_Linux_Files/android-studio" folder
-2. Only Use the above installation folder location to use and run Android studio and respective binaries for this project in the future.
-3. The actual executable binary that should be used to launch the Android studio is located here : "/media/hidayat/PersonalData/Kali_Linux_Files/android-studio/panda4/bin/studio"
+1. - **Android CLI:** for compiling and working with Android studio using CLI is  located at `/home/hidayat/.local/bin/android` (wrapper pointing to `/media/hidayat/PersonalData/Kali_Linux_Files/android-cli`) and can just be called using the 'android' command in the linux terminal.
+2. Only Use the above command to use and run Android studio and respective binaries for this project in the future.
+3. The actual GUI executable binary that should be used by beginner users (AI agents should not use this) to launch the Android studio is located here : "/media/hidayat/PersonalData/Kali_Linux_Files/android-studio/panda4/bin/studio"
 ---
 ## graphify
 This project has a knowledge graph at graphify-out/ with god nodes, community structure, and cross-file relationships.
