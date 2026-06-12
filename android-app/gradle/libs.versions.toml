@@ -21,6 +21,7 @@ media3 = "1.3.1" # Media3 (ExoPlayer) - for playing video lectures
 coroutines = "1.8.1" # Coroutines - for doing things in the background
 work = "2.9.0" # WorkManager - for background tasks (syncing data)
 onnx = "1.26.0" # ONNX Runtime - for offline translation
+richtext = "1.0.0-alpha02" # RichText - for rendering Markdown from LLM
 
 [libraries]
 # Core Android & Compose (already here)
@@ -67,6 +68,10 @@ androidx-work-runtime-ktx = { group = "androidx.work", name = "work-runtime-ktx"
 
 # Offline AI (ONNX Runtime)
 onnx-runtime-android = { group = "com.microsoft.onnxruntime", name = "onnxruntime-android", version.ref = "onnx" }
+
+# Markdown Rendering
+richtext-commonmark = { group = "com.halilibo.compose-richtext", name = "richtext-commonmark", version.ref = "richtext" }
+richtext-ui-material3 = { group = "com.halilibo.compose-richtext", name = "richtext-ui-material3", version.ref = "richtext" }
 
 # Testing
 junit = { group = "junit", name = "junit", version.ref = "junit" }

@@ -94,6 +94,10 @@ import com.rushdululilm.app.viewmodel.AnswerViewModel
 //    At the bottom is a speaker assistant (Read Aloud button) and a shelf of reference lecture tapes (Related Videos).
 import androidx.compose.runtime.LaunchedEffect
 // ^ Side-effect API that runs suspend functions when keys change
+import com.halilibo.richtext.commonmark.Markdown
+// ^ Compose function for rendering raw Markdown syntax into styled text elements
+import com.halilibo.richtext.ui.material3.RichText
+// ^ Compose Material3 container providing base styling context for RichText/Markdown widgets
 
 @OptIn(ExperimentalMaterial3Api::class)
 // ^ Tells compiler we are opting into Experimental Material 3 APIs (like TopAppBar configuration)
@@ -299,18 +303,20 @@ fun AnswerScreen(
                     Spacer(modifier = Modifier.height(16.dp))
                     // ^ Places 16dp blank spacer layout to separate badges from answer content
 
-                    Text(
-                    // ^ Draws main answer text block body
-                        text = answer.answerText,
-                        // ^ Feeds raw scholarly answer string fetched from vector database
-                        style = MaterialTheme.typography.bodyLarge,
-                        // ^ Applies prominent 18sp minimum font size for readability
-                        color = MaterialTheme.colorScheme.onBackground,
-                        // ^ Sets high-contrast color for easy text scanning
-                        lineHeight = 28.sp
-                        // ^ Configures generous 28sp vertical line height to help readers follow sentences
-                    )
-                    // ^ Ends main answer Text widget
+                    RichText(
+                    // ^ Draws main answer text block body wrapped in a RichText container for Markdown rendering
+                        modifier = Modifier.padding(vertical = 4.dp)
+                        // ^ Adds a tiny bit of vertical padding around the markdown container
+                    ) {
+                    // ^ Starts RichText layout body content
+                        Markdown(
+                        // ^ Parses and renders markdown syntax from the LLM output into styled compose widgets
+                            content = answer.answerText
+                            // ^ Feeds raw scholarly answer string fetched from vector database/LLM
+                        )
+                        // ^ Ends Markdown widget
+                    }
+                    // ^ Ends RichText container
 
                     Spacer(modifier = Modifier.height(24.dp))
                     // ^ Adds 24dp blank gap before showing AI transparency logs

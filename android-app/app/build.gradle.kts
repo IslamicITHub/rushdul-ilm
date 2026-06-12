@@ -120,10 +120,15 @@ dependencies {
     // WorkManager runs tasks even if the app is closed (like syncing fatwas)
     implementation(libs.androidx.work.runtime.ktx)
 
-    // 🧠 OFFLINE AI (ONNX)
-    // This lets us run the translation model directly on the phone
+    // 🤖 AI & NLP (ONNX RUNTIME)
+    // Runs the Opus-MT offline translation models without internet
     implementation(libs.onnx.runtime.android)
     implementation(libs.androidx.appcompat)
+
+    // 📝 MARKDOWN RENDERING
+    // Renders markdown syntax from LLM output in Jetpack Compose
+    implementation(libs.richtext.commonmark)
+    implementation(libs.richtext.ui.material3)
 
     // 🧪 TESTING TOOLS
     testImplementation(libs.junit)
