@@ -239,7 +239,7 @@ At the **START** of every coding session, the agent runs:
 ```bash
 cd /home/hidayat/Documents/Islamic\ Knowledge\ Q\&A\ App/knowledge-graph/
 source venv/bin/activate
-export $GEMINI_API_KEY=AQ.Ab8RN6KImltPQFfFLL2kg2arCOthkDWzPGP2nd3Nm-cZpwi96Q
+export $GEMINI_API_KEY=your_gemini_api_key
 export $OPENAI_API_KEY=ollama
 python graphiti_helper.py search "current phase next task"
 python graphiti_helper.py search "files created last session"
