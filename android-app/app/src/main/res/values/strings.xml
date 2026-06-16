@@ -4,6 +4,7 @@
     <string name="app_name">Rushd-ul-Ilm (رشد العلم)</string>
     <string name="home_screen_label">Rushd-ul-Ilm</string>
     <string name="answer_screen_label">Answer</string>
+    <string name="answers_history_my_answers_label">My Previous Answers</string>
     <string name="video_library_label">Video Library</string>
     <string name="settings_label">Settings</string>
     

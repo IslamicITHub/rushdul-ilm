@@ -35,6 +35,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 // ^ Imports Alignment for positioning
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 // ^ Imports Modifier to tweak UI element properties
 import androidx.compose.ui.text.style.TextOverflow
 // ^ Imports TextOverflow to cut off long text with dots
@@ -43,6 +44,7 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 // ^ Imports hiltViewModel to connect to our ViewModel
 import androidx.navigation.NavController
+import com.rushdululilm.app.R
 // ^ Imports NavController to allow moving between screens
 import com.rushdululilm.app.data.local.SavedAnswer
 // ^ Imports the SavedAnswer data model
@@ -76,7 +78,7 @@ fun AnswersHistoryScreen(
         // ^ Defines the top bar section
             TopAppBar(
             // ^ Creates the Material 3 TopAppBar
-                title = { Text("My Answers / నా జవాబులు") }
+                title = { Text(stringResource(R.string.answers_history_my_answers_label)) }
                 // ^ Sets the bilingual title text
             )
             // ^ Closes TopAppBar

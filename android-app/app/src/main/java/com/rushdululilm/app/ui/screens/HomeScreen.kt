@@ -115,7 +115,7 @@ fun HomeScreen(
     }
     // ^ Ends LaunchedEffect block
 
-    val isOffline = false 
+    val isOffline = false
     // ^ Local placeholder boolean tracking connectivity status
 
     Scaffold(

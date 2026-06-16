@@ -4,6 +4,8 @@
     <string name="app_name">Rushd-ul-Ilm (رشد العلم)</string>
     <string name="home_screen_label">رشد العلم (Rushd-ul-Ilm)</string>
     <string name="answer_screen_label">جواب / Answer</string>
+    <string name="nav_answers">جوابات / Answers</string>
+    <string name="answers_history_my_answers_label">My Previous Answers / میرے پچھلے جوابات</string>
     <string name="video_library_label">ویڈیو لائبریری / Video Library</string>
     <string name="settings_label">سیٹنگز / Settings</string>
     
@@ -48,4 +50,8 @@
     <string name="nav_home">ہوم / Home</string>
     <string name="nav_videos">ویڈیوز / Videos</string>
     <string name="nav_settings">سیٹنگز / Settings</string>
+    <!-- Madhab Preference Explanations -->
+    <string name="madhab_all_desc"> ".Mukhtalif ulama ki rai aur fatawa ke wasee daire ko shamil karta hai, jismein chaaron mashhoor madhahib shamil hain: Hanafi, Shafi'i, Hanbali aur Maliki  / .مختلف علماء کی رائے اور فتاویٰ کے وسیع دائرے کو شامل کرتا ہے، جس میں چاروں مشہور مذاہب شامل ہیں: حنفی، شافعی، حنبلی اور مالکی۔" </string>
+    <string name="madhab_neutral_desc">Quran aur Hadith se seedha saboot lene wale aam zaraye par tawajjuh karta hai./ قرآن اور حدیث کی براہِ راست دلیل کی پیروی کرنے والے عام مصادر پر توجہ دیتا ہے۔. </string>
+    <string name="madhab_hanafi_desc">Hanafi maslak ke ahkaam par tawajjuh deta hai, jis par Bharat mein aksar Musalman aur ulama amal karte hain. / حنفی مسلک کے احکام پر توجہ دیتا ہے، جس پر بھارت میں اکثر مسلمان اور علماء عمل کرتے ہیں۔</string>
 </resources>
