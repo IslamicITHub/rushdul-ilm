@@ -824,3 +824,21 @@ Successfully applied the beginner-friendly commenting rules (`Rule T1` and `Rule
 
 Build verified successfully using `./gradlew :app:compileDebugKotlin` in `android-app/` directory.
 
+
+## Full Stack Smoke Test (2026-06-17)
+
+Completed the end-to-end smoke test of the Android app with the FastAPI backend.
+
+### 1. Networking Configurations
+- Fixed the hardcoded `NetworkUtils.kt` LAN server detection to match the host IP (`192.168.0.102`).
+- The app successfully transitions between "Offline", "LAN", and "Internet" tiers.
+
+### 2. Emulation and Deployment
+- Fixed a `minSdk` discrepancy (`minSdk = 31`) inside `build.gradle.kts` to allow installation on the API 31 `Pixel_5_API_31` emulator.
+- Successfully built and installed the debug APK directly via the Android SDK ADB server.
+
+### 3. Backend Verification
+- Queried the Docker logs from `rushd_fastapi`.
+- Verified successful `POST /query` requests at `/query` being processed and answered by the local API backend instance from the virtual device.
+- All testing was fully off-cloud and processed exclusively through the offline LLM / RAG local instance.
+

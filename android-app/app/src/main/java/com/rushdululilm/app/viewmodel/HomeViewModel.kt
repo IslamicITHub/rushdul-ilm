@@ -33,7 +33,20 @@ import kotlinx.coroutines.launch
 // ^ Launches a concurrent background coroutine job within a CoroutineScope
 import javax.inject.Inject
 // ^ Annotation telling Hilt which constructor to use for creating this class
-
+import android.content.Context
+// ^ Provides application context for network connectivity checks
+import dagger.hilt.android.qualifiers.ApplicationContext
+// ^ Annotation telling Hilt to inject the global app context
+import kotlinx.coroutines.Dispatchers
+// ^ Provides access to background thread dispatchers like IO
+import com.rushdululilm.app.utils.NetworkTier
+// ^ Imports the enum defining network states
+import com.rushdululilm.app.utils.observeNetworkTier
+// ^ Imports the utility function to observe the active network tier in real-time
+import kotlinx.coroutines.flow.SharingStarted
+// ^ Defines how a converted StateFlow should be started and stopped based on its subscribers
+import kotlinx.coroutines.flow.stateIn
+// ^ Converts a cold Flow into a hot StateFlow that shares its value across multiple UI observers
 // 🏛️ CONCEPT: HomeUiState is a sealed class modeling the mutually exclusive phases of the Home Screen.
 //    Sealed classes allow us to define closed hierarchies where each state is a distinct type, some holding custom parameters (like Error holding a message).
 // 🏛️ ANALOGY: HomeUiState is like the gears of a car's automatic transmission. 
@@ -61,7 +74,8 @@ sealed class HomeUiState {
 // ^ Instructs Hilt dependency injection to manage construction of this ViewModel class
 class HomeViewModel @Inject constructor( // ^ class HomeViewModel manages state, constructor injected by Hilt
     private val repository: MainRepository, // ^ repository to perform database/network operations
-    private val preferencesRepository: UserPreferencesRepository // ^ repository to retrieve user settings
+    private val preferencesRepository: UserPreferencesRepository, // ^ repository to retrieve user settings
+    @ApplicationContext private val context: Context // ^ Injects application context for network checks
 ) : ViewModel() {
 // ^ HomeViewModel inherits from base architecture ViewModel class
 
@@ -70,6 +84,19 @@ class HomeViewModel @Inject constructor( // ^ class HomeViewModel manages state,
 
     val selectedSource: StateFlow<String> = preferencesRepository.selectedMadhab
     // ^ Exposes a read-only StateFlow linked to the global Madhab filter choice
+
+    val networkTier: StateFlow<NetworkTier> = observeNetworkTier(context)
+    // ^ Creates a continuous real-time stream of the current network connectivity tier
+        .stateIn(
+        // ^ Converts the cold Flow into a hot StateFlow that can be easily read by Jetpack Compose
+            scope = viewModelScope,
+            // ^ Binds the observation to this ViewModel's lifecycle (dies when ViewModel dies)
+            started = SharingStarted.WhileSubscribed(5000),
+            // ^ Stops watching network changes if the UI is hidden for over 5 seconds (saves battery)
+            initialValue = NetworkTier.OFFLINE
+            // ^ Sets the starting assumption to OFFLINE until the first real check completes
+        )
+        // ^ Ends stateIn block
 
     private val _isRecording = MutableStateFlow(false)
     // ^ private mutable flow tracking whether the mic is active (starts as false)

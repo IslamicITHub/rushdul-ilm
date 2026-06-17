@@ -71,6 +71,8 @@ import com.rushdululilm.app.viewmodel.HomeUiState
 // ^ Imports the Home Screen state hierarchy sealed class
 import com.rushdululilm.app.viewmodel.HomeViewModel
 // ^ Imports the ViewModel manager class of this screen
+import com.rushdululilm.app.utils.NetworkTier
+// ^ Imports the network tier enum for offline checking
 
 // 🏛️ CONCEPT: Composable functions (annotated with @Composable) are the building blocks of Jetpack Compose.
 //    They take data from StateFlow streams and draw UI elements on the screen. Whenever state changes, the function recomposes automatically.
@@ -115,8 +117,11 @@ fun HomeScreen(
     }
     // ^ Ends LaunchedEffect block
 
-    val isOffline = false
-    // ^ Local placeholder boolean tracking connectivity status
+    val networkTier by homeViewModel.networkTier.collectAsState()
+    // ^ Observes the current network tier from the ViewModel
+    
+    val isOffline = networkTier == NetworkTier.OFFLINE
+    // ^ Computes a boolean flag determining if we are fully offline
 
     Scaffold(
     // ^ Sets up standard screen scaffolding layout
