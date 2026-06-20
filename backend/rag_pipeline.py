@@ -48,8 +48,8 @@ NVIDIA_API_KEY = os.environ.get("NVIDIA_API_KEY", "$NVIDIA_API_KEY")
 # ^ Fetches Nvidia developer credentials key from active system environment variables
 NVIDIA_BASE_URL = "https://integrate.api.nvidia.com/v1"
 # ^ Cloud gateway network address routing requests to NVIDIA NIM acceleration endpoint services
-NVIDIA_MODEL_NAME = "openai/gpt-oss-20b"
-# ^ Target NVIDIA NIM cloud LLM model name representing the primary 120-billion parameter model
+NVIDIA_MODEL_NAME = "meta/llama-3.3-70b-instruct"
+# ^ Target NVIDIA NIM cloud LLM model name representing the primary 70-billion parameter model
 
 # 🏛️ CONCEPT: Custom post-processors modify retrieved text chunks before passing them to the LLM.
 #    This allows combining metadata payload fields (like separate question/answer fields) into a single text block.
@@ -361,7 +361,7 @@ if __name__ == "__main__":
     pipeline = RagPipeline()
     # ^ Instantiates test pipeline class instance
     
-    test_q = "Is **Bitcoin mining** (earning new coins by providing computational power) halal?"
+    test_q = "Where will the Prophet Muhammed PBUH's parents go according to hadiths. Will they go to heaven or hell"
     # ^ Defines test question string
     print(f"[*] Testing query: {test_q}")
     # ^ Prints test question to terminal console

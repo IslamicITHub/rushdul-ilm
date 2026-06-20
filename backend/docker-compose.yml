@@ -13,31 +13,38 @@ services:
 # ^ Lists all the services (isolated server containers) that Compose will instantiate together
   fastapi:
   # ^ Main python web application service running FastAPI
-    build: .
-    # ^ Directs Docker to compile the container image locally using the Dockerfile in the current folder
+    image: python:3.13-slim
+    # ^ Uses the official lightweight Python 3.13 image directly to save space
     container_name: rushd_fastapi
     # ^ Assigns a custom name tag to the running container instance for easier docker logs tracking
+    working_dir: /app
     network_mode: "host"
     # ^ Configures host network mode to bypass container isolation and access localhost ports directly
     volumes:
     # ^ Maps folder pathways on the host machine to target directories inside the container
       - .:/app
       # ^ Maps current backend code folder to /app inside container for live-reload updates
+      - ../knowledge-graph/venv:/venv
+      # ^ Mounts the host's virtual environment to share dependencies and save disk space
       - ../islamqa.info-offline:/data/islamqa
       # ^ Maps the offline scraped IslamQA database folder pathway
       - ../darulifta-deoband.com-offline:/data/deoband
       # ^ Maps the offline scraped Darul Ifta Deoband database folder pathway
+      - ./local_models:/app/local_models
+      # ^ Mounts the external symbolic link target directly so the models are accessible inside the container
     # ^ Ends volume mounts mapping list
     environment:
     # ^ Defines key-value pairs representing environment variables passed to the container
       - PYTHONUNBUFFERED=1
       # ^ Forces Python output streams to output immediately without buffering (keeps logs real-time)
+      - PYTHONPATH=/venv/lib/python3.13/site-packages
+      # ^ Tells the container's Python to look for dependencies inside the mounted venv
       - HF_TOKEN=${HF_TOKEN}
       # ^ Passes HuggingFace authentication token for loading closed-source models if needed
       - NVIDIA_API_KEY=${NVIDIA_API_KEY}
       # ^ Passes NVIDIA NIM API authorization key for cloud model inference queries
     # ^ Ends environment mapping list
-    command: ["uvicorn", "fastapi_server:app", "--host", "0.0.0.0", "--port", "8000", "--reload"]
+    command: ["python", "-m", "uvicorn", "fastapi_server:app", "--host", "0.0.0.0", "--port", "8000", "--reload"]
     # ^ Executes uvicorn web server hosting fastapi_server:app on port 8000 with code-change hot reloading
   # ^ Ends fastapi service configuration
 
@@ -66,6 +73,65 @@ services:
     # ^ Ends volume mapping list
   # ^ Ends qdrant service configuration
 
+  indictrans2:
+  # ^ Service running the IndicTrans2 machine translation models
+    image: python:3.13-slim
+    # ^ Uses the official lightweight Python 3.13 image directly to save space
+    container_name: rushd_indictrans2
+    # ^ Assigns a custom name tag to the running container instance
+    working_dir: /app
+    ports:
+    # ^ Maps host port 8001 to container port 8001
+      - "8001:8001"
+    networks:
+    # ^ Connects container instance to active virtual networks
+      - rushd-network
+    volumes:
+    # ^ Maps volume storage structures to container folders
+      - .:/app
+      - ./venv_indictrans2:/venv
+      # ^ Mounts the host's dedicated virtual environment for translation
+      - ./local_models:/app/local_models
+      # ^ Mounts the external symbolic link target directly so the models are accessible inside the container
+    environment:
+      - PYTHONUNBUFFERED=1
+      - PYTHONPATH=/venv/lib/python3.13/site-packages
+      # ^ Tells the container's Python to look for dependencies inside the mounted venv
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: 1
+              capabilities: [gpu]
+              # ^ Passes GPU to container for fast IndicTrans2 translation
+    command: ["python", "-m", "uvicorn", "translation_service:app", "--host", "0.0.0.0", "--port", "8001", "--reload"]
+  # ^ Ends indictrans2 service configuration
+
+  tts:
+  # ^ Service running the Indic-Parler TTS models
+    image: python:3.13-slim
+    container_name: rushd_tts
+    working_dir: /app
+    ports:
+      - "8002:8002"
+    networks:
+      - rushd-network
+    volumes:
+      - .:/app
+      - ./venv_tts:/venv
+      - ./local_models:/app/local_models
+    environment:
+      - PYTHONUNBUFFERED=1
+      - PYTHONPATH=/venv/lib/python3.13/site-packages
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: 1
+              capabilities: [gpu]
+    command: ["python", "-m", "uvicorn", "tts_service:app", "--host", "0.0.0.0", "--port", "8002", "--reload"]
 # 🏛️ CONCEPT: Docker networks establish virtual bridge connections enabling secure isolated communications.
 #    Containers connected to the same network bridge communicate using service name endpoints.
 # 🏛️ ANALOGY: networks bridge is like setting up a private intercom system between office rooms.
@@ -88,4 +154,6 @@ volumes:
   # ^ Named volume storage allocation for local Ollama weights and model models caching
   qdrant_data:
   # ^ Named volume storage allocation for Qdrant vector collection files persistence
+  hf_models_data:
+  # ^ Named volume storage allocation for caching downloaded HuggingFace AI models
 # ^ Ends volumes definition

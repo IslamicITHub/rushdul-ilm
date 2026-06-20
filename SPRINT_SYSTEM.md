@@ -40,10 +40,10 @@
 ## 📊 SPRINT PROGRESS TRACKER (Update this dashboard every session)
 
 ```
-CURRENT_PHASE:        4
-CURRENT_SPRINT:       4.3
-CURRENT_SUB_SPRINT:   4.3.1
-CURRENT_MICRO_TASK:   P4.S4.SS1.MT1   ← START HERE
+CURRENT_PHASE:        5
+CURRENT_SPRINT:       5.2
+CURRENT_SUB_SPRINT:   5.2.1
+CURRENT_MICRO_TASK:   P5.S2.SS1.MT1   ← START HERE
 
 PHASE 1 PROGRESS:
   Sprint 1.1 — Environment & Project Setup     [x] 7/7 micro-tasks done
@@ -69,8 +69,11 @@ PHASE 4 PROGRESS:
   Sprint 4.1 — Network Layer & Repository      [x] 2/2 micro-tasks done
   Sprint 4.2 — Wire Home Screen to Backend     [x] 1/1 micro-tasks done
   Sprint 4.3 — Display Real Answer on Screen   [x] 1/1 micro-tasks done
-  Sprint 4.4 — Network Tier Detection          [ ] 0/1 micro-tasks done
-  Sprint 4.5 — Phase 4 Integration Test        [ ] 0/1 micro-tasks done
+  Sprint 4.4 — Network Tier Detection          [x] 1/1 micro-tasks done
+  Sprint 4.5 — Phase 4 Integration Test        [x] 1/1 micro-tasks done
+PHASE 5 PROGRESS:
+  Sprint 5.1 — IndicTrans2 Docker Service      [x] 4/4 micro-tasks done
+  Sprint 5.2 — Coqui XTTS-v2 Docker Service    [ ] 0/2 micro-tasks done
 
 ---
 
@@ -1550,7 +1553,41 @@ DONE CONDITION:
 ##   5.5 Android TTS API + voice pack download
 ##   5.6 Full offline mode integration test
 ##   5.7 Documentation
-##
+
+---
+
+## 🏃 PHASE 5 MICRO-TASK BREAKDOWN
+
+### SPRINT 5.1 — IndicTrans2 Docker Service
+**Goal:** Run IndicTrans2 locally via Docker with GPU support to provide online translation for Telugu and Urdu.
+
+- **[x] P5.S1.SS1.MT1:** Add IndicTrans2 service to `docker-compose.yml`.
+  - **TASK:** Add the `indictrans2` service to the backend Docker Compose using a Python 3.11 image and map port 8001.
+  - **DONE CONDITION:** `docker-compose.yml` is updated and validates correctly.
+
+- **[x] P5.S1.SS1.MT2:** Create the IndicTrans2 FastAPI wrapper script (`translation_service.py`).
+  - **TASK:** Write a FastAPI server that exposes a `/translate` endpoint using the IndicTrans2 model for en-te, te-en, en-ur, ur-en.
+  - **DONE CONDITION:** `translation_service.py` is written with complete inline comments.
+
+- **[x] P5.S1.SS1.MT3:** Test the IndicTrans2 endpoint.
+  - **TASK:** Start the container and curl the `/translate` endpoint with a test sentence.
+  - **DONE CONDITION:** Endpoint returns a successful translation JSON response.
+
+- **[x] P5.S1.SS1.MT4:** Integrate translation pipeline with the main FastAPI server.
+  - **TASK:** Update `fastapi_server.py` to route query inputs and outputs through the `/translate` endpoint.
+  - **DONE CONDITION:** Calling `curl` /query in Telugu returns translated answers and cites sources correctly.
+
+### SPRINT 5.2 — Coqui XTTS-v2 Docker Service
+**Goal:** Setup Coqui XTTS-v2 for high-quality TTS.
+
+- **[ ] P5.S2.SS1.MT1:** Add XTTS-v2 service to `docker-compose.yml`.
+  - **TASK:** Add the `tts_service` to `docker-compose.yml` on port 8002.
+  - **DONE CONDITION:** `docker-compose.yml` validates correctly.
+
+- **[ ] P5.S2.SS1.MT2:** Create the TTS FastAPI wrapper script (`tts_service.py`).
+  - **TASK:** Write `tts_service.py` to expose `/tts` and load the Coqui XTTS-v2 model.
+  - **DONE CONDITION:** `tts_service.py` exists with complete inline comments.
+
 ## Phase 6 — Video Library + Deployment (Sprints 6.1–6.6)
 ##   6.1 Python video metadata indexing script
 ##   6.2 Whisper batch transcription of video folder

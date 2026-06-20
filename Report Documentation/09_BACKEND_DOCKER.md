@@ -148,13 +148,36 @@ A final end-to-end test was performed to verify the stability of all backend ser
 
 ---
 
+## 🛠️ Sprint 5.1 & 5.2 — Multilingual Services (IndicTrans2 & Parler-TTS)
+**Status:** ✅ COMPLETE
+
+### 1. IndicTrans2 Translation Service
+To support Telugu and Hindi translations offline, the `ai4bharat/indictrans2-en-indic-1B` model was containerized.
+- **Service:** `indictrans2` running on port `8001`.
+- **Environment:** Created `venv_indictrans2` to isolate its specific dependency versions (e.g., `transformers==4.45.2`).
+- **Memory Strategy:** Implemented a **Dynamic GPU Offloading** mechanism. Because the RTX 3050 only has 4GB of VRAM, the model loads into CPU RAM by default. It moves to the GPU (`.to("cuda")`) right before translating, and returns to the CPU (`.to("cpu")`) immediately after. Aggressive garbage collection (`del inputs`, `gc.collect()`) and `torch.cuda.empty_cache()` are used to free the VRAM for the TTS service.
+
+### 2. Parler-TTS Speech Service
+To synthesize high-quality speech offline, the `ai4bharat/indic-parler-tts` model was containerized.
+- **Service:** `tts` running on port `8002`.
+- **Environment:** Created `venv_tts` to isolate `parler_tts` dependencies.
+- **Download Script:** Added `download_tts.py` to securely fetch the gated model using the `.env` Hugging Face Token.
+- **Memory Strategy:** Utilizes the same Dynamic GPU Offloading orchestrator as the translation service. A typecast was added to convert the `float16` output tensor to `float32`, which is required by `scipy.io.wavfile` to serialize the audio correctly into a base64 WAV response.
+
+---
+
 ## 📁 File Structure (Backend)
 ```
 backend/
 ├── Dockerfile
 ├── docker-compose.yml
 ├── fastapi_server.py
-└── requirements.txt
+├── requirements.txt
+├── translation_service.py
+├── tts_service.py
+├── download_tts.py
+├── test_gpu_offload.py
+└── local_models/
 ```
 
 ---

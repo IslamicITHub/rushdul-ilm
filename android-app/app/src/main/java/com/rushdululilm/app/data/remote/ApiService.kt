@@ -15,6 +15,8 @@ import retrofit2.http.GET
 // ^ Retrofit annotation specifying an HTTP GET request to retrieve data from a server endpoint
 import retrofit2.http.POST
 // ^ Retrofit annotation specifying an HTTP POST request to send data to a server endpoint
+import retrofit2.http.Url
+// ^ Retrofit annotation to dynamically pass a full URL overriding the base URL
 
 // 🏛️ CONCEPT: An interface in Kotlin defines a contract of functions without implementing their bodies.
 //    Retrofit takes this interface and dynamically generates the actual HTTP client network code for us.
@@ -38,5 +40,16 @@ interface ApiService {
         // ^ @Body passes the serialized QueryRequest object (which contains the question and filters) in the request body
     ): Response<QueryResponse>
     // ^ Returns an HTTP Response wrapping a QueryResponse object (containing the AI answer and sources)
+
+    @POST
+    // ^ Annotation mapping this function to an HTTP POST request. We don't specify the path here because we use @Url below.
+    suspend fun generateSpeech(
+    // ^ suspend function to request audio speech generation for given text
+        @Url url: String,
+        // ^ @Url overrides the default Retrofit base URL and uses this dynamic URL string instead (used for hitting port 8002)
+        @Body request: TTSRequest
+        // ^ @Body passes the serialized TTSRequest object
+    ): Response<TTSResponse>
+    // ^ Returns an HTTP Response wrapping a TTSResponse object containing the base64 audio
 }
 // ^ Ends ApiService interface definition

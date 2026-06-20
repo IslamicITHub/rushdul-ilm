@@ -26,6 +26,7 @@
     <string name="play_button">▶ Play</string>
     
     <string name="offline_banner_text">📵 Offline Mode — Using Downloaded Knowledge</string>
+    <string name="back_online_banner_text">🟢 Back Online — Reconnected to Server</string>
     <string name="search_placeholder">Search by topic...</string>
     <string name="no_videos_found">No videos found.</string>
     <string name="download_button_label">Download</string>

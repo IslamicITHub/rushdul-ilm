@@ -34,6 +34,9 @@ import javax.inject.Inject
 //    We launch coroutines in viewModelScope to collect StateFlow streams from our Repository.
 // 🏛️ ANALOGY: ViewModel is like a flight cockpit instrument panel. Even if the airplane turns
 //    sideways (screen rotation), the dials (StateFlow properties) stay powered on and don't reset.
+import android.content.Context
+import android.media.MediaPlayer
+import dagger.hilt.android.qualifiers.ApplicationContext
 import com.rushdululilm.app.data.repository.AnswerHistoryRepository
 import com.rushdululilm.app.data.local.FatwaSourceConverter
 
@@ -41,9 +44,13 @@ import com.rushdululilm.app.data.local.FatwaSourceConverter
 // ^ Tells the Hilt compiler to generate dependency injection code for this ViewModel class
 class AnswerViewModel @Inject constructor( // ^ class AnswerViewModel manages state for the AnswerScreen, constructor injected by Hilt
     private val repository: MainRepository, // ^ central data repository instance for accessing fatwa answers
-    private val answerHistoryRepository: AnswerHistoryRepository // ^ injected repository for accessing saved local answers
+    private val answerHistoryRepository: AnswerHistoryRepository, // ^ injected repository for accessing saved local answers
+    @ApplicationContext private val context: Context // ^ Injects global application context for saving temporary audio files
 ) : ViewModel() {
 // ^ AnswerViewModel inherits from standard architecture ViewModel
+
+    private var mediaPlayer: MediaPlayer? = null
+    // ^ private nullable variable to hold the Android MediaPlayer instance for TTS playback
 
     private val _currentAnswer = MutableStateFlow<FatwaAnswer?>(FatwaAnswer.PLACEHOLDER)
     // ^ private mutable flow holding the fatwa answer currently drawn on the UI (starts with placeholder)
@@ -169,21 +176,102 @@ class AnswerViewModel @Inject constructor( // ^ class AnswerViewModel manages st
 
     fun onReadAloudPressed() {
     // ^ Function triggered when the user taps the Read Aloud button
-        _isReadingAloud.value = !_isReadingAloud.value
-        // ^ Toggles the true/false state of the active TTS indicator
-        
         if (_isReadingAloud.value) {
-        // ^ Check if text-to-speech should start
-            println("TTS: Started reading aloud...")
-            // ^ Prints a starting debug message
-        } else {
-        // ^ Runs if text-to-speech should stop
-            println("TTS: Stopped reading aloud.")
-            // ^ Prints a stopping debug message
+        // ^ If it is currently playing audio, stop it
+            mediaPlayer?.stop()
+            // ^ Stops the media player
+            mediaPlayer?.release()
+            // ^ Releases system resources held by the media player
+            mediaPlayer = null
+            // ^ Nullifies the reference
+            _isReadingAloud.value = false
+            // ^ Turns off the reading aloud UI state
+            return
         }
-        // ^ Ends conditional check
+
+        val textToSpeak = _currentAnswer.value?.answerText ?: return
+        // ^ Retrieves the text of the fatwa answer, exiting if it's null
+        
+        _isLoading.value = true
+        // ^ Displays the loading spinner while the backend generates the audio
+        
+        viewModelScope.launch {
+        // ^ Launches a coroutine to fetch the audio from the backend
+            val result = repository.generateSpeech(text = textToSpeak)
+            // ^ Calls the MainRepository function to hit the TTS endpoint
+            
+            _isLoading.value = false
+            // ^ Turns off the loading spinner
+            
+            if (result is com.rushdululilm.app.utils.Resource.Success && result.data != null) {
+            // ^ Checks if the network call was successful
+                _isReadingAloud.value = true
+                // ^ Sets the UI state to actively reading
+                playAudioFromBase64(result.data.audioBase64)
+                // ^ Triggers the local playback function with the base64 string
+            } else {
+            // ^ Executes if the network call failed
+                println("TTS Error: ${result.message}")
+                // ^ Prints the error message to the console
+                _isReadingAloud.value = false
+                // ^ Ensures UI state reflects no audio is playing
+            }
+            // ^ Ends network result check
+        }
+        // ^ Ends coroutine
     }
     // ^ Ends onReadAloudPressed function
+
+    private fun playAudioFromBase64(base64Audio: String) {
+    // ^ Decodes a base64 string to a WAV file and plays it using Android's MediaPlayer
+        try {
+        // ^ try block to catch IO or decoding exceptions safely
+            val audioBytes = android.util.Base64.decode(base64Audio, android.util.Base64.DEFAULT)
+            // ^ Decodes the base64 string into a raw byte array
+            
+            val tempFile = java.io.File(context.cacheDir, "tts_temp.wav")
+            // ^ Creates a temporary file in the app's cache directory
+            
+            java.io.FileOutputStream(tempFile).use { fos ->
+            // ^ Opens a file output stream and ensures it closes automatically
+                fos.write(audioBytes)
+                // ^ Writes the byte array to the physical WAV file
+            }
+            
+            mediaPlayer = MediaPlayer().apply {
+            // ^ Instantiates a new Android MediaPlayer object
+                setDataSource(tempFile.absolutePath)
+                // ^ Sets the data source to the temporary file we just wrote
+                prepare()
+                // ^ Synchronously prepares the player for playback (fine for local files)
+                start()
+                // ^ Begins playing the audio
+                setOnCompletionListener {
+                // ^ Listener triggered when the audio track finishes playing naturally
+                    _isReadingAloud.value = false
+                    // ^ Updates the UI state to indicate reading has stopped
+                }
+            }
+            // ^ Ends MediaPlayer configuration block
+        } catch (e: Exception) {
+        // ^ Executes if writing the file or playing the audio crashes
+            e.printStackTrace()
+            // ^ Prints the stack trace for debugging
+            _isReadingAloud.value = false
+            // ^ Ensures the UI state isn't stuck on active
+        }
+        // ^ Ends try-catch block
+    }
+    // ^ Ends playAudioFromBase64 function
+
+    override fun onCleared() {
+    // ^ Android ViewModel lifecycle function called right before this object is destroyed
+        super.onCleared()
+        // ^ Calls the base class cleanup implementation
+        mediaPlayer?.release()
+        // ^ Releases the media player system resources to prevent memory leaks
+    }
+    // ^ Ends onCleared function
 
     fun onVideoClicked(video: RelatedVideo) {
     // ^ Function triggered when the user clicks a related lecture card

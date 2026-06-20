@@ -842,3 +842,47 @@ Completed the end-to-end smoke test of the Android app with the FastAPI backend.
 - Verified successful `POST /query` requests at `/query` being processed and answered by the local API backend instance from the virtual device.
 - All testing was fully off-cloud and processed exclusively through the offline LLM / RAG local instance.
 
+---
+
+## Android Development Environment Storage Optimization (2026-06-17)
+
+Conducted a disk space usage analysis on the Android environment folders (`android-studio`, `AndroidStudioPanda2Additional`, and `android-cli`) to identify optimization targets for freeing up local storage.
+
+### 1. Storage Consumption Breakdown
+- **`android-studio`**: **3.3 GB** (Android Studio IDE installation package, required).
+- **`AndroidStudioPanda2Additional`**: **36 GB**
+  - **`Android/Sdk`**: **23 GB** (Includes 20 GB of SDK system images).
+  - **`.gradle`**: **5.9 GB** (Build caches and wrapper files).
+  - **`.android`**: **6.8 GB** (Includes 6.6 GB of AVD emulator storage).
+- **`android-cli`**: **13 GB**
+  - **`avd/`**: **13 GB** (Duplicate copies of Pixel_5_API_31 and Pixel_6 virtual devices).
+
+### 2. Space-Saving Recommendations & Analysis
+
+#### A. AVD Path Desynchronization & Unification (Saves ~12.3 GB)
+- **Problem**: The Android Studio GUI uses `~/.android` (which symlinks to `AndroidStudioPanda2Additional/.android/`), whereas the `android` CLI wrapper script (`/media/hidayat/PersonalData/Kali_Linux_Files/android-cli/android`) overrides `ANDROID_USER_HOME` to point to `/media/hidayat/PersonalData/Kali_Linux_Files/android-cli/`. This has caused the creation of entirely duplicate AVDs:
+  - `Pixel_5_API_31` exists in both places (**4.1 GB** in `.android` and **9.8 GB** in `android-cli`).
+  - `Pixel_6` exists in both places (**2.5 GB** in `.android` and **2.5 GB** in `android-cli`).
+- **Solution**: Modify the wrapper script to point to the shared `.android` folder:
+  ```bash
+  export ANDROID_USER_HOME="/media/hidayat/PersonalData/Kali_Linux_Files/AndroidStudioPanda2Additional/.android"
+  ```
+  Once the script is updated, both environments will share the same emulators, allowing the safe removal of the duplicate `/media/hidayat/PersonalData/Kali_Linux_Files/android-cli/avd` folder.
+
+#### B. Deleting Unused SDK System Images (Saves ~8.3 GB)
+- **Problem**: The SDK `system-images` directory contains images for APIs that are not currently mapped to any active AVDs:
+  - `android-28` (**2.7 GB**)
+  - `android-33` (**3.3 GB**)
+  - `android-36` (**2.3 GB**)
+- **Solution**: Since our active emulators are `Pixel_5` (API 31) and `Pixel_6` (API 34), we can safely delete the `system-images` for APIs 28, 33, and 36 using the SDK Manager CLI or directly removing the folders:
+  ```bash
+  rm -rf /media/hidayat/PersonalData/Kali_Linux_Files/AndroidStudioPanda2Additional/Android/Sdk/system-images/android-28
+  rm -rf /media/hidayat/PersonalData/Kali_Linux_Files/AndroidStudioPanda2Additional/Android/Sdk/system-images/android-33
+  rm -rf /media/hidayat/PersonalData/Kali_Linux_Files/AndroidStudioPanda2Additional/Android/Sdk/system-images/android-36
+  ```
+
+#### C. Minor Cleanups (Saves ~1.1 GB)
+- **SDK Temp Data**: Deleting the `.downloadIntermediates` cache folder (Saves **310 MB**).
+- **Old Gradle Wrappers**: Deleting unused older downloaded gradle versions inside `AndroidStudioPanda2Additional/.gradle/wrapper/dists/` like `gradle-8.7-all`, `gradle-9.0.0-bin`, and `gradle-9.3.1-bin` (Saves **~780 MB**).
+
+

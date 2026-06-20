@@ -13,6 +13,10 @@ import com.rushdululilm.app.data.remote.QueryRequest
 // ^ Imports the request payload model containing question and settings filters
 import com.rushdululilm.app.data.remote.QueryResponse
 // ^ Imports the response payload model containing RAG search results
+import com.rushdululilm.app.data.remote.TTSRequest
+// ^ Imports the request model for Text-To-Speech endpoint
+import com.rushdululilm.app.data.remote.TTSResponse
+// ^ Imports the response model for Text-To-Speech endpoint
 import com.rushdululilm.app.utils.Resource
 // ^ Imports the sealed class handling UI states (Success, Error, Loading)
 import com.rushdululilm.app.model.FatwaAnswer
@@ -148,5 +152,33 @@ class MainRepository @Inject constructor( // ^ class MainRepository handles RAG 
         // ^ Ends try-catch block
     }
     // ^ Ends checkServerHealth function
+    suspend fun generateSpeech(text: String, description: String = "A female speaker delivers a clear and neutral speech."): Resource<TTSResponse> {
+    // ^ suspend function to request audio synthesis from the TTS backend service
+        return try {
+        // ^ try block to handle network exceptions safely
+            val request = TTSRequest(text = text, description = description)
+            // ^ Constructs the JSON payload object containing the text to be spoken
+            
+            val response = apiService.generateSpeech("http://192.168.0.102:8002/tts", request)
+            // ^ Performs the HTTP POST request to the custom TTS port 8002
+            
+            if (response.isSuccessful && response.body() != null) {
+            // ^ Checks if the HTTP status is successful (200 OK)
+                Resource.Success(response.body()!!)
+                // ^ Returns the base64 audio response string wrapped in a Success status
+            } else {
+            // ^ Executes if the server returned an error (e.g. 500)
+                Resource.Error(response.message() ?: "Failed to generate speech")
+                // ^ Returns an Error status with the HTTP message
+            }
+            // ^ Ends validation check
+        } catch (e: Exception) {
+        // ^ Catches network unreachable exceptions
+            Resource.Error(e.localizedMessage ?: "Network connection failed")
+            // ^ Returns an Error status with the exception details
+        }
+        // ^ Ends try-catch block
+    }
+    // ^ Ends generateSpeech function
 }
 // ^ Ends MainRepository class definition

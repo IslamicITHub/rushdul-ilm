@@ -1,0 +1,14 @@
+# File: backend/requirements_indictrans2.txt
+fastapi
+uvicorn
+pydantic
+torch --index-url https://download.pytorch.org/whl/cu121
+transformers==4.45.2
+tokenizers==0.20.3
+accelerate
+bitsandbytes
+sentencepiece
+protobuf
+scipy
+IndicTransToolkit
+

@@ -144,8 +144,10 @@ class HomeViewModel @Inject constructor( // ^ class HomeViewModel manages state,
             // ^ Constructs a QueryRequest object
                 question = "What is the importance of fasting in the month of muharram?",
                 // ^ Hardcoded question string for integration testing
-                sources = sourcesToSearch
+                sources = sourcesToSearch,
                 // ^ Mapped list of database collection filters
+                language = selectedLanguage.value.languageTag
+                // ^ Mapped language tag for query translation (e.g., "te")
             )
             // ^ Ends QueryRequest construction
             

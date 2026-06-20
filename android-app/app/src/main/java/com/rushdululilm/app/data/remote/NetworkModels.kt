@@ -26,9 +26,13 @@ data class QueryRequest(
     // ^ Serializes the 'chatHistory' property to the JSON key "chat_history"
     // ^ val declares a read-only list of ChatMessage objects to provide context, defaulting to an empty list
     
-    @SerializedName("sources") val sources: List<String>? = null
+    @SerializedName("sources") val sources: List<String>? = null,
     // ^ Serializes the 'sources' property to the JSON key "sources"
     // ^ val declares a nullable read-only list of source names (e.g. ["deoband"]) to filter the RAG database search
+
+    @SerializedName("language") val language: String? = null
+    // ^ Serializes the 'language' property to the JSON key "language"
+    // ^ val declares a nullable read-only string containing the language tag (e.g. "te") for translating queries
 )
 // ^ Ends QueryRequest class definition
 
@@ -63,3 +67,20 @@ data class QueryResponse(
     // ^ Serializes 'error' to the JSON key "error". Nullable String holds error messages if the backend encounters a failure.
 )
 // ^ Ends QueryResponse class definition
+
+data class TTSRequest(
+// ^ data class representing the payload sent to the TTS service endpoint
+    @SerializedName("text") val text: String,
+    // ^ The text to be spoken
+    
+    @SerializedName("description") val description: String? = null
+    // ^ Optional parameter providing a description of the speaker voice (used by Parler-TTS)
+)
+// ^ Ends TTSRequest class definition
+
+data class TTSResponse(
+// ^ data class representing the backend server response containing the generated audio
+    @SerializedName("audio_base64") val audioBase64: String
+    // ^ The base64-encoded audio WAV file string
+)
+// ^ Ends TTSResponse class definition

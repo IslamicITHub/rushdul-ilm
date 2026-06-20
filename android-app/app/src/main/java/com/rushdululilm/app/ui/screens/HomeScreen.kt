@@ -61,6 +61,14 @@ import com.rushdululilm.app.ui.components.SourceSelector
 // ^ Imports the category chips selector component for Islamic database search filters
 import androidx.compose.runtime.LaunchedEffect
 // ^ Compose side-effect block to execute actions (like navigation) safely when states change
+import androidx.compose.runtime.remember
+// ^ Compose function to remember states across recompositions
+import androidx.compose.runtime.mutableStateOf
+// ^ Compose function to hold a mutable state
+import androidx.compose.runtime.setValue
+// ^ Kotlin setter extension for Compose state variables
+import kotlinx.coroutines.delay
+// ^ Coroutine delay function to wait without blocking threads
 import androidx.compose.material3.CircularProgressIndicator
 // ^ Material3 circular progress loader indicator
 import com.rushdululilm.app.ui.theme.IslamicGreen
@@ -122,6 +130,28 @@ fun HomeScreen(
     
     val isOffline = networkTier == NetworkTier.OFFLINE
     // ^ Computes a boolean flag determining if we are fully offline
+    
+    var previousNetworkTier by remember { mutableStateOf(networkTier) }
+    // ^ Remembers the previous network state to detect transitions
+    var showBackOnlineBanner by remember { mutableStateOf(false) }
+    // ^ State that controls whether the green "Back Online" popup is visible
+
+    LaunchedEffect(networkTier) {
+    // ^ Runs whenever the networkTier changes
+        if (previousNetworkTier == NetworkTier.OFFLINE && networkTier != NetworkTier.OFFLINE) {
+        // ^ Checks if we just transitioned from offline to online
+            showBackOnlineBanner = true
+            // ^ Shows the green banner
+            delay(4000)
+            // ^ Waits for 4 seconds
+            showBackOnlineBanner = false
+            // ^ Hides the green banner
+        }
+        // ^ Ends if block
+        previousNetworkTier = networkTier
+        // ^ Updates the previous tier to the current one
+    }
+    // ^ Ends LaunchedEffect
 
     Scaffold(
     // ^ Sets up standard screen scaffolding layout
@@ -172,8 +202,34 @@ fun HomeScreen(
         ) {
         // ^ Starts Column body
             
-            if (isOffline) {
-            // ^ Checks if offline status is active
+            if (showBackOnlineBanner) {
+            // ^ Prioritizes showing the "Back Online" success banner if it's active
+                Surface(
+                // ^ Instantiates background drawing surface
+                    color = IslamicGreen, 
+                    // ^ Sets surface background to IslamicGreen success color
+                    modifier = Modifier.fillMaxWidth()
+                    // ^ Sets modifier to fill screen width
+                ) {
+                // ^ Starts Surface body
+                    Text(
+                    // ^ Draws back online banner text
+                        text = stringResource(R.string.back_online_banner_text),
+                        // ^ Fetches success message from strings.xml
+                        modifier = Modifier.padding(8.dp),
+                        // ^ Adds 8dp padding around the text content
+                        textAlign = TextAlign.Center,
+                        // ^ Centers the text inside the banner bounds
+                        style = MaterialTheme.typography.labelSmall, 
+                        // ^ Applies labelSmall font style (16sp accessibility minimum)
+                        color = Color.White
+                        // ^ Sets text color to solid White
+                    )
+                    // ^ Ends Text widget
+                }
+                // ^ Ends Surface widget
+            } else if (isOffline) {
+            // ^ Checks if offline status is active (only if the online banner isn't showing)
                 Surface(
                 // ^ Instantiates background drawing surface
                     color = OfflineOrange, 
@@ -199,7 +255,7 @@ fun HomeScreen(
                 }
                 // ^ Ends Surface widget
             }
-            // ^ Ends offline check block
+            // ^ Ends banner check block
 
             Spacer(modifier = Modifier.height(16.dp))
             // ^ Adds a blank spacing gap of 16dp below the top bar
