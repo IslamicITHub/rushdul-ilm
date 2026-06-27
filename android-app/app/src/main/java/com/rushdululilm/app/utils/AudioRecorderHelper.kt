@@ -54,6 +54,16 @@ class AudioRecorderHelper {
             bufferSize
         )
 
+        if (audioRecord?.state != AudioRecord.STATE_INITIALIZED) {
+        // ^ Checks if the microphone failed to open (e.g., used by another app, unsupported hardware, or permissions revoked late)
+            println("❌ AudioRecord failed to initialize.")
+            audioRecord?.release()
+            audioRecord = null
+            isRecording = false
+            return
+            // ^ Safely aborts the recording attempt without crashing
+        }
+
         audioBuffer.clear()
         // ^ Empties the previous recording data
 

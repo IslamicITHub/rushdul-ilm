@@ -81,6 +81,18 @@ import com.rushdululilm.app.viewmodel.HomeViewModel
 // ^ Imports the ViewModel manager class of this screen
 import com.rushdululilm.app.utils.NetworkTier
 // ^ Imports the network tier enum for offline checking
+import android.Manifest
+// ^ Imports Android system permission constants
+import android.content.pm.PackageManager
+// ^ Imports PackageManager for permission status checking
+import androidx.activity.compose.rememberLauncherForActivityResult
+// ^ Compose function to launch Android Intents (like permission dialogs)
+import androidx.activity.result.contract.ActivityResultContracts
+// ^ Constants defining standard Android Activity results (like RequestPermission)
+import androidx.core.content.ContextCompat
+// ^ Utility class to access Android context features safely across OS versions
+import androidx.compose.ui.platform.LocalContext
+// ^ Provides the Android Context scoped to this Compose function
 
 // 🏛️ CONCEPT: Composable functions (annotated with @Composable) are the building blocks of Jetpack Compose.
 //    They take data from StateFlow streams and draw UI elements on the screen. Whenever state changes, the function recomposes automatically.
@@ -98,6 +110,25 @@ fun HomeScreen(
     // ^ Parameter supplying the brain ViewModel instance, injected by Hilt by default
 ) {
 // ^ Starts HomeScreen body
+
+    val context = LocalContext.current
+    // ^ Grabs the active Android Activity context to check permissions
+
+    val permissionLauncher = rememberLauncherForActivityResult(
+    // ^ Registers a callback listener for the system permission request dialog
+        contract = ActivityResultContracts.RequestPermission(),
+        onResult = { isGranted ->
+        // ^ Triggered when the user taps 'Allow' or 'Deny'
+            if (isGranted) {
+                homeViewModel.onMicPressed()
+                // ^ If they allowed it, instantly trigger the mic action they tapped
+            } else {
+                println("❌ User denied microphone permission.")
+                // ^ Debug log for rejected permissions
+            }
+        }
+    )
+    // ^ Ends permission launcher
 
     val selectedLanguage by homeViewModel.selectedLanguage.collectAsState()
     // ^ Observes selectedLanguage StateFlow from ViewModel, mapping it to a standard variable delegate
@@ -304,7 +335,23 @@ fun HomeScreen(
                 // ^ Instantiates main microphone button component (40% height animated layout)
                     isRecording = isRecording,
                     // ^ Passes active recording state boolean
-                    onClick = { homeViewModel.onMicPressed() }
+                    onClick = { 
+                        val hasPermission = ContextCompat.checkSelfPermission(
+                        // ^ Checks if the user previously granted mic access
+                            context,
+                            Manifest.permission.RECORD_AUDIO
+                        ) == PackageManager.PERMISSION_GRANTED
+                        
+                        if (hasPermission) {
+                        // ^ If they already allowed it
+                            homeViewModel.onMicPressed()
+                            // ^ Trigger the recording directly
+                        } else {
+                        // ^ If they haven't allowed it yet (first launch)
+                            permissionLauncher.launch(Manifest.permission.RECORD_AUDIO)
+                            // ^ Show the system permission popup dialog
+                        }
+                    }
                     // ^ Passes click event callback to toggle recording state
                 )
                 // ^ Ends MicButton widget
