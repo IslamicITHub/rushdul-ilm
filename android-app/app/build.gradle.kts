@@ -26,6 +26,17 @@ android {
         vectorDrawables {
             useSupportLibrary = true
         }
+        
+        externalNativeBuild {
+        // ^ Instructs Gradle on how to compile our C++ code
+            cmake {
+            // ^ Uses CMake as the build system
+                cppFlags += "-std=c++14"
+                // ^ Enforces C++14 standard which is compatible with whisper.cpp
+            }
+            // ^ Ends CMake specific flags
+        }
+        // ^ Ends externalNativeBuild configuration for defaultConfig
     }
 
     buildTypes {
@@ -35,6 +46,16 @@ android {
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
             )
+        }
+    }
+
+    externalNativeBuild {
+    // ^ Links the CMake script to the Android Gradle build process
+        cmake {
+            path("src/main/cpp/CMakeLists.txt")
+            // ^ Points to our custom CMakeLists file which builds whisper.cpp
+            version = "3.22.1"
+            // ^ Specifies the CMake version to use (comes bundled with modern Android Studio SDKs)
         }
     }
 

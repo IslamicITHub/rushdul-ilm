@@ -47,6 +47,12 @@ import kotlinx.coroutines.flow.SharingStarted
 // ^ Defines how a converted StateFlow should be started and stopped based on its subscribers
 import kotlinx.coroutines.flow.stateIn
 // ^ Converts a cold Flow into a hot StateFlow that shares its value across multiple UI observers
+import com.rushdululilm.app.utils.AudioRecorderHelper
+// ^ Imports our audio capture utility
+import com.rushdululilm.app.utils.WhisperHelper
+// ^ Imports our C++ JNI bridge for offline AI transcription
+import java.io.File
+// ^ Imports Java File class for interacting with the file system
 // 🏛️ CONCEPT: HomeUiState is a sealed class modeling the mutually exclusive phases of the Home Screen.
 //    Sealed classes allow us to define closed hierarchies where each state is a distinct type, some holding custom parameters (like Error holding a message).
 // 🏛️ ANALOGY: HomeUiState is like the gears of a car's automatic transmission. 
@@ -110,6 +116,75 @@ class HomeViewModel @Inject constructor( // ^ class HomeViewModel manages state,
     val uiState: StateFlow<HomeUiState> = _uiState.asStateFlow()
     // ^ public read-only StateFlow exposed to the UI to control loaders and navigation triggers
 
+    private val audioRecorder = AudioRecorderHelper()
+    // ^ Instantiates the audio recorder helper to manage the microphone
+    private val whisperHelper = WhisperHelper()
+    // ^ Instantiates the C++ JNI interface to access whisper.cpp
+    private var isWhisperModelLoaded = false
+    // ^ Boolean flag to prevent loading the 182MB model more than once
+
+    init {
+    // ^ Runs as soon as the ViewModel is created
+        viewModelScope.launch(Dispatchers.IO) {
+        // ^ Runs in the background IO thread to avoid freezing the screen
+            loadWhisperModel()
+            // ^ Preemptively loads the whisper model so it's ready when the user goes offline
+        }
+        // ^ Ends coroutine
+    }
+    // ^ Ends init block
+
+    private fun loadWhisperModel() {
+    // ^ Copies the 182MB model from the read-only APK assets to the cache directory and loads it into C++
+        if (isWhisperModelLoaded) return
+        // ^ Early exit if already loaded
+        
+        val modelFilename = "models/ggml-small-q5_1.bin"
+        // ^ Path inside the APK's assets folder
+        val destFile = File(context.cacheDir, "ggml-small-q5_1.bin")
+        // ^ Destination path where C++ can access it natively
+        
+        if (!destFile.exists()) {
+        // ^ If it hasn't been copied yet (first run)
+            println("Copying Whisper model from assets to cache... this may take a moment.")
+            // ^ Debug print
+            try {
+                context.assets.open(modelFilename).use { inputStream ->
+                // ^ Opens the asset file
+                    destFile.outputStream().use { outputStream ->
+                    // ^ Opens the destination file
+                        inputStream.copyTo(outputStream)
+                        // ^ Copies the bytes
+                    }
+                    // ^ Ends outputStream
+                }
+                // ^ Ends inputStream
+            } catch (e: Exception) {
+            // ^ Catches missing asset errors
+                println("❌ Error copying model: ${e.message}")
+                return
+            }
+            // ^ Ends try-catch
+        }
+        // ^ Ends if exists block
+        
+        val success = whisperHelper.initModel(destFile.absolutePath)
+        // ^ Hands the file path to C++ via JNI to load the neural network weights
+        
+        if (success) {
+        // ^ If C++ loaded it without error
+            isWhisperModelLoaded = true
+            // ^ Marks it as ready
+            println("✅ Whisper model loaded successfully into C++!")
+            // ^ Debug print
+        } else {
+        // ^ If C++ failed
+            println("❌ Failed to initialize Whisper model in C++.")
+        }
+        // ^ Ends success check
+    }
+    // ^ Ends loadWhisperModel function
+
     fun onMicPressed() {
     // ^ Triggered when the user taps the mic button
         _isRecording.value = !_isRecording.value
@@ -119,31 +194,58 @@ class HomeViewModel @Inject constructor( // ^ class HomeViewModel manages state,
         // ^ Checks if recording started
             _uiState.value = HomeUiState.Recording
             // ^ Sets screen state to Recording
+            audioRecorder.startRecording()
+            // ^ Commands the audio helper to begin capturing raw microphone PCM data
             println("Mic pressed: Started recording...") 
             // ^ Prints a debug statement to the console
         } else {
         // ^ Executes when recording stops
-            sendTestQuery()
-            // ^ Triggers a test RAG query to backend (simulating audio query upload)
+            _uiState.value = HomeUiState.Processing
+            // ^ Shows the loading state while we process the audio
+            
+            viewModelScope.launch {
+            // ^ Launches a coroutine to stop the recorder securely and process the audio
+                val rawAudioBuffer = audioRecorder.stopRecording()
+                // ^ Stops hardware capture and waits for the finalized float array to return
+                
+                if (networkTier.value == NetworkTier.OFFLINE) {
+                // ^ If the device has no internet or LAN connection
+                    println("Offline STT requested. Sending ${rawAudioBuffer.size} floats to JNI...")
+                    // ^ Logs how much data we are passing to C++
+                    val transcription = whisperHelper.transcribeAudio(rawAudioBuffer)
+                    // ^ Hands the audio array directly to the native C++ engine via our bridge
+                    println("Native transcription result: $transcription")
+                    // ^ Logs the string returned by whisper.cpp
+                    
+                    // For now, since it's a stub, we will just send a mock query down below anyway 
+                    // or handle the UI differently. But we are successfully passing the buffer!
+                    sendTestQuery(transcription)
+                } else {
+                // ^ If we are online
+                    // Here we'd normally send the audio to the FastAPI server.
+                    sendTestQuery("What is the importance of fasting in the month of muharram?")
+                }
+                // ^ Ends network tier check
+            }
+            // ^ Ends coroutine
         }
         // ^ Ends recording toggle check
     }
     // ^ Ends onMicPressed function
 
-    private fun sendTestQuery() {
-    // ^ Simulates sending a speech-to-text string to the backend /query endpoint
+    private fun sendTestQuery(questionText: String) {
+    // ^ Simulates sending the transcribed text to the backend /query endpoint
         viewModelScope.launch {
         // ^ Launches a coroutine job bound to this ViewModel's lifecycle scope
-            _uiState.value = HomeUiState.Processing
-            // ^ Updates the UI state to Processing (showing loading spinner)
             
             val sourcesToSearch = preferencesRepository.getBackendSources()
             // ^ Queries user preferences to get database collection filter strings (e.g. ["deoband"])
             
             val request = QueryRequest(
             // ^ Constructs a QueryRequest object
-                question = "What is the importance of fasting in the month of muharram?",
-                // ^ Hardcoded question string for integration testing
+                question = questionText,
+                // ^ Uses the transcribed or simulated question string
+
                 sources = sourcesToSearch,
                 // ^ Mapped list of database collection filters
                 language = selectedLanguage.value.languageTag
@@ -207,5 +309,14 @@ class HomeViewModel @Inject constructor( // ^ class HomeViewModel manages state,
         // ^ Prints a debug message in the console
     }
     // ^ Ends onSourceSelected function
+    
+    override fun onCleared() {
+    // ^ Android Lifecycle method called right before this ViewModel is destroyed
+        super.onCleared()
+        // ^ Calls base class
+        whisperHelper.freeModel()
+        // ^ Instructs C++ to free the 182MB of RAM it was holding for the whisper AI model
+    }
+    // ^ Ends onCleared function
 }
 // ^ Ends HomeViewModel class definition

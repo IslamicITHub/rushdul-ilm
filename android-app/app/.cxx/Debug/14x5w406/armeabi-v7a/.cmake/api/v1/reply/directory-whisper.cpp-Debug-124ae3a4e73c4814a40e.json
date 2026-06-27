@@ -1,0 +1,149 @@
+{
+	"backtraceGraph" : 
+	{
+		"commands" : 
+		[
+			"install"
+		],
+		"files" : 
+		[
+			"whisper.cpp/CMakeLists.txt"
+		],
+		"nodes" : 
+		[
+			{
+				"file" : 0
+			},
+			{
+				"command" : 0,
+				"file" : 0,
+				"line" : 185,
+				"parent" : 0
+			},
+			{
+				"command" : 0,
+				"file" : 0,
+				"line" : 192,
+				"parent" : 0
+			},
+			{
+				"command" : 0,
+				"file" : 0,
+				"line" : 212,
+				"parent" : 0
+			},
+			{
+				"command" : 0,
+				"file" : 0,
+				"line" : 220,
+				"parent" : 0
+			},
+			{
+				"command" : 0,
+				"file" : 0,
+				"line" : 241,
+				"parent" : 0
+			},
+			{
+				"command" : 0,
+				"file" : 0,
+				"line" : 249,
+				"parent" : 0
+			}
+		]
+	},
+	"installers" : 
+	[
+		{
+			"backtrace" : 1,
+			"component" : "Unspecified",
+			"destination" : "lib",
+			"paths" : 
+			[
+				"bin/libwhisper.so"
+			],
+			"targetId" : "whisper::@a8a66f5e841e94d32cb3",
+			"targetIndex" : 4,
+			"type" : "target"
+		},
+		{
+			"backtrace" : 1,
+			"component" : "Unspecified",
+			"destination" : "include",
+			"paths" : 
+			[
+				"whisper.cpp/include/whisper.h"
+			],
+			"type" : "file"
+		},
+		{
+			"backtrace" : 2,
+			"component" : "Unspecified",
+			"destination" : "lib",
+			"paths" : 
+			[
+				"bin/libparakeet.so"
+			],
+			"targetId" : "parakeet::@a8a66f5e841e94d32cb3",
+			"targetIndex" : 3,
+			"type" : "target"
+		},
+		{
+			"backtrace" : 2,
+			"component" : "Unspecified",
+			"destination" : "include",
+			"paths" : 
+			[
+				"whisper.cpp/include/parakeet.h"
+			],
+			"type" : "file"
+		},
+		{
+			"backtrace" : 3,
+			"component" : "Unspecified",
+			"destination" : "lib/cmake/whisper",
+			"paths" : 
+			[
+				"/home/hidayat/Documents/Islamic-Knowledge-QA-App/android-app/app/.cxx/Debug/14x5w406/armeabi-v7a/whisper.cpp/whisper-config.cmake",
+				"/home/hidayat/Documents/Islamic-Knowledge-QA-App/android-app/app/.cxx/Debug/14x5w406/armeabi-v7a/whisper.cpp/whisper-version.cmake"
+			],
+			"type" : "file"
+		},
+		{
+			"backtrace" : 4,
+			"component" : "Unspecified",
+			"destination" : "lib/pkgconfig",
+			"paths" : 
+			[
+				"/home/hidayat/Documents/Islamic-Knowledge-QA-App/android-app/app/.cxx/Debug/14x5w406/armeabi-v7a/whisper.cpp/whisper.pc"
+			],
+			"type" : "file"
+		},
+		{
+			"backtrace" : 5,
+			"component" : "Unspecified",
+			"destination" : "lib/cmake/parakeet",
+			"paths" : 
+			[
+				"/home/hidayat/Documents/Islamic-Knowledge-QA-App/android-app/app/.cxx/Debug/14x5w406/armeabi-v7a/whisper.cpp/parakeet-config.cmake",
+				"/home/hidayat/Documents/Islamic-Knowledge-QA-App/android-app/app/.cxx/Debug/14x5w406/armeabi-v7a/whisper.cpp/parakeet-version.cmake"
+			],
+			"type" : "file"
+		},
+		{
+			"backtrace" : 6,
+			"component" : "Unspecified",
+			"destination" : "lib/pkgconfig",
+			"paths" : 
+			[
+				"/home/hidayat/Documents/Islamic-Knowledge-QA-App/android-app/app/.cxx/Debug/14x5w406/armeabi-v7a/whisper.cpp/parakeet.pc"
+			],
+			"type" : "file"
+		}
+	],
+	"paths" : 
+	{
+		"build" : "whisper.cpp",
+		"source" : "whisper.cpp"
+	}
+}

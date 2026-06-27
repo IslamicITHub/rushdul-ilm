@@ -1,0 +1,11 @@
+/home/hidayat/Documents/Islamic-Knowledge-QA-App/android-app/app/src/main/cpp/CMakeLists.txt
+/home/hidayat/Documents/Islamic-Knowledge-QA-App/android-app/app/src/main/cpp/whisper.cpp/CMakeLists.txt
+/home/hidayat/Documents/Islamic-Knowledge-QA-App/android-app/app/src/main/cpp/whisper.cpp/cmake/build-info.cmake
+/home/hidayat/Documents/Islamic-Knowledge-QA-App/android-app/app/src/main/cpp/whisper.cpp/cmake/parakeet-config.cmake.in
+/home/hidayat/Documents/Islamic-Knowledge-QA-App/android-app/app/src/main/cpp/whisper.cpp/cmake/whisper-config.cmake.in
+/home/hidayat/Documents/Islamic-Knowledge-QA-App/android-app/app/src/main/cpp/whisper.cpp/ggml/CMakeLists.txt
+/home/hidayat/Documents/Islamic-Knowledge-QA-App/android-app/app/src/main/cpp/whisper.cpp/ggml/cmake/common.cmake
+/home/hidayat/Documents/Islamic-Knowledge-QA-App/android-app/app/src/main/cpp/whisper.cpp/ggml/cmake/ggml-config.cmake.in
+/home/hidayat/Documents/Islamic-Knowledge-QA-App/android-app/app/src/main/cpp/whisper.cpp/ggml/src/CMakeLists.txt
+/home/hidayat/Documents/Islamic-Knowledge-QA-App/android-app/app/src/main/cpp/whisper.cpp/ggml/src/ggml-cpu/CMakeLists.txt
+/home/hidayat/Documents/Islamic-Knowledge-QA-App/android-app/app/src/main/cpp/whisper.cpp/src/CMakeLists.txt

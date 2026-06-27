@@ -36,9 +36,15 @@ import javax.inject.Inject
 //    sideways (screen rotation), the dials (StateFlow properties) stay powered on and don't reset.
 import android.content.Context
 import android.media.MediaPlayer
+import android.speech.tts.TextToSpeech
+// ^ Imports Android's built-in offline TextToSpeech engine
 import dagger.hilt.android.qualifiers.ApplicationContext
 import com.rushdululilm.app.data.repository.AnswerHistoryRepository
 import com.rushdululilm.app.data.local.FatwaSourceConverter
+import com.rushdululilm.app.utils.NetworkTier
+// ^ Imports the NetworkTier enum to check connectivity status
+import com.rushdululilm.app.utils.detectNetworkTier
+// ^ Imports the function to detect the current network tier
 
 @HiltViewModel
 // ^ Tells the Hilt compiler to generate dependency injection code for this ViewModel class
@@ -58,8 +64,27 @@ class AnswerViewModel @Inject constructor( // ^ class AnswerViewModel manages st
     val currentAnswer: StateFlow<FatwaAnswer?> = _currentAnswer.asStateFlow()
     // ^ public read-only StateFlow exposed to the AnswerScreen UI
 
+    private var textToSpeechEngine: TextToSpeech? = null
+    // ^ Nullable variable to hold the Android TextToSpeech engine instance
+
     init {
     // ^ init block runs immediately when this ViewModel class is created
+        
+        textToSpeechEngine = TextToSpeech(context) { status ->
+        // ^ Initializes the Android TextToSpeech engine with the application context
+            if (status == TextToSpeech.SUCCESS) {
+            // ^ Checks if the engine initialized successfully
+                println("Offline TTS Engine initialized successfully")
+                // ^ Logs success for debugging
+            } else {
+            // ^ Executes if initialization failed
+                println("Offline TTS Engine failed to initialize")
+                // ^ Logs failure for debugging
+            }
+            // ^ Ends status check
+        }
+        // ^ Ends TTS initialization block
+
         viewModelScope.launch {
         // ^ Launches a background coroutine to safely collect updates from the Repository
             repository.latestAnswer.collect { answer ->
@@ -184,6 +209,8 @@ class AnswerViewModel @Inject constructor( // ^ class AnswerViewModel manages st
             // ^ Releases system resources held by the media player
             mediaPlayer = null
             // ^ Nullifies the reference
+            textToSpeechEngine?.stop()
+            // ^ Stops the built-in offline TTS engine if it was speaking
             _isReadingAloud.value = false
             // ^ Turns off the reading aloud UI state
             return
@@ -191,6 +218,23 @@ class AnswerViewModel @Inject constructor( // ^ class AnswerViewModel manages st
 
         val textToSpeak = _currentAnswer.value?.answerText ?: return
         // ^ Retrieves the text of the fatwa answer, exiting if it's null
+        
+        val currentTier = detectNetworkTier(context)
+        // ^ Checks the current network connectivity status
+        
+        if (currentTier == NetworkTier.OFFLINE) {
+        // ^ If the device has no network connection at all
+            _isReadingAloud.value = true
+            // ^ Turns on the reading aloud UI state indicator
+            textToSpeechEngine?.speak(textToSpeak, TextToSpeech.QUEUE_FLUSH, null, "offline_tts")
+            // ^ Instructs the built-in Android offline TTS engine to speak the text immediately
+            
+            // Note: Since TextToSpeech runs asynchronously without an easy coroutine callback, 
+            // the UI state will stay true until manually stopped by another button press in this basic implementation.
+            return
+            // ^ Exits the function early so we don't try to call the network API
+        }
+        // ^ Ends offline check
         
         _isLoading.value = true
         // ^ Displays the loading spinner while the backend generates the audio
@@ -270,6 +314,10 @@ class AnswerViewModel @Inject constructor( // ^ class AnswerViewModel manages st
         // ^ Calls the base class cleanup implementation
         mediaPlayer?.release()
         // ^ Releases the media player system resources to prevent memory leaks
+        textToSpeechEngine?.stop()
+        // ^ Stops the offline TTS engine if it is currently speaking
+        textToSpeechEngine?.shutdown()
+        // ^ Shuts down the offline TTS engine to free up system resources
     }
     // ^ Ends onCleared function
 

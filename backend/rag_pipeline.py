@@ -48,7 +48,7 @@ NVIDIA_API_KEY = os.environ.get("NVIDIA_API_KEY", "$NVIDIA_API_KEY")
 # ^ Fetches Nvidia developer credentials key from active system environment variables
 NVIDIA_BASE_URL = "https://integrate.api.nvidia.com/v1"
 # ^ Cloud gateway network address routing requests to NVIDIA NIM acceleration endpoint services
-NVIDIA_MODEL_NAME = "meta/llama-3.3-70b-instruct"
+NVIDIA_MODEL_NAME = "openai/gpt-oss-20b"
 # ^ Target NVIDIA NIM cloud LLM model name representing the primary 70-billion parameter model
 
 # 🏛️ CONCEPT: Custom post-processors modify retrieved text chunks before passing them to the LLM.
