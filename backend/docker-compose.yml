@@ -132,6 +132,42 @@ services:
               count: 1
               capabilities: [gpu]
     command: ["python", "-m", "uvicorn", "tts_service:app", "--host", "0.0.0.0", "--port", "8002", "--reload"]
+  # ^ Ends tts service configuration
+
+  stt:
+  # ^ Service running the faster-whisper STT models
+    image: python:3.11-slim
+    # ^ Uses the official lightweight Python 3.11 image directly to save space
+    container_name: rushd_stt
+    # ^ Assigns a custom name tag to the running container instance
+    working_dir: /app
+    ports:
+    # ^ Maps host port 8003 to container port 8003
+      - "8003:8003"
+    networks:
+    # ^ Connects container instance to active virtual networks
+      - rushd-network
+    volumes:
+    # ^ Maps volume storage structures to container folders
+      - .:/app
+      - ./venv_stt:/venv
+      # ^ Mounts the host's dedicated virtual environment for STT
+      - ./local_models:/app/local_models
+      # ^ Mounts the external symbolic link target directly so the models are accessible inside the container
+    environment:
+      - PYTHONUNBUFFERED=1
+      - PYTHONPATH=/venv/lib/python3.11/site-packages
+      # ^ Tells the container's Python to look for dependencies inside the mounted venv
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: 1
+              capabilities: [gpu]
+              # ^ Passes GPU to container for fast faster-whisper STT inference
+    command: ["python", "-m", "uvicorn", "stt_service:app", "--host", "0.0.0.0", "--port", "8003", "--reload"]
+  # ^ Ends stt service configuration
 # 🏛️ CONCEPT: Docker networks establish virtual bridge connections enabling secure isolated communications.
 #    Containers connected to the same network bridge communicate using service name endpoints.
 # 🏛️ ANALOGY: networks bridge is like setting up a private intercom system between office rooms.

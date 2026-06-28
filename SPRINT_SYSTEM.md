@@ -73,7 +73,9 @@ PHASE 4 PROGRESS:
   Sprint 4.5 — Phase 4 Integration Test        [x] 1/1 micro-tasks done
 PHASE 5 PROGRESS:
   Sprint 5.1 — IndicTrans2 Docker Service      [x] 4/4 micro-tasks done
-  Sprint 5.2 — Coqui XTTS-v2 Docker Service    [ ] 0/2 micro-tasks done
+  Sprint 5.2 — Coqui XTTS-v2 Docker Service    [x] 2/2 micro-tasks done
+  Sprint 5.3 — faster-whisper Docker Service   [x] 4/4 micro-tasks done
+  Sprint 5.4 — whisper.cpp Offline Fallback    [x] 1/1 micro-tasks done
 
 ---
 
@@ -1545,14 +1547,15 @@ DONE CONDITION:
 ```
 
 ##
-## Phase 5 — Multilingual + Offline (Sprints 5.1–5.7)
+## Phase 5 — Multilingual + Offline (Sprints 5.1–5.8)
 ##   5.1 IndicTrans2 Docker service
-##   5.2 Coqui XTTS-v2 Docker service + TTS in Telugu
-##   5.3 whisper.cpp JNI (Android NDK + CMake)
-##   5.4 Opus-MT ONNX offline translation
-##   5.5 Android TTS API + voice pack download
-##   5.6 Full offline mode integration test
-##   5.7 Documentation
+##   5.2 Indic-parler-TTS Docker service + TTS in Telugu
+##   5.3 faster-whisper-large-v3-turbo Docker service (Primary LAN STT)
+##   5.4 whisper.cpp JNI (Android NDK + CMake) (Offline Fallback STT)
+##   5.5 Opus-MT ONNX offline translation
+##   5.6 Android TTS API + voice pack download
+##   5.7 Full offline mode integration test
+##   5.8 Documentation
 
 ---
 
@@ -1578,15 +1581,41 @@ DONE CONDITION:
   - **DONE CONDITION:** Calling `curl` /query in Telugu returns translated answers and cites sources correctly.
 
 ### SPRINT 5.2 — Coqui XTTS-v2 Docker Service
-**Goal:** Setup Coqui XTTS-v2 for high-quality TTS.
+**Goal:** Setup Indic-parler-TTS for high-quality TTS.
 
-- **[ ] P5.S2.SS1.MT1:** Add XTTS-v2 service to `docker-compose.yml`.
+- **[ ] P5.S2.SS1.MT1:** Add Indic-parler-TTS service to `docker-compose.yml`.
   - **TASK:** Add the `tts_service` to `docker-compose.yml` on port 8002.
   - **DONE CONDITION:** `docker-compose.yml` validates correctly.
 
 - **[ ] P5.S2.SS1.MT2:** Create the TTS FastAPI wrapper script (`tts_service.py`).
-  - **TASK:** Write `tts_service.py` to expose `/tts` and load the Coqui XTTS-v2 model.
+  - **TASK:** Write `tts_service.py` to expose `/tts` and load the Indic-parler-TTS model.
   - **DONE CONDITION:** `tts_service.py` exists with complete inline comments.
+
+### SPRINT 5.3 — faster-whisper-large-v3-turbo Docker Service
+**Goal:** Run `faster-whisper-large-v3-turbo INT8` locally via Docker with GPU support as the primary high-accuracy STT for LAN/WiFi mode.
+
+- **[ ] P5.S3.SS1.MT1:** Add faster-whisper service to `docker-compose.yml`.
+  - **TASK:** Add the `stt_service` to the backend Docker Compose using a Python 3.11 image and map port 8003.
+  - **DONE CONDITION:** `docker-compose.yml` is updated and validates correctly.
+
+- **[ ] P5.S3.SS1.MT2:** Create the STT FastAPI wrapper script (`stt_service.py`).
+  - **TASK:** Write a FastAPI server that exposes a `/transcribe` endpoint using the `faster-whisper` model in INT8 mode.
+  - **DONE CONDITION:** `stt_service.py` is written with complete inline comments and loads the model into VRAM properly.
+
+- **[x] P5.S3.SS1.MT3:** Test the faster-whisper endpoint.
+  - **TASK:** Start the container and curl the `/transcribe` endpoint with a test WAV/PCM audio file.
+  - **DONE CONDITION:** Endpoint returns a successful transcription JSON response.
+
+- **[x] P5.S3.SS1.MT4:** Wire Android app to use online STT via Retrofit.
+  - **TASK:** Update `ApiService.kt` and `HomeViewModel.kt` to send the captured audio to the backend server via Retrofit when the network tier is Internet/LAN.
+  - **DONE CONDITION:** App correctly sends audio to the backend `/transcribe` endpoint when connected to WiFi and displays the text.
+
+### SPRINT 5.4 — whisper.cpp JNI (Offline Fallback STT)
+**Goal:** Use the previously built `whisper.cpp` JNI integration exclusively as an offline fallback when there is no internet or LAN connection.
+
+- **[x] P5.S4.SS1.MT1:** Update Network Routing in HomeViewModel.
+  - **TASK:** Utilize `NetworkUtils` to determine the connection status. If offline, route the `rawAudioBuffer` to `whisperHelper.transcribeAudio()` instead of Retrofit.
+  - **DONE CONDITION:** Disabling WiFi on the emulator/device seamlessly falls back to the local `ggml-small-q5_1.bin` inference.
 
 ## Phase 6 — Video Library + Deployment (Sprints 6.1–6.6)
 ##   6.1 Python video metadata indexing script

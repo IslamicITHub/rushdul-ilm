@@ -1,0 +1,1 @@
+/home/hidayat/Documents/Islamic-Knowledge-QA-App/android-app/app/build/intermediates/cxx/Debug/26651z60/obj/arm64-v8a

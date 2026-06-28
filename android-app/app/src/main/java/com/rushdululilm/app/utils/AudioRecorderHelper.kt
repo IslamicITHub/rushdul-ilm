@@ -117,5 +117,50 @@ class AudioRecorderHelper {
         // ^ Converts our dynamic list into a fixed FloatArray (which whisper-jni needs) and returns it
     }
     // ^ Ends stopRecording function
+
+    suspend fun saveAsWav(file: java.io.File): java.io.File = withContext(Dispatchers.IO) {
+    // ^ Saves the current audio buffer into a standard WAV file for HTTP upload
+        val floatArray = audioBuffer.toFloatArray()
+        val numSamples = floatArray.size
+        val numChannels = 1
+        val sampleRate = 16000
+        val byteRate = sampleRate * numChannels * 2
+        val dataSize = numSamples * 2
+        val headerSize = 44
+        val totalDataLen = dataSize + 36
+
+        java.io.FileOutputStream(file).use { out ->
+            val header = java.nio.ByteBuffer.allocate(headerSize)
+            header.order(java.nio.ByteOrder.LITTLE_ENDIAN)
+            header.put("RIFF".toByteArray(Charsets.US_ASCII))
+            header.putInt(totalDataLen)
+            header.put("WAVE".toByteArray(Charsets.US_ASCII))
+            header.put("fmt ".toByteArray(Charsets.US_ASCII))
+            header.putInt(16) // Subchunk1Size
+            header.putShort(1.toShort()) // AudioFormat (PCM)
+            header.putShort(numChannels.toShort()) // NumChannels
+            header.putInt(sampleRate) // SampleRate
+            header.putInt(byteRate) // ByteRate
+            header.putShort((numChannels * 2).toShort()) // BlockAlign
+            header.putShort(16.toShort()) // BitsPerSample
+            header.put("data".toByteArray(Charsets.US_ASCII))
+            header.putInt(dataSize) // Subchunk2Size
+
+            out.write(header.array())
+
+            val dataBuffer = java.nio.ByteBuffer.allocate(dataSize)
+            dataBuffer.order(java.nio.ByteOrder.LITTLE_ENDIAN)
+            for (f in floatArray) {
+                // Convert float back to short
+                var s = (f * 32768.0f).toInt()
+                if (s > 32767) s = 32767
+                if (s < -32768) s = -32768
+                dataBuffer.putShort(s.toShort())
+            }
+            out.write(dataBuffer.array())
+        }
+        return@withContext file
+    }
+    // ^ Ends saveAsWav function
 }
 // ^ Ends AudioRecorderHelper class

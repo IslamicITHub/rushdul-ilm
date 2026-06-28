@@ -84,3 +84,16 @@ data class TTSResponse(
     // ^ The base64-encoded audio WAV file string
 )
 // ^ Ends TTSResponse class definition
+
+data class TranscriptionResponse(
+// ^ data class representing the backend server response containing the transcribed text from STT
+    @SerializedName("transcription") val transcription: String,
+    // ^ The transcribed text from the audio
+    
+    @SerializedName("language") val language: String? = null,
+    // ^ The detected language of the spoken text
+    
+    @SerializedName("processing_time") val processingTime: Double? = null
+    // ^ The time taken by the server to transcribe the audio
+)
+// ^ Ends TranscriptionResponse class definition

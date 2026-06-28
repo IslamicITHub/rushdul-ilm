@@ -28,6 +28,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 // ^ Kotlin Coroutines flow class that holds a single value and lets others read it (read-only)
 import kotlinx.coroutines.flow.asStateFlow
+import okhttp3.MediaType.Companion.toMediaTypeOrNull
 // ^ Kotlin extension function to convert a mutable flow into a read-only StateFlow for safety
 import javax.inject.Inject
 // ^ Standard Java injection annotation used to ask Hilt to supply dependencies
@@ -180,5 +181,24 @@ class MainRepository @Inject constructor( // ^ class MainRepository handles RAG 
         // ^ Ends try-catch block
     }
     // ^ Ends generateSpeech function
+
+    suspend fun transcribeAudio(file: java.io.File): Resource<com.rushdululilm.app.data.remote.TranscriptionResponse> {
+    // ^ suspend function to request audio transcription from the STT backend service
+        return try {
+            val requestFile = okhttp3.RequestBody.create("audio/wav".toMediaTypeOrNull(), file)
+            val body = okhttp3.MultipartBody.Part.createFormData("file", file.name, requestFile)
+            
+            val response = apiService.transcribeAudio("http://192.168.0.102:8003/transcribe", body)
+            
+            if (response.isSuccessful && response.body() != null) {
+                Resource.Success(response.body()!!)
+            } else {
+                Resource.Error(response.message() ?: "Failed to transcribe audio")
+            }
+        } catch (e: Exception) {
+            Resource.Error(e.localizedMessage ?: "Network connection failed")
+        }
+    }
+    // ^ Ends transcribeAudio function
 }
 // ^ Ends MainRepository class definition

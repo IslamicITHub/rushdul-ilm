@@ -33,3 +33,5 @@
 2514	9018	1782480083640991080	whisper.cpp/src/CMakeFiles/whisper.dir/whisper.cpp.o	c530add92ff50b52
 9018	9135	1782480083792993489	bin/libwhisper.so	39b75df9dd7284d
 9135	9159	1782480083828994059	/home/hidayat/Documents/Islamic-Knowledge-QA-App/android-app/app/build/intermediates/cxx/Debug/14x5w406/obj/x86/libwhisper_jni.so	fe52085a79c9abbf
+325	849	1782560140270844008	CMakeFiles/whisper_jni.dir/whisper-jni.cpp.o	e59fbb810a10fc08
+850	988	1782560140414846416	/home/hidayat/Documents/Islamic-Knowledge-QA-App/android-app/app/build/intermediates/cxx/Debug/14x5w406/obj/x86/libwhisper_jni.so	fe52085a79c9abbf

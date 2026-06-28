@@ -51,5 +51,17 @@ interface ApiService {
         // ^ @Body passes the serialized TTSRequest object
     ): Response<TTSResponse>
     // ^ Returns an HTTP Response wrapping a TTSResponse object containing the base64 audio
+
+    @retrofit2.http.Multipart
+    // ^ Annotation stating that the request will have multiple parts (used for file uploads)
+    @POST
+    suspend fun transcribeAudio(
+    // ^ suspend function to send recorded audio for speech-to-text transcription
+        @Url url: String,
+        // ^ @Url overrides the base URL to hit the STT service (port 8003)
+        @retrofit2.http.Part file: okhttp3.MultipartBody.Part
+        // ^ @Part sends the audio file as a multipart form data part
+    ): Response<TranscriptionResponse>
+    // ^ Returns an HTTP Response wrapping a TranscriptionResponse object with the transcribed text
 }
 // ^ Ends ApiService interface definition

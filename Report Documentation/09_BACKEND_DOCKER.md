@@ -177,7 +177,22 @@ backend/
 ├── tts_service.py
 ├── download_tts.py
 ├── test_gpu_offload.py
+├── test_gpu_offload.py
+├── stt_service.py
+├── requirements_stt.txt
 └── local_models/
+
+---
+
+## 🛠️ Sprint 5.3 — faster-whisper STT Service
+**Status:** ✅ COMPLETE
+
+### 1. faster-whisper STT Service
+To provide highly accurate speech-to-text when connected to the local network, the `faster-whisper-large-v3-turbo` model was containerized.
+- **Service:** `stt` running on port `8003`.
+- **Environment:** Created `venv_stt` for its specific dependencies including `faster-whisper` and `requests`.
+- **Memory Strategy:** Loaded the model with `compute_type="int8"` which ensures it fits inside the limited 4GB VRAM of the host machine while maintaining accuracy and speed.
+- **Android Integration:** The Android app was updated in Phase 5.3 to send captured audio via Retrofit (Multipart) when the network is available. When the network is unavailable, it gracefully falls back to the local `whisper.cpp` JNI execution.
 ```
 
 ---

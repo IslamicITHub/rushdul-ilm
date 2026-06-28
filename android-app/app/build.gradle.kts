@@ -33,6 +33,10 @@ android {
             // ^ Uses CMake as the build system
                 cppFlags += "-std=c++14"
                 // ^ Enforces C++14 standard which is compatible with whisper.cpp
+                cppFlags += "-O3"
+                // ^ Force maximum CPU optimization even in Debug builds to fix extremely slow AI inference
+                cppFlags += "-DNDEBUG"
+                // ^ Disable slow C++ debug assertions during tensor math
             }
             // ^ Ends CMake specific flags
         }

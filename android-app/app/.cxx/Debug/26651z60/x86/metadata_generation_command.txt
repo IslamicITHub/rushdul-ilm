@@ -1,0 +1,19 @@
+                        -H/home/hidayat/Documents/Islamic-Knowledge-QA-App/android-app/app/src/main/cpp
+-DCMAKE_SYSTEM_NAME=Android
+-DCMAKE_EXPORT_COMPILE_COMMANDS=ON
+-DCMAKE_SYSTEM_VERSION=31
+-DANDROID_PLATFORM=android-31
+-DANDROID_ABI=x86
+-DCMAKE_ANDROID_ARCH_ABI=x86
+-DANDROID_NDK=/media/hidayat/PersonalData/Kali_Linux_Files/AndroidStudioPanda2Additional/Android/Sdk/ndk/26.1.10909125
+-DCMAKE_ANDROID_NDK=/media/hidayat/PersonalData/Kali_Linux_Files/AndroidStudioPanda2Additional/Android/Sdk/ndk/26.1.10909125
+-DCMAKE_TOOLCHAIN_FILE=/media/hidayat/PersonalData/Kali_Linux_Files/AndroidStudioPanda2Additional/Android/Sdk/ndk/26.1.10909125/build/cmake/android.toolchain.cmake
+-DCMAKE_MAKE_PROGRAM=/media/hidayat/PersonalData/Kali_Linux_Files/AndroidStudioPanda2Additional/Android/Sdk/cmake/3.22.1/bin/ninja
+-DCMAKE_CXX_FLAGS=-std=c++14 -O3 -DNDEBUG
+-DCMAKE_LIBRARY_OUTPUT_DIRECTORY=/home/hidayat/Documents/Islamic-Knowledge-QA-App/android-app/app/build/intermediates/cxx/Debug/26651z60/obj/x86
+-DCMAKE_RUNTIME_OUTPUT_DIRECTORY=/home/hidayat/Documents/Islamic-Knowledge-QA-App/android-app/app/build/intermediates/cxx/Debug/26651z60/obj/x86
+-DCMAKE_BUILD_TYPE=Debug
+-B/home/hidayat/Documents/Islamic-Knowledge-QA-App/android-app/app/.cxx/Debug/26651z60/x86
+-GNinja
+                        Build command args: []
+                        Version: 2

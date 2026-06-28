@@ -3269,3 +3269,38 @@ NOTES_FOR_NEXT_AGENT:
   
 GRAPHITI_UPDATED: NOT RUNNING
 MEM0_UPDATED:     NOT RUNNING
+
+### Date: 2026-06-27
+* **AGENT_USED:** Gemini
+* **TASKS_COMPLETED:** P5.S3.SS1.MT1 (Added faster-whisper service to docker-compose.yml)
+* **FILES_CHANGED:** 
+  - `backend/docker-compose.yml` (Added `stt` service for faster-whisper STT)
+* **NEXT_TASK:** P5.S3.SS1.MT2 (Create the STT FastAPI wrapper script `stt_service.py`)
+* **BLOCKERS:** None.
+
+### Date: 2026-06-27
+* **AGENT_USED:** Gemini
+* **TASKS_COMPLETED:** P5.S3.SS1.MT2 (Created the STT FastAPI wrapper script `stt_service.py`)
+* **FILES_CHANGED:** 
+  - `backend/requirements_stt.txt` (Created dependencies list)
+  - `backend/stt_service.py` (Created FastAPI wrapper)
+* **NEXT_TASK:** P5.S3.SS1.MT3 (Test the faster-whisper endpoint)
+* **BLOCKERS:** None.
+### Date: 2026-06-27
+* **AGENT_USED:** Gemini
+* **TASKS_COMPLETED:** P5.S3.SS1.MT3, P5.S3.SS1.MT4, P5.S4.SS1.MT1
+* **FILES_CHANGED:**
+  - `android-app/app/src/main/java/com/rushdululilm/app/data/remote/ApiService.kt`
+  - `android-app/app/src/main/java/com/rushdululilm/app/data/remote/NetworkModels.kt`
+  - `android-app/app/src/main/java/com/rushdululilm/app/data/repository/MainRepository.kt`
+  - `android-app/app/src/main/java/com/rushdululilm/app/utils/AudioRecorderHelper.kt`
+  - `android-app/app/src/main/java/com/rushdululilm/app/viewmodel/HomeViewModel.kt`
+* **NEXT_TASK:** Phase 6 tasks
+* **BLOCKERS:** None.
+
+### Date: 2026-06-28
+* **AGENT_USED:** Gemini
+* **TASKS_COMPLETED:** Analyzed Docker RAM usage.
+* **FILES_CHANGED:** None (As requested).
+* **NEXT_TASK:** Phase 6 tasks
+* **BLOCKERS:** High RAM usage due to uvicorn --reload (Pending user decision to fix).

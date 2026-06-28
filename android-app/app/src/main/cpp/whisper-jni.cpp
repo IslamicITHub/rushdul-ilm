@@ -96,11 +96,24 @@ Java_com_rushdululilm_app_utils_WhisperHelper_transcribeAudio(JNIEnv *env, jobje
     wparams.print_special = false;
     wparams.print_realtime = false;
     wparams.print_timestamps = false;
-    wparams.language = "auto";
-    // ^ Detect language automatically
-    wparams.n_threads = 4;
-    // ^ Run across 4 CPU cores for speed
+    wparams.language = "en";
+    // ^ Force English to skip the buggy auto-detect pass which can infinite-loop on silence
+    wparams.n_threads = 2;
+    // ^ Run across 2 CPU cores to prevent thread thrashing/deadlocking on mobile devices
+    
+    // Safety optimizations for Android to prevent deadlocks:
+    wparams.temperature_inc = -1.0f;
+    // ^ Disables temperature fallback. (Whisper tries to re-transcribe repeatedly if confidence is low, which hangs the app)
+    wparams.no_speech_thold = 0.6f;
+    // ^ Increases strictness on noise/silence to prevent hallucinations ("Thank you. Thank you.")
+    
+    // Add progress callback to see if it's actually working or just slow
+    wparams.progress_callback = [](struct whisper_context * ctx, struct whisper_state * state, int progress, void * user_data) {
+        LOGI("Whisper inference progress: %d%%", progress);
+    };
+    wparams.progress_callback_user_data = nullptr;
 
+    LOGI("Starting whisper_full inference on CPU...");
     if (whisper_full(ctx, wparams, pcmf32.data(), pcmf32.size()) != 0) {
     // ^ Runs the actual AI STT inference on the audio buffer
         LOGE("Failed to process audio");

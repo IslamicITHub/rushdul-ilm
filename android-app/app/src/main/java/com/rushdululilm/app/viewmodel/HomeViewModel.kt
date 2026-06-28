@@ -144,8 +144,8 @@ class HomeViewModel @Inject constructor( // ^ class HomeViewModel manages state,
         val destFile = File(context.cacheDir, "ggml-small-q5_1.bin")
         // ^ Destination path where C++ can access it natively
         
-        if (!destFile.exists()) {
-        // ^ If it hasn't been copied yet (first run)
+        if (!destFile.exists() || destFile.length() < 150_000_000) {
+        // ^ If it hasn't been copied yet, or if the copied file is corrupted/incomplete (< 150MB)
             println("Copying Whisper model from assets to cache... this may take a moment.")
             // ^ Debug print
             try {
@@ -208,24 +208,57 @@ class HomeViewModel @Inject constructor( // ^ class HomeViewModel manages state,
                 val rawAudioBuffer = audioRecorder.stopRecording()
                 // ^ Stops hardware capture and waits for the finalized float array to return
                 
-                if (networkTier.value == NetworkTier.OFFLINE) {
-                // ^ If the device has no internet or LAN connection
-                    println("Offline STT requested. Sending ${rawAudioBuffer.size} floats to JNI...")
-                    // ^ Logs how much data we are passing to C++
-                    val transcription = whisperHelper.transcribeAudio(rawAudioBuffer)
-                    // ^ Hands the audio array directly to the native C++ engine via our bridge
-                    println("Native transcription result: $transcription")
-                    // ^ Logs the string returned by whisper.cpp
+                var transcription = ""
+                // ^ Variable to hold the final recognized text
+
+                if (networkTier.value == NetworkTier.INTERNET || networkTier.value == NetworkTier.LAN) {
+                // ^ If the device has an active connection (Tier 1 or 2)
+                    println("STT requested. Network available, sending audio to backend...")
+                    // ^ Debug print
                     
-                    // For now, since it's a stub, we will just send a mock query down below anyway 
-                    // or handle the UI differently. But we are successfully passing the buffer!
-                    sendTestQuery(transcription)
+                    val tempWavFile = java.io.File(context.cacheDir, "temp_stt.wav")
+                    // ^ Creates a temporary file in the app's cache directory
+                    
+                    audioRecorder.saveAsWav(tempWavFile)
+                    // ^ Saves the raw audio array as a WAV file
+                    
+                    val result = repository.transcribeAudio(tempWavFile)
+                    // ^ Sends the WAV file to the remote STT server via Retrofit
+                    
+                    if (result is Resource.Success && result.data != null) {
+                    // ^ If the server successfully transcribed the audio
+                        transcription = result.data.transcription
+                        println("Online transcription result: $transcription")
+                    } else {
+                    // ^ If the server failed or timed out
+                        println("Online transcription failed: ${result.message}. Falling back to offline...")
+                        transcription = kotlinx.coroutines.withContext(Dispatchers.IO) {
+                            whisperHelper.transcribeAudio(rawAudioBuffer)
+                            // ^ Fallback to the offline C++ engine
+                        }
+                    }
                 } else {
-                // ^ If we are online
-                    // Here we'd normally send the audio to the FastAPI server.
-                    sendTestQuery("What is the importance of fasting in the month of muharram?")
+                // ^ If the device is entirely offline (Tier 3)
+                    println("STT requested. Offline mode, sending ${rawAudioBuffer.size} floats to JNI...")
+                    transcription = kotlinx.coroutines.withContext(Dispatchers.IO) {
+                    // ^ Switches to background thread
+                        whisperHelper.transcribeAudio(rawAudioBuffer)
+                        // ^ Hands audio directly to the native C++ engine
+                    }
                 }
-                // ^ Ends network tier check
+                
+                println("Final transcription result: $transcription")
+                // ^ Logs the final string
+                
+                if (transcription.isNotBlank() && !transcription.startsWith("Error:")) {
+                // ^ If the transcription succeeded and isn't empty
+                    sendTestQuery(transcription)
+                    // ^ Send the transcribed text to the backend
+                } else {
+                // ^ If transcription failed or was silent
+                    _uiState.value = HomeUiState.Error("Transcription failed or was empty. Please try again.")
+                }
+                // ^ Ends validation check
             }
             // ^ Ends coroutine
         }

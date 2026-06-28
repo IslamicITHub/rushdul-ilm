@@ -1,0 +1,88 @@
+{
+  "buildFiles": [
+    "/home/hidayat/Documents/Islamic-Knowledge-QA-App/android-app/app/src/main/cpp/CMakeLists.txt",
+    "/home/hidayat/Documents/Islamic-Knowledge-QA-App/android-app/app/src/main/cpp/whisper.cpp/CMakeLists.txt",
+    "/home/hidayat/Documents/Islamic-Knowledge-QA-App/android-app/app/src/main/cpp/whisper.cpp/cmake/build-info.cmake",
+    "/home/hidayat/Documents/Islamic-Knowledge-QA-App/android-app/app/src/main/cpp/whisper.cpp/cmake/parakeet-config.cmake.in",
+    "/home/hidayat/Documents/Islamic-Knowledge-QA-App/android-app/app/src/main/cpp/whisper.cpp/cmake/whisper-config.cmake.in",
+    "/home/hidayat/Documents/Islamic-Knowledge-QA-App/android-app/app/src/main/cpp/whisper.cpp/ggml/CMakeLists.txt",
+    "/home/hidayat/Documents/Islamic-Knowledge-QA-App/android-app/app/src/main/cpp/whisper.cpp/ggml/cmake/common.cmake",
+    "/home/hidayat/Documents/Islamic-Knowledge-QA-App/android-app/app/src/main/cpp/whisper.cpp/ggml/cmake/ggml-config.cmake.in",
+    "/home/hidayat/Documents/Islamic-Knowledge-QA-App/android-app/app/src/main/cpp/whisper.cpp/ggml/src/CMakeLists.txt",
+    "/home/hidayat/Documents/Islamic-Knowledge-QA-App/android-app/app/src/main/cpp/whisper.cpp/ggml/src/ggml-cpu/CMakeLists.txt",
+    "/home/hidayat/Documents/Islamic-Knowledge-QA-App/android-app/app/src/main/cpp/whisper.cpp/src/CMakeLists.txt"
+  ],
+  "cleanCommandsComponents": [
+    [
+      "/media/hidayat/PersonalData/Kali_Linux_Files/AndroidStudioPanda2Additional/Android/Sdk/cmake/3.22.1/bin/ninja",
+      "-C",
+      "/home/hidayat/Documents/Islamic-Knowledge-QA-App/android-app/app/.cxx/Debug/26651z60/x86",
+      "clean"
+    ]
+  ],
+  "buildTargetsCommandComponents": [
+    "/media/hidayat/PersonalData/Kali_Linux_Files/AndroidStudioPanda2Additional/Android/Sdk/cmake/3.22.1/bin/ninja",
+    "-C",
+    "/home/hidayat/Documents/Islamic-Knowledge-QA-App/android-app/app/.cxx/Debug/26651z60/x86",
+    "{LIST_OF_TARGETS_TO_BUILD}"
+  ],
+  "libraries": {
+    "ggml-base::@74253485f3a7ec30fb13": {
+      "artifactName": "ggml-base",
+      "abi": "x86",
+      "output": "/home/hidayat/Documents/Islamic-Knowledge-QA-App/android-app/app/.cxx/Debug/26651z60/x86/bin/libggml-base.so",
+      "runtimeFiles": [
+        "/media/hidayat/PersonalData/Kali_Linux_Files/AndroidStudioPanda2Additional/Android/Sdk/ndk/26.1.10909125/toolchains/llvm/prebuilt/linux-x86_64/lib/clang/17/lib/linux/i386/libomp.so"
+      ]
+    },
+    "whisper_jni::@6890427a1f51a3e7e1df": {
+      "artifactName": "whisper_jni",
+      "abi": "x86",
+      "output": "/home/hidayat/Documents/Islamic-Knowledge-QA-App/android-app/app/build/intermediates/cxx/Debug/26651z60/obj/x86/libwhisper_jni.so",
+      "runtimeFiles": [
+        "/home/hidayat/Documents/Islamic-Knowledge-QA-App/android-app/app/.cxx/Debug/26651z60/x86/bin/libwhisper.so",
+        "/home/hidayat/Documents/Islamic-Knowledge-QA-App/android-app/app/.cxx/Debug/26651z60/x86/bin/libggml.so",
+        "/home/hidayat/Documents/Islamic-Knowledge-QA-App/android-app/app/.cxx/Debug/26651z60/x86/bin/libggml-cpu.so",
+        "/home/hidayat/Documents/Islamic-Knowledge-QA-App/android-app/app/.cxx/Debug/26651z60/x86/bin/libggml-base.so"
+      ]
+    },
+    "ggml-cpu::@74253485f3a7ec30fb13": {
+      "artifactName": "ggml-cpu",
+      "abi": "x86",
+      "output": "/home/hidayat/Documents/Islamic-Knowledge-QA-App/android-app/app/.cxx/Debug/26651z60/x86/bin/libggml-cpu.so",
+      "runtimeFiles": [
+        "/home/hidayat/Documents/Islamic-Knowledge-QA-App/android-app/app/.cxx/Debug/26651z60/x86/bin/libggml-base.so",
+        "/media/hidayat/PersonalData/Kali_Linux_Files/AndroidStudioPanda2Additional/Android/Sdk/ndk/26.1.10909125/toolchains/llvm/prebuilt/linux-x86_64/lib/clang/17/lib/linux/i386/libomp.so"
+      ]
+    },
+    "parakeet::@a8a66f5e841e94d32cb3": {
+      "artifactName": "parakeet",
+      "abi": "x86",
+      "output": "/home/hidayat/Documents/Islamic-Knowledge-QA-App/android-app/app/.cxx/Debug/26651z60/x86/bin/libparakeet.so",
+      "runtimeFiles": [
+        "/home/hidayat/Documents/Islamic-Knowledge-QA-App/android-app/app/.cxx/Debug/26651z60/x86/bin/libggml.so",
+        "/home/hidayat/Documents/Islamic-Knowledge-QA-App/android-app/app/.cxx/Debug/26651z60/x86/bin/libggml-cpu.so",
+        "/home/hidayat/Documents/Islamic-Knowledge-QA-App/android-app/app/.cxx/Debug/26651z60/x86/bin/libggml-base.so"
+      ]
+    },
+    "ggml::@74253485f3a7ec30fb13": {
+      "artifactName": "ggml",
+      "abi": "x86",
+      "output": "/home/hidayat/Documents/Islamic-Knowledge-QA-App/android-app/app/.cxx/Debug/26651z60/x86/bin/libggml.so",
+      "runtimeFiles": [
+        "/home/hidayat/Documents/Islamic-Knowledge-QA-App/android-app/app/.cxx/Debug/26651z60/x86/bin/libggml-cpu.so",
+        "/home/hidayat/Documents/Islamic-Knowledge-QA-App/android-app/app/.cxx/Debug/26651z60/x86/bin/libggml-base.so"
+      ]
+    },
+    "whisper::@a8a66f5e841e94d32cb3": {
+      "artifactName": "whisper",
+      "abi": "x86",
+      "output": "/home/hidayat/Documents/Islamic-Knowledge-QA-App/android-app/app/.cxx/Debug/26651z60/x86/bin/libwhisper.so",
+      "runtimeFiles": [
+        "/home/hidayat/Documents/Islamic-Knowledge-QA-App/android-app/app/.cxx/Debug/26651z60/x86/bin/libggml.so",
+        "/home/hidayat/Documents/Islamic-Knowledge-QA-App/android-app/app/.cxx/Debug/26651z60/x86/bin/libggml-cpu.so",
+        "/home/hidayat/Documents/Islamic-Knowledge-QA-App/android-app/app/.cxx/Debug/26651z60/x86/bin/libggml-base.so"
+      ]
+    }
+  }
+}

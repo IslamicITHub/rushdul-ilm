@@ -1,0 +1,106 @@
+{
+  "buildFiles": [
+    "/home/hidayat/Documents/Islamic-Knowledge-QA-App/android-app/app/src/main/cpp/CMakeLists.txt",
+    "/home/hidayat/Documents/Islamic-Knowledge-QA-App/android-app/app/src/main/cpp/whisper.cpp/CMakeLists.txt",
+    "/home/hidayat/Documents/Islamic-Knowledge-QA-App/android-app/app/src/main/cpp/whisper.cpp/cmake/build-info.cmake",
+    "/home/hidayat/Documents/Islamic-Knowledge-QA-App/android-app/app/src/main/cpp/whisper.cpp/cmake/parakeet-config.cmake.in",
+    "/home/hidayat/Documents/Islamic-Knowledge-QA-App/android-app/app/src/main/cpp/whisper.cpp/cmake/whisper-config.cmake.in",
+    "/home/hidayat/Documents/Islamic-Knowledge-QA-App/android-app/app/src/main/cpp/whisper.cpp/ggml/CMakeLists.txt",
+    "/home/hidayat/Documents/Islamic-Knowledge-QA-App/android-app/app/src/main/cpp/whisper.cpp/ggml/cmake/common.cmake",
+    "/home/hidayat/Documents/Islamic-Knowledge-QA-App/android-app/app/src/main/cpp/whisper.cpp/ggml/cmake/ggml-config.cmake.in",
+    "/home/hidayat/Documents/Islamic-Knowledge-QA-App/android-app/app/src/main/cpp/whisper.cpp/ggml/src/CMakeLists.txt",
+    "/home/hidayat/Documents/Islamic-Knowledge-QA-App/android-app/app/src/main/cpp/whisper.cpp/ggml/src/ggml-cpu/CMakeLists.txt",
+    "/home/hidayat/Documents/Islamic-Knowledge-QA-App/android-app/app/src/main/cpp/whisper.cpp/src/CMakeLists.txt"
+  ],
+  "cleanCommandsComponents": [
+    [
+      "/media/hidayat/PersonalData/Kali_Linux_Files/AndroidStudioPanda2Additional/Android/Sdk/cmake/3.22.1/bin/ninja",
+      "-C",
+      "/home/hidayat/Documents/Islamic-Knowledge-QA-App/android-app/app/.cxx/Debug/26651z60/arm64-v8a",
+      "clean"
+    ]
+  ],
+  "buildTargetsCommandComponents": [
+    "/media/hidayat/PersonalData/Kali_Linux_Files/AndroidStudioPanda2Additional/Android/Sdk/cmake/3.22.1/bin/ninja",
+    "-C",
+    "/home/hidayat/Documents/Islamic-Knowledge-QA-App/android-app/app/.cxx/Debug/26651z60/arm64-v8a",
+    "{LIST_OF_TARGETS_TO_BUILD}"
+  ],
+  "libraries": {
+    "ggml::@74253485f3a7ec30fb13": {
+      "toolchain": "toolchain",
+      "abi": "arm64-v8a",
+      "artifactName": "ggml",
+      "output": "/home/hidayat/Documents/Islamic-Knowledge-QA-App/android-app/app/.cxx/Debug/26651z60/arm64-v8a/bin/libggml.so",
+      "runtimeFiles": [
+        "/home/hidayat/Documents/Islamic-Knowledge-QA-App/android-app/app/.cxx/Debug/26651z60/arm64-v8a/bin/libggml-cpu.so",
+        "/home/hidayat/Documents/Islamic-Knowledge-QA-App/android-app/app/.cxx/Debug/26651z60/arm64-v8a/bin/libggml-base.so"
+      ]
+    },
+    "ggml-base::@74253485f3a7ec30fb13": {
+      "toolchain": "toolchain",
+      "abi": "arm64-v8a",
+      "artifactName": "ggml-base",
+      "output": "/home/hidayat/Documents/Islamic-Knowledge-QA-App/android-app/app/.cxx/Debug/26651z60/arm64-v8a/bin/libggml-base.so",
+      "runtimeFiles": [
+        "/media/hidayat/PersonalData/Kali_Linux_Files/AndroidStudioPanda2Additional/Android/Sdk/ndk/26.1.10909125/toolchains/llvm/prebuilt/linux-x86_64/lib/clang/17/lib/linux/aarch64/libomp.so"
+      ]
+    },
+    "ggml-cpu::@74253485f3a7ec30fb13": {
+      "toolchain": "toolchain",
+      "abi": "arm64-v8a",
+      "artifactName": "ggml-cpu",
+      "output": "/home/hidayat/Documents/Islamic-Knowledge-QA-App/android-app/app/.cxx/Debug/26651z60/arm64-v8a/bin/libggml-cpu.so",
+      "runtimeFiles": [
+        "/home/hidayat/Documents/Islamic-Knowledge-QA-App/android-app/app/.cxx/Debug/26651z60/arm64-v8a/bin/libggml-base.so",
+        "/media/hidayat/PersonalData/Kali_Linux_Files/AndroidStudioPanda2Additional/Android/Sdk/ndk/26.1.10909125/toolchains/llvm/prebuilt/linux-x86_64/lib/clang/17/lib/linux/aarch64/libomp.so"
+      ]
+    },
+    "parakeet::@a8a66f5e841e94d32cb3": {
+      "toolchain": "toolchain",
+      "abi": "arm64-v8a",
+      "artifactName": "parakeet",
+      "output": "/home/hidayat/Documents/Islamic-Knowledge-QA-App/android-app/app/.cxx/Debug/26651z60/arm64-v8a/bin/libparakeet.so",
+      "runtimeFiles": [
+        "/home/hidayat/Documents/Islamic-Knowledge-QA-App/android-app/app/.cxx/Debug/26651z60/arm64-v8a/bin/libggml.so",
+        "/home/hidayat/Documents/Islamic-Knowledge-QA-App/android-app/app/.cxx/Debug/26651z60/arm64-v8a/bin/libggml-cpu.so",
+        "/home/hidayat/Documents/Islamic-Knowledge-QA-App/android-app/app/.cxx/Debug/26651z60/arm64-v8a/bin/libggml-base.so"
+      ]
+    },
+    "whisper::@a8a66f5e841e94d32cb3": {
+      "toolchain": "toolchain",
+      "abi": "arm64-v8a",
+      "artifactName": "whisper",
+      "output": "/home/hidayat/Documents/Islamic-Knowledge-QA-App/android-app/app/.cxx/Debug/26651z60/arm64-v8a/bin/libwhisper.so",
+      "runtimeFiles": [
+        "/home/hidayat/Documents/Islamic-Knowledge-QA-App/android-app/app/.cxx/Debug/26651z60/arm64-v8a/bin/libggml.so",
+        "/home/hidayat/Documents/Islamic-Knowledge-QA-App/android-app/app/.cxx/Debug/26651z60/arm64-v8a/bin/libggml-cpu.so",
+        "/home/hidayat/Documents/Islamic-Knowledge-QA-App/android-app/app/.cxx/Debug/26651z60/arm64-v8a/bin/libggml-base.so"
+      ]
+    },
+    "whisper_jni::@6890427a1f51a3e7e1df": {
+      "toolchain": "toolchain",
+      "abi": "arm64-v8a",
+      "artifactName": "whisper_jni",
+      "output": "/home/hidayat/Documents/Islamic-Knowledge-QA-App/android-app/app/build/intermediates/cxx/Debug/26651z60/obj/arm64-v8a/libwhisper_jni.so",
+      "runtimeFiles": [
+        "/home/hidayat/Documents/Islamic-Knowledge-QA-App/android-app/app/.cxx/Debug/26651z60/arm64-v8a/bin/libwhisper.so",
+        "/home/hidayat/Documents/Islamic-Knowledge-QA-App/android-app/app/.cxx/Debug/26651z60/arm64-v8a/bin/libggml.so",
+        "/home/hidayat/Documents/Islamic-Knowledge-QA-App/android-app/app/.cxx/Debug/26651z60/arm64-v8a/bin/libggml-cpu.so",
+        "/home/hidayat/Documents/Islamic-Knowledge-QA-App/android-app/app/.cxx/Debug/26651z60/arm64-v8a/bin/libggml-base.so"
+      ]
+    }
+  },
+  "toolchains": {
+    "toolchain": {
+      "cCompilerExecutable": "/media/hidayat/PersonalData/Kali_Linux_Files/AndroidStudioPanda2Additional/Android/Sdk/ndk/26.1.10909125/toolchains/llvm/prebuilt/linux-x86_64/bin/clang.lld",
+      "cppCompilerExecutable": "/media/hidayat/PersonalData/Kali_Linux_Files/AndroidStudioPanda2Additional/Android/Sdk/ndk/26.1.10909125/toolchains/llvm/prebuilt/linux-x86_64/bin/clang++.lld"
+    }
+  },
+  "cFileExtensions": [
+    "c"
+  ],
+  "cppFileExtensions": [
+    "cpp"
+  ]
+}
