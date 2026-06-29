@@ -44,8 +44,8 @@ services:
       - NVIDIA_API_KEY=${NVIDIA_API_KEY}
       # ^ Passes NVIDIA NIM API authorization key for cloud model inference queries
     # ^ Ends environment mapping list
-    command: ["python", "-m", "uvicorn", "fastapi_server:app", "--host", "0.0.0.0", "--port", "8000", "--reload"]
-    # ^ Executes uvicorn web server hosting fastapi_server:app on port 8000 with code-change hot reloading
+    command: ["python", "-m", "uvicorn", "fastapi_server:app", "--host", "0.0.0.0", "--port", "8000", "--workers", "1"]
+    # ^ Executes uvicorn web server hosting fastapi_server:app on port 8000 with a single worker
   # ^ Ends fastapi service configuration
 
   qdrant:
@@ -105,7 +105,7 @@ services:
               count: 1
               capabilities: [gpu]
               # ^ Passes GPU to container for fast IndicTrans2 translation
-    command: ["python", "-m", "uvicorn", "translation_service:app", "--host", "0.0.0.0", "--port", "8001", "--reload"]
+    command: ["python", "-m", "uvicorn", "translation_service:app", "--host", "0.0.0.0", "--port", "8001", "--workers", "1"]
   # ^ Ends indictrans2 service configuration
 
   tts:
@@ -131,7 +131,7 @@ services:
             - driver: nvidia
               count: 1
               capabilities: [gpu]
-    command: ["python", "-m", "uvicorn", "tts_service:app", "--host", "0.0.0.0", "--port", "8002", "--reload"]
+    command: ["python", "-m", "uvicorn", "tts_service:app", "--host", "0.0.0.0", "--port", "8002", "--workers", "1"]
   # ^ Ends tts service configuration
 
   stt:
@@ -157,6 +157,7 @@ services:
     environment:
       - PYTHONUNBUFFERED=1
       - PYTHONPATH=/venv/lib/python3.11/site-packages
+      - LD_LIBRARY_PATH=/venv/lib/python3.11/site-packages/nvidia/cublas/lib:/venv/lib/python3.11/site-packages/nvidia/cudnn/lib
       # ^ Tells the container's Python to look for dependencies inside the mounted venv
     deploy:
       resources:
@@ -166,7 +167,7 @@ services:
               count: 1
               capabilities: [gpu]
               # ^ Passes GPU to container for fast faster-whisper STT inference
-    command: ["python", "-m", "uvicorn", "stt_service:app", "--host", "0.0.0.0", "--port", "8003", "--reload"]
+    command: ["python", "-m", "uvicorn", "stt_service:app", "--host", "0.0.0.0", "--port", "8003", "--workers", "1"]
   # ^ Ends stt service configuration
 # 🏛️ CONCEPT: Docker networks establish virtual bridge connections enabling secure isolated communications.
 #    Containers connected to the same network bridge communicate using service name endpoints.

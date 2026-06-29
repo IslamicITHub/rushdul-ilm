@@ -15,6 +15,17 @@ import requests
 from rag_pipeline import RagPipeline
 # ^ Import our custom RAG pipeline logic from the local directory
 
+from contextlib import asynccontextmanager
+
+rag = None
+
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    global rag
+    rag = RagPipeline()
+    yield
+    rag = None
+
 # 🏛️ CONCEPT: FastAPI runs an asynchronous web server that exposes REST endpoints for the client.
 #    Pydantic models act as schemas that validate the shape of JSON requests and responses.
 # 🏛️ ANALOGY: fastapi_server.py is like a front-desk receptionist in a medical clinic.
@@ -26,13 +37,11 @@ app = FastAPI(
     # ^ Sets the display name of the API documentation
     description="Backend server for the Islamic Q&A App",
     # ^ Provides a description of what this backend API manages
-    version="1.0.0"
+    version="1.0.0",
     # ^ Sets the current API version string
+    lifespan=lifespan
 )
 # ^ Ends FastAPI instantiation
-
-rag = RagPipeline()
-# ^ Initialize the RAG pipeline globally so it's ready when requests come in (loads models on startup)
 
 # 🏛️ CONCEPT: Pydantic models define static data structures that ensure type safety.
 #    Any incoming HTTP request must match this structure or it will be rejected automatically.

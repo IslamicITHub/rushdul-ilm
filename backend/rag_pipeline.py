@@ -289,6 +289,8 @@ class RagPipeline:
             "If no context matches, say: 'I could not find an answer in the approved sources.'\n"
             # ^ Core fallback message requirements
             "Always include references and citations to hadiths, the Quran and source URL wherever possible at the appropriate place in the answer and at the end of your final answers."
+            "Always include reference to source URL at the end of every sentence or bulluet point so that it would be easy for the user to refer by visiting the website.\n"
+            "The output response should be in a proper editable markdown format that can be rendered easily."
             # ^ Citation URL formatting requirements
         )
         # ^ Ends system prompt block

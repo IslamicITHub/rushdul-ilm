@@ -1,0 +1,627 @@
+{
+  "communities": {
+    "0": [
+      "backend_fastapi_server",
+      "backend_fastapi_server_ask_question",
+      "backend_fastapi_server_health_check",
+      "backend_fastapi_server_lifespan",
+      "backend_fastapi_server_queryrequest",
+      "backend_fastapi_server_rationale_66",
+      "backend_fastapi_server_translate_text",
+      "backend_fastapi_service",
+      "backend_indictrans2_service",
+      "backend_qdrant_service",
+      "backend_stt_service",
+      "backend_stt_service_health_check",
+      "backend_stt_service_lifespan",
+      "backend_stt_service_rationale_33",
+      "backend_stt_service_rationale_39",
+      "backend_stt_service_transcribe_audio",
+      "backend_translation_service",
+      "backend_translation_service_health_check",
+      "backend_translation_service_load_model",
+      "backend_translation_service_translate",
+      "backend_translation_service_translationrequest",
+      "backend_tts_service",
+      "backend_tts_service_generate_speech",
+      "backend_tts_service_health_check",
+      "backend_tts_service_lifespan",
+      "backend_tts_service_ttsrequest",
+      "backend_tts_service_ttsresponse",
+      "basemodel",
+      "fastapi",
+      "report_documentation_docker",
+      "report_documentation_ingestion",
+      "report_documentation_translation",
+      "uploadfile"
+    ],
+    "1": [
+      "boolean",
+      "components_languageselector",
+      "components_languageselector_languageselector",
+      "floatarray",
+      "model_applanguage",
+      "model_applanguage_applanguage",
+      "repository_userpreferencesrepository",
+      "repository_userpreferencesrepository_userpreferencesrepository",
+      "repository_userpreferencesrepository_userpreferencesrepository_getbackendsources",
+      "repository_userpreferencesrepository_userpreferencesrepository_updatelanguage",
+      "repository_userpreferencesrepository_userpreferencesrepository_updatelanguagebykey",
+      "repository_userpreferencesrepository_userpreferencesrepository_updatemadhab",
+      "screens_settingsscreen",
+      "screens_settingsscreen_downloaditem",
+      "screens_settingsscreen_settingsradiobutton",
+      "screens_settingsscreen_settingsscreen",
+      "screens_settingsscreen_settingssectiontitle",
+      "screens_settingsscreen_settingsswitch",
+      "string",
+      "utils_audiorecorderhelper_audiorecorderhelper_stoprecording",
+      "utils_whisperhelper",
+      "utils_whisperhelper_whisperhelper",
+      "utils_whisperhelper_whisperhelper_freemodel",
+      "utils_whisperhelper_whisperhelper_getsysteminfo",
+      "utils_whisperhelper_whisperhelper_initmodel",
+      "utils_whisperhelper_whisperhelper_transcribeaudio",
+      "viewmodel_homeviewmodel_homeviewmodel_onlanguageselected",
+      "viewmodel_settingsviewmodel",
+      "viewmodel_settingsviewmodel_settingsviewmodel",
+      "viewmodel_settingsviewmodel_settingsviewmodel_onautoplaytoggled",
+      "viewmodel_settingsviewmodel_settingsviewmodel_onlanguageselected",
+      "viewmodel_settingsviewmodel_settingsviewmodel_onlargetexttoggled",
+      "viewmodel_settingsviewmodel_settingsviewmodel_onmadhabselected"
+    ],
+    "2": [
+      "context",
+      "list",
+      "local_fatwasourceconverter",
+      "local_fatwasourceconverter_fatwasourceconverter",
+      "local_fatwasourceconverter_fatwasourceconverter_fromsourcelist",
+      "local_fatwasourceconverter_fatwasourceconverter_tosourcelist",
+      "mediaplayer",
+      "model_answermodels",
+      "model_answermodels_fatwaanswer",
+      "model_answermodels_fatwasource",
+      "model_answermodels_relatedvideo",
+      "stateflow",
+      "texttospeech",
+      "utils_networkutils",
+      "utils_networkutils_detectnetworktier",
+      "utils_networkutils_networktier",
+      "utils_networkutils_observenetworktier",
+      "utils_networkutils_pingserver",
+      "viewmodel",
+      "viewmodel_answershistoryviewmodel",
+      "viewmodel_answershistoryviewmodel_answershistoryviewmodel",
+      "viewmodel_answershistoryviewmodel_answershistoryviewmodel_deleteanswer",
+      "viewmodel_answerviewmodel",
+      "viewmodel_answerviewmodel_answerviewmodel",
+      "viewmodel_answerviewmodel_answerviewmodel_loadanswer",
+      "viewmodel_answerviewmodel_answerviewmodel_oncleared",
+      "viewmodel_answerviewmodel_answerviewmodel_onreadaloudpressed",
+      "viewmodel_answerviewmodel_answerviewmodel_onvideoclicked",
+      "viewmodel_answerviewmodel_answerviewmodel_playaudiofrombase64",
+      "viewmodel_videolibraryviewmodel",
+      "viewmodel_videolibraryviewmodel_videolibraryviewmodel",
+      "viewmodel_videolibraryviewmodel_videolibraryviewmodel_onsearchquerychanged"
+    ],
+    "3": [
+      "backend_ingest_deoband",
+      "backend_ingest_deoband_ingest",
+      "backend_ingest_deoband_test_search",
+      "backend_ingest_islamqa",
+      "backend_ingest_islamqa_ingest",
+      "backend_ingest_islamqa_test_qdrant_search",
+      "backend_qdrant_test_query",
+      "backend_qdrant_test_query_ingest",
+      "backend_qdrant_test_query_rationale_1",
+      "backend_qdrant_test_query_rationale_163",
+      "backend_qdrant_test_query_rationale_72",
+      "backend_qdrant_test_query_test_qdrant_search",
+      "backend_rag_pipeline",
+      "backend_rag_pipeline_combineqapostprocessor",
+      "backend_rag_pipeline_combineqapostprocessor_postprocess_nodes",
+      "backend_rag_pipeline_multicollectionretriever",
+      "backend_rag_pipeline_multicollectionretriever_init",
+      "backend_rag_pipeline_multicollectionretriever_retrieve",
+      "backend_rag_pipeline_ragpipeline",
+      "backend_rag_pipeline_ragpipeline_ask",
+      "backend_rag_pipeline_ragpipeline_generate_search_query",
+      "backend_rag_pipeline_ragpipeline_init",
+      "basenodepostprocessor",
+      "baseretriever",
+      "nodewithscore",
+      "qdrantclient"
+    ],
+    "4": [
+      "di_databasemodule",
+      "di_databasemodule_databasemodule",
+      "di_databasemodule_databasemodule_providedatabase",
+      "di_databasemodule_databasemodule_providesavedanswerdao",
+      "flow",
+      "int",
+      "local_rushdulilmdatabase",
+      "local_rushdulilmdatabase_rushdulilmdatabase",
+      "local_rushdulilmdatabase_rushdulilmdatabase_savedanswerdao",
+      "local_savedanswer",
+      "local_savedanswer_savedanswer",
+      "local_savedanswerdao",
+      "local_savedanswerdao_savedanswerdao",
+      "local_savedanswerdao_savedanswerdao_deleteanswer",
+      "local_savedanswerdao_savedanswerdao_getallanswers",
+      "local_savedanswerdao_savedanswerdao_getanswerbyid",
+      "local_savedanswerdao_savedanswerdao_insertanswer",
+      "repository_answerhistoryrepository",
+      "repository_answerhistoryrepository_answerhistoryrepository",
+      "repository_answerhistoryrepository_answerhistoryrepository_deleteanswer",
+      "repository_answerhistoryrepository_answerhistoryrepository_getallsavedanswers",
+      "repository_answerhistoryrepository_answerhistoryrepository_getanswerbyid",
+      "repository_answerhistoryrepository_answerhistoryrepository_savefatwaanswer",
+      "roomdatabase"
+    ],
+    "5": [
+      "di_networkmodule",
+      "di_networkmodule_networkmodule",
+      "di_networkmodule_networkmodule_provideapiservice",
+      "di_networkmodule_networkmodule_provideokhttpclient",
+      "di_networkmodule_networkmodule_provideretrofit",
+      "map",
+      "okhttp3",
+      "okhttpclient",
+      "remote_apiservice",
+      "remote_apiservice_apiservice",
+      "remote_apiservice_apiservice_askquestion",
+      "remote_apiservice_apiservice_checkhealth",
+      "remote_apiservice_apiservice_generatespeech",
+      "remote_apiservice_apiservice_transcribeaudio",
+      "remote_networkmodels",
+      "remote_networkmodels_chatmessage",
+      "remote_networkmodels_queryrequest",
+      "remote_networkmodels_queryresponse",
+      "remote_networkmodels_transcriptionresponse",
+      "remote_networkmodels_ttsrequest",
+      "remote_networkmodels_ttsresponse",
+      "response",
+      "retrofit",
+      "ttsrequest"
+    ],
+    "6": [
+      "app_mainactivity",
+      "app_mainactivity_mainactivity",
+      "app_mainactivity_mainactivity_oncreate",
+      "appcompatactivity",
+      "bundle",
+      "components_micbutton",
+      "components_micbutton_micbutton",
+      "components_micbutton_micbuttonpreviewnotrecording",
+      "components_micbutton_micbuttonpreviewrecording",
+      "components_sourceselector",
+      "components_sourceselector_sourceselector",
+      "components_sourceselector_sourceselectorpreview",
+      "theme_color_backgroundcream",
+      "theme_color_errorred",
+      "theme_color_islamicgreen",
+      "theme_color_quranicblue",
+      "theme_color_textprimary",
+      "theme_theme",
+      "theme_theme_rushdulilmtheme",
+      "theme_type_typography",
+      "viewmodel_homeviewmodel_homeviewmodel_onsourceselected"
+    ],
+    "7": [
+      "audiorecord",
+      "com",
+      "java",
+      "queryrequest",
+      "repository_mainrepository",
+      "repository_mainrepository_mainrepository",
+      "repository_mainrepository_mainrepository_askquestion",
+      "repository_mainrepository_mainrepository_checkserverhealth",
+      "repository_mainrepository_mainrepository_generatespeech",
+      "repository_mainrepository_mainrepository_transcribeaudio",
+      "t",
+      "ttsresponse",
+      "utils_audiorecorderhelper",
+      "utils_audiorecorderhelper_audiorecorderhelper",
+      "utils_audiorecorderhelper_audiorecorderhelper_saveaswav",
+      "utils_audiorecorderhelper_audiorecorderhelper_startrecording",
+      "utils_resource",
+      "utils_resource_error",
+      "utils_resource_loading",
+      "utils_resource_resource",
+      "utils_resource_success"
+    ],
+    "8": [
+      "components_videocard",
+      "components_videocard_videocard",
+      "navcontroller",
+      "screens_answerscreen",
+      "screens_answerscreen_answerscreen",
+      "screens_answerscreen_answervideocard",
+      "screens_answershistoryscreen",
+      "screens_answershistoryscreen_answershistoryscreen",
+      "screens_answershistoryscreen_savedanswercard",
+      "screens_homescreen",
+      "screens_homescreen_homescreen",
+      "screens_navgraph",
+      "screens_navgraph_rushdulilmnavgraph",
+      "screens_routes",
+      "screens_routes_routes",
+      "screens_videolibraryscreen",
+      "screens_videolibraryscreen_videolibraryscreen"
+    ],
+    "9": [
+      "viewmodel_homeviewmodel",
+      "viewmodel_homeviewmodel_error",
+      "viewmodel_homeviewmodel_homeuistate",
+      "viewmodel_homeviewmodel_homeviewmodel",
+      "viewmodel_homeviewmodel_homeviewmodel_loadwhispermodel",
+      "viewmodel_homeviewmodel_homeviewmodel_oncleared",
+      "viewmodel_homeviewmodel_homeviewmodel_onmicpressed",
+      "viewmodel_homeviewmodel_homeviewmodel_resetuistate",
+      "viewmodel_homeviewmodel_homeviewmodel_sendtestquery",
+      "viewmodel_homeviewmodel_idle",
+      "viewmodel_homeviewmodel_navigatingtoanswer",
+      "viewmodel_homeviewmodel_processing",
+      "viewmodel_homeviewmodel_recording"
+    ],
+    "10": [
+      "cpp_whisper_jni",
+      "cpp_whisper_jni_java_com_rushdululilm_app_utils_whisperhelper_freemodel",
+      "cpp_whisper_jni_java_com_rushdululilm_app_utils_whisperhelper_getsysteminfo",
+      "cpp_whisper_jni_java_com_rushdululilm_app_utils_whisperhelper_initmodel",
+      "cpp_whisper_jni_java_com_rushdululilm_app_utils_whisperhelper_transcribeaudio",
+      "jfloatarray",
+      "jnienv",
+      "jniexport",
+      "jobject",
+      "jstring"
+    ],
+    "11": [
+      "bin_activate",
+      "bin_activate_get_pyvenvconfig",
+      "bin_activate_global_deactivate",
+      "bin_activate_global_old_virtual_prompt",
+      "bin_activate_global_prompt"
+    ],
+    "12": [
+      "app_rushdulilmapplication",
+      "app_rushdulilmapplication_rushdulilmapplication",
+      "application"
+    ],
+    "13": [
+      "agent_rules_architecture",
+      "report_documentation_overview"
+    ],
+    "14": [
+      "backend_requirements_fastapi",
+      "backend_requirements_uvicorn"
+    ],
+    "15": [
+      "backend_requirements_indictrans2_indictranstoolkit",
+      "rushd_ul_ilm_system_design_v3_indictrans2"
+    ],
+    "16": [
+      "backend_requirements_llama_index",
+      "rushd_ul_ilm_system_design_v3_qwen3_4b"
+    ],
+    "17": [
+      "backend_requirements_qdrant_client",
+      "rushd_ul_ilm_system_design_v3_qdrant"
+    ],
+    "18": [
+      "backend_requirements_stt_faster_whisper",
+      "rushd_ul_ilm_system_design_v3_faster_whisper"
+    ],
+    "19": [
+      "agent_rules_offline_fallback"
+    ],
+    "20": [
+      "ai_system_prompt_rules"
+    ],
+    "21": [
+      "android_app_build"
+    ],
+    "22": [
+      "android_app_build_gradle"
+    ],
+    "23": [
+      "android_app_settings"
+    ],
+    "24": [
+      "android_app_settings_gradle"
+    ],
+    "25": [
+      "app_build_gradle"
+    ],
+    "26": [
+      "backend_download_indictrans2"
+    ],
+    "27": [
+      "backend_download_model"
+    ],
+    "28": [
+      "backend_download_qwen3_embed"
+    ],
+    "29": [
+      "backend_download_tts"
+    ],
+    "30": [
+      "backend_namaz_mp3"
+    ],
+    "31": [
+      "backend_namaz_wav"
+    ],
+    "32": [
+      "backend_requirements_sentence_transformers"
+    ],
+    "33": [
+      "backend_test_memory_leak"
+    ],
+    "34": [
+      "backend_test_model_move"
+    ],
+    "35": [
+      "backend_wazu_mp3"
+    ],
+    "36": [
+      "backend_wazu_wav"
+    ],
+    "37": [
+      "components_components"
+    ],
+    "38": [
+      "cpp_whisper_jni_transcribeaudio"
+    ],
+    "39": [
+      "di_dimodules"
+    ],
+    "40": [
+      "local_localdata"
+    ],
+    "41": [
+      "model_models"
+    ],
+    "42": [
+      "remote_remotedata"
+    ],
+    "43": [
+      "report_documentation_android"
+    ],
+    "44": [
+      "report_documentation_video"
+    ],
+    "45": [
+      "repository_repository"
+    ],
+    "46": [
+      "rushd_ul_ilm_system_design_v3_graphiti"
+    ],
+    "47": [
+      "rushd_ul_ilm_system_design_v3_mem0"
+    ],
+    "48": [
+      "screens_screens"
+    ],
+    "49": [
+      "sprint_system_microtasks"
+    ],
+    "50": [
+      "theme_color"
+    ],
+    "51": [
+      "theme_color_offlineorange"
+    ],
+    "52": [
+      "theme_type"
+    ],
+    "53": [
+      "utils_utils"
+    ],
+    "54": [
+      "viewmodel_viewmodels"
+    ]
+  },
+  "cohesion": {
+    "0": 0.09090909090909091,
+    "1": 0.10416666666666667,
+    "2": 0.10685483870967742,
+    "3": 0.10461538461538461,
+    "4": 0.13768115942028986,
+    "5": 0.11594202898550725,
+    "6": 0.12380952380952381,
+    "7": 0.1380952380952381,
+    "8": 0.15441176470588236,
+    "9": 0.24358974358974358,
+    "10": 0.4,
+    "11": 0.4,
+    "12": 0.6666666666666666,
+    "13": 1.0,
+    "14": 1.0,
+    "15": 1.0,
+    "16": 1.0,
+    "17": 1.0,
+    "18": 1.0,
+    "19": 1.0,
+    "20": 1.0,
+    "21": 1.0,
+    "22": 1.0,
+    "23": 1.0,
+    "24": 1.0,
+    "25": 1.0,
+    "26": 1.0,
+    "27": 1.0,
+    "28": 1.0,
+    "29": 1.0,
+    "30": 1.0,
+    "31": 1.0,
+    "32": 1.0,
+    "33": 1.0,
+    "34": 1.0,
+    "35": 1.0,
+    "36": 1.0,
+    "37": 1.0,
+    "38": 1.0,
+    "39": 1.0,
+    "40": 1.0,
+    "41": 1.0,
+    "42": 1.0,
+    "43": 1.0,
+    "44": 1.0,
+    "45": 1.0,
+    "46": 1.0,
+    "47": 1.0,
+    "48": 1.0,
+    "49": 1.0,
+    "50": 1.0,
+    "51": 1.0,
+    "52": 1.0,
+    "53": 1.0,
+    "54": 1.0
+  },
+  "gods": [
+    {
+      "id": "viewmodel_answerviewmodel_answerviewmodel",
+      "label": "AnswerViewModel",
+      "degree": 17
+    },
+    {
+      "id": "viewmodel_homeviewmodel_homeviewmodel",
+      "label": "HomeViewModel",
+      "degree": 16
+    },
+    {
+      "id": "theme_theme_rushdulilmtheme",
+      "label": "RushdulIlmTheme()",
+      "degree": 14
+    },
+    {
+      "id": "local_savedanswer_savedanswer",
+      "label": "SavedAnswer",
+      "degree": 13
+    },
+    {
+      "id": "viewmodel_settingsviewmodel_settingsviewmodel",
+      "label": "SettingsViewModel",
+      "degree": 12
+    },
+    {
+      "id": "local_savedanswerdao_savedanswerdao",
+      "label": "SavedAnswerDao",
+      "degree": 10
+    },
+    {
+      "id": "remote_apiservice_apiservice",
+      "label": "ApiService",
+      "degree": 10
+    },
+    {
+      "id": "local_rushdulilmdatabase_rushdulilmdatabase",
+      "label": "RushdulIlmDatabase",
+      "degree": 9
+    },
+    {
+      "id": "repository_mainrepository_mainrepository",
+      "label": "MainRepository",
+      "degree": 9
+    },
+    {
+      "id": "repository_userpreferencesrepository_userpreferencesrepository",
+      "label": "UserPreferencesRepository",
+      "degree": 8
+    }
+  ],
+  "surprises": [
+    {
+      "source": "HomeScreen()",
+      "target": "LanguageSelector()",
+      "source_files": [
+        "android-app/app/src/main/java/com/rushdululilm/app/ui/screens/HomeScreen.kt",
+        "android-app/app/src/main/java/com/rushdululilm/app/ui/components/LanguageSelector.kt"
+      ],
+      "confidence": "INFERRED",
+      "relation": "calls",
+      "why": "inferred connection - not explicitly stated in source; bridges separate communities"
+    },
+    {
+      "source": "HomeScreen()",
+      "target": "MicButton()",
+      "source_files": [
+        "android-app/app/src/main/java/com/rushdululilm/app/ui/screens/HomeScreen.kt",
+        "android-app/app/src/main/java/com/rushdululilm/app/ui/components/MicButton.kt"
+      ],
+      "confidence": "INFERRED",
+      "relation": "calls",
+      "why": "inferred connection - not explicitly stated in source; bridges separate communities"
+    },
+    {
+      "source": "HomeScreen()",
+      "target": "SourceSelector()",
+      "source_files": [
+        "android-app/app/src/main/java/com/rushdululilm/app/ui/screens/HomeScreen.kt",
+        "android-app/app/src/main/java/com/rushdululilm/app/ui/components/SourceSelector.kt"
+      ],
+      "confidence": "INFERRED",
+      "relation": "calls",
+      "why": "inferred connection - not explicitly stated in source; bridges separate communities"
+    },
+    {
+      "source": "RushdulIlmNavGraph()",
+      "target": "SettingsScreen()",
+      "source_files": [
+        "android-app/app/src/main/java/com/rushdululilm/app/ui/screens/NavGraph.kt",
+        "android-app/app/src/main/java/com/rushdululilm/app/ui/screens/SettingsScreen.kt"
+      ],
+      "confidence": "INFERRED",
+      "relation": "calls",
+      "why": "inferred connection - not explicitly stated in source; bridges separate communities"
+    },
+    {
+      "source": "lifespan()",
+      "target": "RagPipeline",
+      "source_files": [
+        "backend/fastapi_server.py",
+        "backend/rag_pipeline.py"
+      ],
+      "confidence": "INFERRED",
+      "relation": "calls",
+      "why": "inferred connection - not explicitly stated in source; bridges separate communities"
+    }
+  ],
+  "questions": [
+    {
+      "type": "bridge_node",
+      "question": "Why does `HomeViewModel` connect `Community 9` to `Community 8`, `Community 1`, `Community 2`, `Community 6`?",
+      "why": "High betweenness centrality (0.058) - this node is a cross-community bridge."
+    },
+    {
+      "type": "bridge_node",
+      "question": "Why does `MainRepository` connect `Community 7` to `Community 2`, `Community 4`, `Community 5`?",
+      "why": "High betweenness centrality (0.045) - this node is a cross-community bridge."
+    },
+    {
+      "type": "bridge_node",
+      "question": "Why does `RushdulIlmTheme()` connect `Community 6` to `Community 1`?",
+      "why": "High betweenness centrality (0.044) - this node is a cross-community bridge."
+    },
+    {
+      "type": "verify_inferred",
+      "question": "Are the 4 inferred relationships involving `RushdulIlmTheme()` (e.g. with `.onCreate()` and `MicButtonPreviewNotRecording()`) actually correct?",
+      "why": "`RushdulIlmTheme()` has 4 INFERRED edges - model-reasoned connections that need verification."
+    },
+    {
+      "type": "isolated_nodes",
+      "question": "What connects `ChatMessage`, `TTSRequest`, `TTSResponse` to the rest of the system?",
+      "why": "9 weakly-connected nodes found - possible documentation gaps or missing edges."
+    },
+    {
+      "type": "low_cohesion",
+      "question": "Should `Community 0` be split into smaller, more focused modules?",
+      "why": "Cohesion score 0.09090909090909091 - nodes in this community are weakly interconnected."
+    },
+    {
+      "type": "low_cohesion",
+      "question": "Should `Community 1` be split into smaller, more focused modules?",
+      "why": "Cohesion score 0.10416666666666667 - nodes in this community are weakly interconnected."
+    }
+  ]
+}

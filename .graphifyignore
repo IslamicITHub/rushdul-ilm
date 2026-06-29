@@ -1,0 +1,16 @@
+darulifta-deoband.com-offline/
+gemini_chat_history/
+Islamic YouTube Video Database/
+islamqa.info-offline/
+knowledge-graph/
+mem0_local_db/
+old_unused_backup/
+scraping/
+temp/
+video-database/
+.gemini/
+.git/
+android-app/app/.cxx/
+android-app/app/build/
+android-app/build/
+android-app/app/src/main/cpp/whisper.cpp

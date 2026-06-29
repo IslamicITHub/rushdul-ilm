@@ -1,0 +1,5 @@
+  warning: could not transcribe /home/hidayat/Documents/Islamic-Knowledge-QA-App/backend/namaz.mp3: Video transcription requires faster-whisper. Run: pip install 'graphifyy[video]'
+  warning: could not transcribe /home/hidayat/Documents/Islamic-Knowledge-QA-App/backend/namaz.wav: Video transcription requires faster-whisper. Run: pip install 'graphifyy[video]'
+  warning: could not transcribe /home/hidayat/Documents/Islamic-Knowledge-QA-App/backend/wazu.mp3: Video transcription requires faster-whisper. Run: pip install 'graphifyy[video]'
+  warning: could not transcribe /home/hidayat/Documents/Islamic-Knowledge-QA-App/backend/wazu.wav: Video transcription requires faster-whisper. Run: pip install 'graphifyy[video]'
+[]

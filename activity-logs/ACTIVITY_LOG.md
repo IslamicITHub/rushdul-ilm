@@ -3304,3 +3304,84 @@ MEM0_UPDATED:     NOT RUNNING
 * **FILES_CHANGED:** None (As requested).
 * **NEXT_TASK:** Phase 6 tasks
 * **BLOCKERS:** High RAM usage due to uvicorn --reload (Pending user decision to fix).
+
+### Date: 2026-06-28
+* **AGENT_USED:** Gemini
+* **TASKS_COMPLETED:** Implemented RAM usage optimizations for Docker containers (Removed --reload, added lazy loading lifespan).
+* **FILES_CHANGED:**
+  - `backend/docker-compose.yml` (Removed --reload, added --workers 1)
+  - `backend/tts_service.py` (Added FastAPI lifespan for lazy loading)
+  - `backend/stt_service.py` (Added FastAPI lifespan and garbage collection)
+  - `backend/fastapi_server.py` (Added FastAPI lifespan for RagPipeline)
+* **NEXT_TASK:** Phase 6 tasks
+* **BLOCKERS:** None.
+
+### Date: 2026-06-28
+* **AGENT_USED:** Gemini
+* **TASKS_COMPLETED:** Resolved CUDA Out Of Memory issue in IndicTrans2.
+* **FILES_CHANGED:**
+  - `backend/stt_service.py` (Unloaded WhisperModel from lifespan to run on-demand, freeing 1.5GB VRAM)
+  - `backend/translation_service.py` (Reduced num_beams from 5 to 2 to minimize KV cache VRAM spikes)
+* **NEXT_TASK:** Phase 6 tasks
+* **BLOCKERS:** None.
+
+### Date: 2026-06-28
+* **AGENT_USED:** Antigravity (Gemini)
+* **TASKS_COMPLETED:** Resolved missing CUDA libraries issue for faster-whisper STT API by freeing docker disk space and installing nvidia-cublas-cu12 and nvidia-cudnn-cu12 inside the STT venv, then restarting the STT container.
+* **FILES_CHANGED:**
+  - `backend/docker-compose.yml` (Added LD_LIBRARY_PATH environment variable for STT container to link the newly installed CUDA drivers)
+* **NEXT_TASK:** Debug translation_service.py backward translation.
+* **BLOCKERS:** None.
+
+---
+
+## Session 2026-06-29 10:36
+AGENT: Antigravity (Claude Opus 4.6 Thinking)
+PHASE: Documentation — GitHub Repository Documentation
+SPRINT: Ad-hoc — Comprehensive GitHub Documentation
+SUB_SPRINT: N/A
+MICRO_TASK_COMPLETED: Ad-hoc (GitHub Documentation)
+MICRO_TASK_DESCRIPTION: Analyze entire codebase and create comprehensive GitHub repository documentation for community-driven open-source project.
+SESSION_DURATION: 60 minutes
+
+TASKS_COMPLETED:
+  - Analyzed entire codebase including AGENT_RULES.md, SPRINT_SYSTEM.md, ACTIVITY_LOG.md (3335 lines), all Report Documentation files, graphify-out/GRAPH_REPORT.md, project structure (android-app, backend, scraping, video-database).
+  - Rewrote README.md from a 3-line placeholder to a comprehensive 400+ line GitHub README with: project problem statement, solution approach, how-it-works sequence diagram, key features, 6-layer architecture, three-tier offline strategy, full technology stack, current development status, getting started guide, project structure, Islamic content integrity rules, privacy-first design, known issues, roadmap, contributing guide, developer notes.
+  - Created docs/ARCHITECTURE.md with 7 mermaid diagrams: system overview, three-tier offline, MVVM pattern, Docker Compose services, RAG pipeline sequence, end-to-end data flow, dynamic GPU offloading.
+  - Created docs/DEVELOPMENT_STATUS.md with phase-by-phase progress tables, feature status, bug fixes applied, known issues, Gantt timeline diagram, and agent contributions summary.
+  - Created CONTRIBUTING.md with code of conduct, development setup, coding standards, Islamic content rules, privacy requirements, PR process, areas needing help, and issue reporting templates.
+  - Created SECURITY.md with vulnerability reporting process, security principles, and data handling practices.
+  - Created .github/ISSUE_TEMPLATE/bug_report.md for structured bug reports.
+  - Created .github/ISSUE_TEMPLATE/feature_request.md for structured feature requests.
+  - Created backend/.env.example so contributors know what environment variables are needed.
+
+FILES_CREATED:
+  - docs/ARCHITECTURE.md — Detailed system architecture with 7 mermaid flow diagrams.
+  - docs/DEVELOPMENT_STATUS.md — Current development progress with phase tables and Gantt timeline.
+  - CONTRIBUTING.md — Comprehensive contributor guidelines for open-source community.
+  - SECURITY.md — Security policy and vulnerability reporting.
+  - .github/ISSUE_TEMPLATE/bug_report.md — GitHub bug report template.
+  - .github/ISSUE_TEMPLATE/feature_request.md — GitHub feature request template.
+  - backend/.env.example — Example environment variables for backend setup.
+
+FILES_MODIFIED:
+  - README.md — Complete rewrite from 3 lines to 400+ line comprehensive GitHub README.
+  - activity-logs/ACTIVITY_LOG.md — (This entry).
+
+DONE_CONDITION_MET: YES — All documentation files created, reviewed for accuracy against codebase, and formatted for GitHub publishing.
+
+CURRENT_MICRO_TASK: Ad-hoc (GitHub Documentation)
+NEXT_MICRO_TASK: P5.S4.SS1.MT1 (or Phase 6 tasks)
+NEXT_MICRO_TASK_DESCRIPTION: Continue development from where Phase 5 left off, or begin Phase 6 (Video Library + Deployment).
+
+BLOCKERS: None.
+
+NOTES_FOR_NEXT_AGENT:
+  - All GitHub documentation is now in place for community-driven open-source publishing.
+  - The README.md references docs/SETUP_GUIDE.md which has not been created yet — it shows as "(coming soon)".
+  - The mermaid diagrams in ARCHITECTURE.md use GitHub-compatible syntax and will render natively on GitHub.
+  - CONTRIBUTING.md emphasizes the beginner-friendly comment requirement (Rule T2) prominently.
+  - The .gitignore should be checked to ensure .github/ directory is NOT ignored (it currently is not).
+
+GRAPHITI_UPDATED: NOT RUNNING
+MEM0_UPDATED:     NOT RUNNING

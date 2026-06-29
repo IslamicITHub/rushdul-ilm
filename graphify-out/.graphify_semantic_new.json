@@ -1,0 +1,1425 @@
+{
+  "nodes": [
+    {
+      "id": "app_mainactivity_mainactivity",
+      "label": "MainActivity",
+      "type": "class",
+      "file_path": "/home/hidayat/Documents/Islamic-Knowledge-QA-App/android-app/app/src/main/java/com/rushdululilm/app/MainActivity.kt",
+      "file_type": "code",
+      "description": "The main entry point (Front Door) of the app"
+    },
+    {
+      "id": "app_rushdulilmapplication_rushdulilmapplication",
+      "label": "RushdulIlmApplication",
+      "type": "class",
+      "file_path": "/home/hidayat/Documents/Islamic-Knowledge-QA-App/android-app/app/src/main/java/com/rushdululilm/app/RushdulIlmApplication.kt",
+      "file_type": "code",
+      "description": "The main entry point for the entire Android Application process"
+    },
+    {
+      "id": "cpp_whisper_jni_transcribeaudio",
+      "label": "transcribeAudio (JNI)",
+      "type": "function",
+      "file_path": "/home/hidayat/Documents/Islamic-Knowledge-QA-App/android-app/app/src/main/cpp/whisper-jni.cpp",
+      "file_type": "code",
+      "description": "JNI wrapper function to expose whisper.cpp STT to Kotlin"
+    },
+    {
+      "id": "local_fatwasourceconverter_fatwasourceconverter",
+      "label": "FatwaSourceConverter",
+      "type": "class",
+      "file_path": "/home/hidayat/Documents/Islamic-Knowledge-QA-App/android-app/app/src/main/java/com/rushdululilm/app/data/local/FatwaSourceConverter.kt",
+      "file_type": "code",
+      "description": "Converts List of FatwaSources to JSON string and back for Room database storage"
+    },
+    {
+      "id": "local_rushdulilmdatabase_rushdulilmdatabase",
+      "label": "RushdulIlmDatabase",
+      "type": "class",
+      "file_path": "/home/hidayat/Documents/Islamic-Knowledge-QA-App/android-app/app/src/main/java/com/rushdululilm/app/data/local/RushdulIlmDatabase.kt",
+      "file_type": "code",
+      "description": "The main Room Database class that ties all entities and DAOs together"
+    },
+    {
+      "id": "local_savedanswer_savedanswer",
+      "label": "SavedAnswer",
+      "type": "class",
+      "file_path": "/home/hidayat/Documents/Islamic-Knowledge-QA-App/android-app/app/src/main/java/com/rushdululilm/app/data/local/SavedAnswer.kt",
+      "file_type": "code",
+      "description": "Defines the table structure for saving fatwa answers in the local database"
+    },
+    {
+      "id": "local_savedanswerdao_savedanswerdao",
+      "label": "SavedAnswerDao",
+      "type": "class",
+      "file_path": "/home/hidayat/Documents/Islamic-Knowledge-QA-App/android-app/app/src/main/java/com/rushdululilm/app/data/local/SavedAnswerDao.kt",
+      "file_type": "code",
+      "description": "Data Access Object (DAO) that defines database operations for saved answers"
+    },
+    {
+      "id": "remote_apiservice_apiservice",
+      "label": "ApiService",
+      "type": "class",
+      "file_path": "/home/hidayat/Documents/Islamic-Knowledge-QA-App/android-app/app/src/main/java/com/rushdululilm/app/data/remote/ApiService.kt",
+      "file_type": "code",
+      "description": "Defines the Retrofit interface for the backend API"
+    },
+    {
+      "id": "remote_networkmodels_queryrequest",
+      "label": "QueryRequest",
+      "type": "class",
+      "file_path": "/home/hidayat/Documents/Islamic-Knowledge-QA-App/android-app/app/src/main/java/com/rushdululilm/app/data/remote/NetworkModels.kt",
+      "file_type": "code",
+      "description": "Request payload model containing question and settings filters"
+    },
+    {
+      "id": "remote_networkmodels_queryresponse",
+      "label": "QueryResponse",
+      "type": "class",
+      "file_path": "/home/hidayat/Documents/Islamic-Knowledge-QA-App/android-app/app/src/main/java/com/rushdululilm/app/data/remote/NetworkModels.kt",
+      "file_type": "code",
+      "description": "Response payload model containing RAG search results"
+    },
+    {
+      "id": "repository_answerhistoryrepository_answerhistoryrepository",
+      "label": "AnswerHistoryRepository",
+      "type": "class",
+      "file_path": "/home/hidayat/Documents/Islamic-Knowledge-QA-App/android-app/app/src/main/java/com/rushdululilm/app/data/repository/AnswerHistoryRepository.kt",
+      "file_type": "code",
+      "description": "Mediates between the ViewModel and the Room database for saving and retrieving answers"
+    },
+    {
+      "id": "repository_mainrepository_mainrepository",
+      "label": "MainRepository",
+      "type": "class",
+      "file_path": "/home/hidayat/Documents/Islamic-Knowledge-QA-App/android-app/app/src/main/java/com/rushdululilm/app/data/repository/MainRepository.kt",
+      "file_type": "code",
+      "description": "The central data manager that coordinates between network (Retrofit) and local storage"
+    },
+    {
+      "id": "repository_userpreferencesrepository_userpreferencesrepository",
+      "label": "UserPreferencesRepository",
+      "type": "class",
+      "file_path": "/home/hidayat/Documents/Islamic-Knowledge-QA-App/android-app/app/src/main/java/com/rushdululilm/app/data/repository/UserPreferencesRepository.kt",
+      "file_type": "code",
+      "description": "A central storage for user-selected settings that need to be shared across multiple screens"
+    },
+    {
+      "id": "di_databasemodule_databasemodule",
+      "label": "DatabaseModule",
+      "type": "class",
+      "file_path": "/home/hidayat/Documents/Islamic-Knowledge-QA-App/android-app/app/src/main/java/com/rushdululilm/app/di/DatabaseModule.kt",
+      "file_type": "code",
+      "description": "Hilt Module to provide Room database and DAO instances to the app"
+    },
+    {
+      "id": "di_networkmodule_networkmodule",
+      "label": "NetworkModule",
+      "type": "class",
+      "file_path": "/home/hidayat/Documents/Islamic-Knowledge-QA-App/android-app/app/src/main/java/com/rushdululilm/app/di/NetworkModule.kt",
+      "file_type": "code",
+      "description": "Provides Retrofit and OkHttp instances using Hilt Dependency Injection"
+    },
+    {
+      "id": "model_answermodels_fatwaanswer",
+      "label": "FatwaAnswer",
+      "type": "class",
+      "file_path": "/home/hidayat/Documents/Islamic-Knowledge-QA-App/android-app/app/src/main/java/com/rushdululilm/app/model/AnswerModels.kt",
+      "file_type": "code",
+      "description": "Layout for fatwa answers received from the RAG search pipeline"
+    },
+    {
+      "id": "model_answermodels_fatwasource",
+      "label": "FatwaSource",
+      "type": "class",
+      "file_path": "/home/hidayat/Documents/Islamic-Knowledge-QA-App/android-app/app/src/main/java/com/rushdululilm/app/model/AnswerModels.kt",
+      "file_type": "code",
+      "description": "Representing a single cited web reference website"
+    },
+    {
+      "id": "model_applanguage_applanguage",
+      "label": "AppLanguage",
+      "type": "class",
+      "file_path": "/home/hidayat/Documents/Islamic-Knowledge-QA-App/android-app/app/src/main/java/com/rushdululilm/app/model/AppLanguage.kt",
+      "file_type": "code",
+      "description": "Defines every app language in one modular place"
+    },
+    {
+      "id": "components_languageselector_languageselector",
+      "label": "LanguageSelector",
+      "type": "function",
+      "file_path": "/home/hidayat/Documents/Islamic-Knowledge-QA-App/android-app/app/src/main/java/com/rushdululilm/app/ui/components/LanguageSelector.kt",
+      "file_type": "code",
+      "description": "A dropdown menu allowing the user to select their preferred language for questions and answers.",
+      "rationale": "Dropdown menus in Compose use ExposedDropdownMenuBox. An OutlinedTextField acts as the anchor read-only display, and ExposedDropdownMenu renders the list of choices when clicked."
+    },
+    {
+      "id": "components_micbutton_micbutton",
+      "label": "MicButton",
+      "type": "function",
+      "file_path": "/home/hidayat/Documents/Islamic-Knowledge-QA-App/android-app/app/src/main/java/com/rushdululilm/app/ui/components/MicButton.kt",
+      "file_type": "code",
+      "description": "A reusable, animated microphone button for capturing user questions.",
+      "rationale": "By abstracting the MicButton layout, we can use it on different screens without rewriting the layout or pulse animation code."
+    },
+    {
+      "id": "components_sourceselector_sourceselector",
+      "label": "SourceSelector",
+      "type": "function",
+      "file_path": "/home/hidayat/Documents/Islamic-Knowledge-QA-App/android-app/app/src/main/java/com/rushdululilm/app/ui/components/SourceSelector.kt",
+      "file_type": "code",
+      "description": "Allows the user to pick which Islamic database to query.",
+      "rationale": "LazyRow implements a horizontally scrolling layout list. Unlike a Row that constructs all its items at once, LazyRow is highly optimized, building chips only when visible."
+    },
+    {
+      "id": "components_videocard_videocard",
+      "label": "VideoCard",
+      "type": "function",
+      "file_path": "/home/hidayat/Documents/Islamic-Knowledge-QA-App/android-app/app/src/main/java/com/rushdululilm/app/ui/components/VideoCard.kt",
+      "file_type": "code",
+      "description": "Displays a single video entry in the video library list.",
+      "rationale": "Cards are modular container widgets. We use semantics modifiers to merge all children texts into a single accessibility readout, so blind users can select the full card instead of struggling with tiny text fragments."
+    },
+    {
+      "id": "screens_answerscreen_answerscreen",
+      "label": "AnswerScreen",
+      "type": "function",
+      "file_path": "/home/hidayat/Documents/Islamic-Knowledge-QA-App/android-app/app/src/main/java/com/rushdululilm/app/ui/screens/AnswerScreen.kt",
+      "file_type": "code",
+      "description": "Displays the Islamic answer, source URL, and the 'Read Aloud' button.",
+      "rationale": "State Flow representation binds view actions to ViewModel states asynchronously. The UI draws layout views depending entirely on the active State data."
+    },
+    {
+      "id": "screens_answerscreen_answervideocard",
+      "label": "AnswerVideoCard",
+      "type": "function",
+      "file_path": "/home/hidayat/Documents/Islamic-Knowledge-QA-App/android-app/app/src/main/java/com/rushdululilm/app/ui/screens/AnswerScreen.kt",
+      "file_type": "code",
+      "description": "Reusable UI card for related videos in AnswerScreen.",
+      "rationale": "Reusable UI cards isolate UI widget styles from parent page frameworks. Making layout sub-elements separate functions increases readability and testability."
+    },
+    {
+      "id": "screens_answershistoryscreen_answershistoryscreen",
+      "label": "AnswersHistoryScreen",
+      "type": "function",
+      "file_path": "/home/hidayat/Documents/Islamic-Knowledge-QA-App/android-app/app/src/main/java/com/rushdululilm/app/ui/screens/AnswersHistoryScreen.kt",
+      "file_type": "code",
+      "description": "Displays a list of all previously saved answers."
+    },
+    {
+      "id": "screens_answershistoryscreen_savedanswercard",
+      "label": "SavedAnswerCard",
+      "type": "function",
+      "file_path": "/home/hidayat/Documents/Islamic-Knowledge-QA-App/android-app/app/src/main/java/com/rushdululilm/app/ui/screens/AnswersHistoryScreen.kt",
+      "file_type": "code",
+      "description": "Card component displaying a single saved answer."
+    },
+    {
+      "id": "screens_homescreen_homescreen",
+      "label": "HomeScreen",
+      "type": "function",
+      "file_path": "/home/hidayat/Documents/Islamic-Knowledge-QA-App/android-app/app/src/main/java/com/rushdululilm/app/ui/screens/HomeScreen.kt",
+      "file_type": "code",
+      "description": "The main screen where the user asks questions using the mic.",
+      "rationale": "Composable functions are the building blocks of Jetpack Compose. They take data from StateFlow streams and draw UI elements on the screen. Whenever state changes, the function recomposes automatically."
+    },
+    {
+      "id": "screens_navgraph_rushdulilmnavgraph",
+      "label": "RushdulIlmNavGraph",
+      "type": "function",
+      "file_path": "/home/hidayat/Documents/Islamic-Knowledge-QA-App/android-app/app/src/main/java/com/rushdululilm/app/ui/screens/NavGraph.kt",
+      "file_type": "code",
+      "description": "The 'Traffic Controller' of our app - it connects all our screens together.",
+      "rationale": "Navigation in Jetpack Compose uses a NavController to trigger screen changes, and a NavHost to draw the Composable screen linked to the active route."
+    },
+    {
+      "id": "screens_routes_routes",
+      "label": "Routes",
+      "type": "object",
+      "file_path": "/home/hidayat/Documents/Islamic-Knowledge-QA-App/android-app/app/src/main/java/com/rushdululilm/app/ui/screens/Routes.kt",
+      "file_type": "code",
+      "description": "Defines all the navigation 'addresses' (routes) for the app in one place.",
+      "rationale": "Routes is a central registry containing the names of all screens in the app. By centralizing these strings, we ensure that navigating to a screen always uses the correct address."
+    },
+    {
+      "id": "screens_settingsscreen_settingsscreen",
+      "label": "SettingsScreen",
+      "type": "function",
+      "file_path": "/home/hidayat/Documents/Islamic-Knowledge-QA-App/android-app/app/src/main/java/com/rushdululilm/app/ui/screens/SettingsScreen.kt",
+      "file_type": "code",
+      "description": "Displays the app settings and offline download options.",
+      "rationale": "User preference management binds UI controls to local repository storage. Changes selected in this screen apply globally across the application."
+    },
+    {
+      "id": "screens_settingsscreen_settingssectiontitle",
+      "label": "SettingsSectionTitle",
+      "type": "function",
+      "file_path": "/home/hidayat/Documents/Islamic-Knowledge-QA-App/android-app/app/src/main/java/com/rushdululilm/app/ui/screens/SettingsScreen.kt",
+      "file_type": "code",
+      "description": "Reusable UI header for settings sections.",
+      "rationale": "Reusable UI headers isolate title font properties from parent screen lists. Isolating styling into clean sub-components makes screens look highly uniform."
+    },
+    {
+      "id": "screens_settingsscreen_settingsradiobutton",
+      "label": "SettingsRadioButton",
+      "type": "function",
+      "file_path": "/home/hidayat/Documents/Islamic-Knowledge-QA-App/android-app/app/src/main/java/com/rushdululilm/app/ui/screens/SettingsScreen.kt",
+      "file_type": "code",
+      "description": "Custom radio button row for settings.",
+      "rationale": "Custom radio button rows increase accessibility touch targets. Selecting any portion of the horizontal row registers the click event."
+    },
+    {
+      "id": "screens_settingsscreen_settingsswitch",
+      "label": "SettingsSwitch",
+      "type": "function",
+      "file_path": "/home/hidayat/Documents/Islamic-Knowledge-QA-App/android-app/app/src/main/java/com/rushdululilm/app/ui/screens/SettingsScreen.kt",
+      "file_type": "code",
+      "description": "Custom toggle switch row for settings.",
+      "rationale": "Custom toggle switch rows align toggles along screen edges automatically. It structures parameters to isolate labels from status controls."
+    },
+    {
+      "id": "screens_settingsscreen_downloaditem",
+      "label": "DownloadItem",
+      "type": "function",
+      "file_path": "/home/hidayat/Documents/Islamic-Knowledge-QA-App/android-app/app/src/main/java/com/rushdululilm/app/ui/screens/SettingsScreen.kt",
+      "file_type": "code",
+      "description": "Widget organizing technical file size data inside structured cards for downloads.",
+      "rationale": "Download widgets organize technical file size data inside structured cards. Organizing details inside cards helps users distinguish database download packages clearly."
+    },
+    {
+      "id": "screens_videolibraryscreen_videolibraryscreen",
+      "label": "VideoLibraryScreen",
+      "type": "function",
+      "file_path": "/home/hidayat/Documents/Islamic-Knowledge-QA-App/android-app/app/src/main/java/com/rushdululilm/app/ui/screens/VideoLibraryScreen.kt",
+      "file_type": "code",
+      "description": "Displays a list of offline Islamic video lectures that the user can play.",
+      "rationale": "Search query filtering processes input string modifications asynchronously. Updating search text flows triggers search logic in the background, updating list items."
+    },
+    {
+      "id": "theme_color_islamicgreen",
+      "label": "IslamicGreen",
+      "type": "constant",
+      "file_path": "/home/hidayat/Documents/Islamic-Knowledge-QA-App/android-app/app/src/main/java/com/rushdululilm/app/ui/theme/Color.kt",
+      "file_type": "code",
+      "description": "Primary brand dark green color for primary buttons and success banners."
+    },
+    {
+      "id": "theme_color_quranicblue",
+      "label": "QuranicBlue",
+      "type": "constant",
+      "file_path": "/home/hidayat/Documents/Islamic-Knowledge-QA-App/android-app/app/src/main/java/com/rushdululilm/app/ui/theme/Color.kt",
+      "file_type": "code",
+      "description": "Accent calm blue color for clickable links and citations."
+    },
+    {
+      "id": "theme_color_offlineorange",
+      "label": "OfflineOrange",
+      "type": "constant",
+      "file_path": "/home/hidayat/Documents/Islamic-Knowledge-QA-App/android-app/app/src/main/java/com/rushdululilm/app/ui/theme/Color.kt",
+      "file_type": "code",
+      "description": "Bright orange color for the offline status banner."
+    },
+    {
+      "id": "theme_color_errorred",
+      "label": "ErrorRed",
+      "type": "constant",
+      "file_path": "/home/hidayat/Documents/Islamic-Knowledge-QA-App/android-app/app/src/main/java/com/rushdululilm/app/ui/theme/Color.kt",
+      "file_type": "code",
+      "description": "Error red color for warning states and network connection errors."
+    },
+    {
+      "id": "theme_color_backgroundcream",
+      "label": "BackgroundCream",
+      "type": "constant",
+      "file_path": "/home/hidayat/Documents/Islamic-Knowledge-QA-App/android-app/app/src/main/java/com/rushdululilm/app/ui/theme/Color.kt",
+      "file_type": "code",
+      "description": "Soft warm yellow/white color for screen backgrounds."
+    },
+    {
+      "id": "theme_color_textprimary",
+      "label": "TextPrimary",
+      "type": "constant",
+      "file_path": "/home/hidayat/Documents/Islamic-Knowledge-QA-App/android-app/app/src/main/java/com/rushdululilm/app/ui/theme/Color.kt",
+      "file_type": "code",
+      "description": "Soft black/grey color for high contrast readable text."
+    },
+    {
+      "id": "theme_theme_rushdulilmtheme",
+      "label": "RushdulIlmTheme",
+      "type": "function",
+      "file_path": "/home/hidayat/Documents/Islamic-Knowledge-QA-App/android-app/app/src/main/java/com/rushdululilm/app/ui/theme/Theme.kt",
+      "file_type": "code",
+      "description": "Wraps the colors and typography into a complete Material3 Theme for the app.",
+      "rationale": "A Theme coordinates a unified design system. We map our custom colors to standard semantic roles so standard Compose buttons and screens style themselves automatically."
+    },
+    {
+      "id": "theme_type_typography",
+      "label": "Typography",
+      "type": "constant",
+      "file_path": "/home/hidayat/Documents/Islamic-Knowledge-QA-App/android-app/app/src/main/java/com/rushdululilm/app/ui/theme/Type.kt",
+      "file_type": "code",
+      "description": "Defines the text styles (fonts, sizes, weights) used across the app.",
+      "rationale": "Material3 Typography maps common text roles to specific TextStyles. Declaring sizes in scale-independent pixels ensures accessibility settings are honored."
+    },
+    {
+      "id": "utils_audiorecorderhelper_audiorecorderhelper",
+      "label": "AudioRecorderHelper",
+      "type": "class",
+      "file_path": "/home/hidayat/Documents/Islamic-Knowledge-QA-App/android-app/app/src/main/java/com/rushdululilm/app/utils/AudioRecorderHelper.kt",
+      "file_type": "code",
+      "description": "Captures raw audio from the microphone at 16kHz mono for whisper.cpp processing.",
+      "rationale": "AudioRecord is Android's lowest-level audio capture API. Whisper AI requires raw audio (PCM) format at 16,000 Hz."
+    },
+    {
+      "id": "utils_networkutils_networktier",
+      "label": "NetworkTier",
+      "type": "enum",
+      "file_path": "/home/hidayat/Documents/Islamic-Knowledge-QA-App/android-app/app/src/main/java/com/rushdululilm/app/utils/NetworkUtils.kt",
+      "file_type": "code",
+      "description": "Enum defining the three possible connection states of the app.",
+      "rationale": "Tier 1 is INTERNET (use cloud APIs), Tier 2 is LAN (use local Ubuntu server), Tier 3 is OFFLINE (use on-device models)."
+    },
+    {
+      "id": "utils_networkutils_pingserver",
+      "label": "pingServer",
+      "type": "function",
+      "file_path": "/home/hidayat/Documents/Islamic-Knowledge-QA-App/android-app/app/src/main/java/com/rushdululilm/app/utils/NetworkUtils.kt",
+      "file_type": "code",
+      "description": "Tries to open a quick connection to a specific IP and port to see if the server is alive.",
+      "rationale": "Pinging a server returns true if successful within the timeout, false otherwise."
+    },
+    {
+      "id": "utils_networkutils_detectnetworktier",
+      "label": "detectNetworkTier",
+      "type": "function",
+      "file_path": "/home/hidayat/Documents/Islamic-Knowledge-QA-App/android-app/app/src/main/java/com/rushdululilm/app/utils/NetworkUtils.kt",
+      "file_type": "code",
+      "description": "Uses the Android system to check for active networks, and pings specific local server to determine the tier.",
+      "rationale": "Since pinging involves a network call, this function should generally be run on a background thread to avoid freezing the UI."
+    },
+    {
+      "id": "utils_networkutils_observenetworktier",
+      "label": "observeNetworkTier",
+      "type": "function",
+      "file_path": "/home/hidayat/Documents/Islamic-Knowledge-QA-App/android-app/app/src/main/java/com/rushdululilm/app/utils/NetworkUtils.kt",
+      "file_type": "code",
+      "description": "Creates a continuous stream (Flow) of network status updates by listening to Android's ConnectivityManager.",
+      "rationale": "It listens to Android's ConnectivityManager for network changes and re-evaluates the tier automatically in real-time."
+    },
+    {
+      "id": "utils_resource_resource",
+      "label": "Resource",
+      "type": "class",
+      "file_path": "/home/hidayat/Documents/Islamic-Knowledge-QA-App/android-app/app/src/main/java/com/rushdululilm/app/utils/Resource.kt",
+      "file_type": "code",
+      "description": "A generic wrapper class for handling UI states (Success, Error, Loading).",
+      "rationale": "A sealed class is a closed hierarchy class. It restricts subclasses to be defined only within this file. It is perfect for representing state states that are mutually exclusive."
+    },
+    {
+      "id": "utils_whisperhelper_whisperhelper",
+      "label": "WhisperHelper",
+      "type": "class",
+      "file_path": "/home/hidayat/Documents/Islamic-Knowledge-QA-App/android-app/app/src/main/java/com/rushdululilm/app/utils/WhisperHelper.kt",
+      "file_type": "code",
+      "description": "Kotlin interface to communicate with the native whisper.cpp C++ code.",
+      "rationale": "This class acts as our Kotlin-side bridge to the C++ code. We use the 'external' keyword to tell Kotlin that the function implementation exists in the C++ library we loaded."
+    },
+    {
+      "id": "viewmodel_answerviewmodel_answerviewmodel",
+      "label": "AnswerViewModel",
+      "type": "class",
+      "file_path": "/home/hidayat/Documents/Islamic-Knowledge-QA-App/android-app/app/src/main/java/com/rushdululilm/app/viewmodel/AnswerViewModel.kt",
+      "file_type": "code",
+      "description": "The 'brain' of the Answer Screen. It holds the fatwa answer and related videos.",
+      "rationale": "A ViewModel manages state for a specific screen, preserving data during screen rotation. We launch coroutines in viewModelScope to collect StateFlow streams from our Repository."
+    },
+    {
+      "id": "viewmodel_answershistoryviewmodel",
+      "label": "AnswersHistoryViewModel",
+      "type": "class",
+      "file_path": "/home/hidayat/Documents/Islamic-Knowledge-QA-App/android-app/app/src/main/java/com/rushdululilm/app/viewmodel/AnswersHistoryViewModel.kt",
+      "file_type": "code",
+      "description": "Manages the state of the Answers History screen by fetching data from the local DB."
+    },
+    {
+      "id": "viewmodel_homeviewmodel",
+      "label": "HomeViewModel",
+      "type": "class",
+      "file_path": "/home/hidayat/Documents/Islamic-Knowledge-QA-App/android-app/app/src/main/java/com/rushdululilm/app/viewmodel/HomeViewModel.kt",
+      "file_type": "code",
+      "description": "The brain of the Home Screen. Remembers choices and handles actions like tapping the mic.",
+      "rationale": "Binds Home UI components to repositories."
+    },
+    {
+      "id": "viewmodel_settingsviewmodel",
+      "label": "SettingsViewModel",
+      "type": "class",
+      "file_path": "/home/hidayat/Documents/Islamic-Knowledge-QA-App/android-app/app/src/main/java/com/rushdululilm/app/viewmodel/SettingsViewModel.kt",
+      "file_type": "code",
+      "description": "Manages the state of the Settings Screen.",
+      "rationale": "Coordinates preferences state for the Settings screen."
+    },
+    {
+      "id": "viewmodel_videolibraryviewmodel",
+      "label": "VideoLibraryViewModel",
+      "type": "class",
+      "file_path": "/home/hidayat/Documents/Islamic-Knowledge-QA-App/android-app/app/src/main/java/com/rushdululilm/app/viewmodel/VideoLibraryViewModel.kt",
+      "file_type": "code",
+      "description": "Manages the state and search filtering for the Video Library screen."
+    },
+    {
+      "id": "viewmodel_viewmodels",
+      "label": "ViewModels.kt",
+      "type": "file",
+      "file_path": "/home/hidayat/Documents/Islamic-Knowledge-QA-App/android-app/app/src/main/java/com/rushdululilm/app/viewmodel/ViewModels.kt",
+      "file_type": "code",
+      "description": "Placeholder to keep the viewmodel package visible."
+    },
+    {
+      "id": "android_app_build",
+      "label": "build.gradle.kts",
+      "type": "file",
+      "file_path": "/home/hidayat/Documents/Islamic-Knowledge-QA-App/android-app/build.gradle.kts",
+      "file_type": "code",
+      "description": "Configures tools and versions used across the entire project."
+    },
+    {
+      "id": "android_app_settings",
+      "label": "settings.gradle.kts",
+      "type": "file",
+      "file_path": "/home/hidayat/Documents/Islamic-Knowledge-QA-App/android-app/settings.gradle.kts",
+      "file_type": "code",
+      "description": "Defines the project name and where to find libraries."
+    },
+    {
+      "id": "backend_download_indictrans2",
+      "label": "download_indictrans2.py",
+      "type": "file",
+      "file_path": "/home/hidayat/Documents/Islamic-Knowledge-QA-App/backend/download_indictrans2.py",
+      "file_type": "code",
+      "description": "Downloads the IndicTrans2 models from HuggingFace."
+    },
+    {
+      "id": "backend_download_model",
+      "label": "download_model.py",
+      "type": "file",
+      "file_path": "/home/hidayat/Documents/Islamic-Knowledge-QA-App/backend/download_model.py",
+      "file_type": "code",
+      "description": "Downloads paraphrase-multilingual-MiniLM-L12-v2 model."
+    },
+    {
+      "id": "backend_download_qwen3_embed",
+      "label": "download_qwen3_embed.py",
+      "type": "file",
+      "file_path": "/home/hidayat/Documents/Islamic-Knowledge-QA-App/backend/download_qwen3_embed.py",
+      "file_type": "code",
+      "description": "Downloads Qwen3-Embedding-0.6B locally."
+    },
+    {
+      "id": "backend_download_tts",
+      "label": "download_tts.py",
+      "type": "file",
+      "file_path": "/home/hidayat/Documents/Islamic-Knowledge-QA-App/backend/download_tts.py",
+      "file_type": "code",
+      "description": "Downloads the indic-parler-tts model from Hugging Face."
+    },
+    {
+      "id": "backend_fastapi_server",
+      "label": "fastapi_server.py",
+      "type": "file",
+      "file_path": "/home/hidayat/Documents/Islamic-Knowledge-QA-App/backend/fastapi_server.py",
+      "file_type": "code",
+      "description": "Main backend server for the Android app. Exposes REST endpoints."
+    },
+    {
+      "id": "backend_fastapi_server_queryrequest",
+      "label": "QueryRequest",
+      "type": "class",
+      "file_path": "/home/hidayat/Documents/Islamic-Knowledge-QA-App/backend/fastapi_server.py",
+      "file_type": "code",
+      "description": "Pydantic model defining the shape of data expected from the Android app for querying."
+    },
+    {
+      "id": "backend_ingest_deoband",
+      "label": "ingest_deoband.py",
+      "type": "file",
+      "file_path": "/home/hidayat/Documents/Islamic-Knowledge-QA-App/backend/ingest_deoband.py",
+      "file_type": "code",
+      "description": "Converts Deoband SQLite fatwas into vector embeddings and saves them in Qdrant."
+    },
+    {
+      "id": "backend_ingest_islamqa",
+      "label": "ingest_islamqa.py",
+      "type": "file",
+      "file_path": "/home/hidayat/Documents/Islamic-Knowledge-QA-App/backend/ingest_islamqa.py",
+      "file_type": "code",
+      "description": "Converts IslamQA SQLite fatwas into vector embeddings and saves them in Qdrant."
+    },
+    {
+      "id": "backend_qdrant_test_query",
+      "label": "qdrant_test_query.py",
+      "type": "file",
+      "file_path": "/home/hidayat/Documents/Islamic-Knowledge-QA-App/backend/qdrant_test_query.py",
+      "file_type": "code",
+      "description": "Tests qdrant queries and ingests data."
+    },
+    {
+      "id": "backend_rag_pipeline_ragpipeline",
+      "label": "RagPipeline",
+      "type": "class",
+      "file_path": "/home/hidayat/Documents/Islamic-Knowledge-QA-App/backend/rag_pipeline.py",
+      "file_type": "code",
+      "description": "Implements the Retrieval-Augmented Generation (RAG) pipeline using LlamaIndex.",
+      "rationale": "Binds data retrieval steps directly into the prompting window of the language model."
+    },
+    {
+      "id": "backend_rag_pipeline_combineqapostprocessor",
+      "label": "CombineQAPostprocessor",
+      "type": "class",
+      "file_path": "/home/hidayat/Documents/Islamic-Knowledge-QA-App/backend/rag_pipeline.py",
+      "file_type": "code",
+      "description": "Custom post-processor that modifies retrieved text chunks.",
+      "rationale": "Combines metadata payload fields (like separate question/answer fields) into a single text block."
+    },
+    {
+      "id": "backend_rag_pipeline_multicollectionretriever",
+      "label": "MultiCollectionRetriever",
+      "type": "class",
+      "file_path": "/home/hidayat/Documents/Islamic-Knowledge-QA-App/backend/rag_pipeline.py",
+      "file_type": "code",
+      "description": "Custom retriever that bypasses standard single-collection constraints and queries multiple vector collections.",
+      "rationale": "Runs parallel queries across multiple vector collections (like islamqa and deoband) and merges results."
+    },
+    {
+      "id": "backend_stt_service",
+      "label": "stt_service.py",
+      "type": "file",
+      "file_path": "/home/hidayat/Documents/Islamic-Knowledge-QA-App/backend/stt_service.py",
+      "file_type": "code",
+      "description": "FastAPI wrapper for faster-whisper STT service."
+    },
+    {
+      "id": "backend_test_memory_leak",
+      "label": "test_memory_leak.py",
+      "type": "file",
+      "file_path": "/home/hidayat/Documents/Islamic-Knowledge-QA-App/backend/test_memory_leak.py",
+      "file_type": "code",
+      "description": "Script to test memory leak."
+    },
+    {
+      "id": "backend_test_model_move",
+      "label": "test_model_move.py",
+      "type": "file",
+      "file_path": "/home/hidayat/Documents/Islamic-Knowledge-QA-App/backend/test_model_move.py",
+      "file_type": "code",
+      "description": "Tests loading and moving model to and from GPU for ParlerTTS."
+    },
+    {
+      "id": "backend_translation_service",
+      "label": "translation_service.py",
+      "type": "file",
+      "file_path": "/home/hidayat/Documents/Islamic-Knowledge-QA-App/backend/translation_service.py",
+      "file_type": "code",
+      "description": "Standalone Python FastAPI service acting as an offline language translator using IndicTrans2."
+    },
+    {
+      "id": "backend_tts_service",
+      "label": "tts_service.py",
+      "type": "file",
+      "file_path": "/home/hidayat/Documents/Islamic-Knowledge-QA-App/backend/tts_service.py",
+      "file_type": "code",
+      "description": "FastAPI web server for Text-To-Speech using Parler-TTS."
+    },
+    {
+      "id": "agent_rules_architecture",
+      "label": "Project Architecture",
+      "type": "concept",
+      "file_path": "/home/hidayat/Documents/Islamic-Knowledge-QA-App/AGENT_RULES.md",
+      "file_type": "document",
+      "description": "Six-layer project architecture for Rushd-ul-Ilm app including Android UI, Backend Docker, Knowledge Ingestion, etc."
+    },
+    {
+      "id": "agent_rules_offline_fallback",
+      "label": "Three-Tier Offline Fallback",
+      "type": "concept",
+      "file_path": "/home/hidayat/Documents/Islamic-Knowledge-QA-App/AGENT_RULES.md",
+      "file_type": "document",
+      "description": "Fallback mechanism ensuring app works via Internet, LAN, or fully Offline."
+    },
+    {
+      "id": "ai_system_prompt_rules",
+      "label": "AI System Prompt Rules",
+      "type": "concept",
+      "file_path": "/home/hidayat/Documents/Islamic-Knowledge-QA-App/AI_SYSTEM_PROMPT.md",
+      "file_type": "document",
+      "description": "Instructions for AI coding agents to follow teaching rules, anti-hallucination rules, and UI guidelines."
+    },
+    {
+      "id": "report_documentation_overview",
+      "label": "Project Overview",
+      "type": "concept",
+      "file_path": "/home/hidayat/Documents/Islamic-Knowledge-QA-App/Report Documentation/01_PROJECT_OVERVIEW.md",
+      "file_type": "document",
+      "description": "High-level overview of the app's purpose, target audience, and technology stack choices."
+    },
+    {
+      "id": "report_documentation_android",
+      "label": "Android App Layer",
+      "type": "concept",
+      "file_path": "/home/hidayat/Documents/Islamic-Knowledge-QA-App/Report Documentation/02_ANDROID_APP_LAYER.md",
+      "file_type": "document",
+      "description": "Details about the MVVM architecture, Jetpack Compose screens, and navigation."
+    },
+    {
+      "id": "report_documentation_ingestion",
+      "label": "Knowledge Ingestion",
+      "type": "concept",
+      "file_path": "/home/hidayat/Documents/Islamic-Knowledge-QA-App/Report Documentation/03_KNOWLEDGE_INGESTION.md",
+      "file_type": "document",
+      "description": "Process of vectorizing fatwas using paraphrase-multilingual-MiniLM and storing in Qdrant."
+    },
+    {
+      "id": "report_documentation_translation",
+      "label": "Translation Pipeline",
+      "type": "concept",
+      "file_path": "/home/hidayat/Documents/Islamic-Knowledge-QA-App/Report Documentation/04_TRANSLATION_PIPELINE.md",
+      "file_type": "document",
+      "description": "Multilingual translation using IndicTrans2 models."
+    },
+    {
+      "id": "report_documentation_video",
+      "label": "Video Database",
+      "type": "concept",
+      "file_path": "/home/hidayat/Documents/Islamic-Knowledge-QA-App/Report Documentation/08_VIDEO_DATABASE.md",
+      "file_type": "document",
+      "description": "Scraping, indexing, and transcribing Islamic video lectures using yt-dlp and faster-whisper."
+    },
+    {
+      "id": "report_documentation_docker",
+      "label": "Backend Docker Services",
+      "type": "concept",
+      "file_path": "/home/hidayat/Documents/Islamic-Knowledge-QA-App/Report Documentation/09_BACKEND_DOCKER.md",
+      "file_type": "document",
+      "description": "Docker Compose setup for FastAPI, Qdrant, Ollama, IndicTrans2, Parler-TTS, and faster-whisper."
+    },
+    {
+      "id": "sprint_system_microtasks",
+      "label": "Micro-Task System",
+      "type": "concept",
+      "file_path": "/home/hidayat/Documents/Islamic-Knowledge-QA-App/SPRINT_SYSTEM.md",
+      "file_type": "document",
+      "description": "The methodology for breaking down project phases into sprints and micro-tasks for AI execution."
+    },
+    {
+      "id": "backend_fastapi_service",
+      "label": "FastAPI Service",
+      "type": "service",
+      "file_path": "/home/hidayat/Documents/Islamic-Knowledge-QA-App/backend/docker-compose.yml",
+      "file_type": "code",
+      "description": "Main python web application service running FastAPI on port 8000."
+    },
+    {
+      "id": "backend_qdrant_service",
+      "label": "Qdrant Service",
+      "type": "service",
+      "file_path": "/home/hidayat/Documents/Islamic-Knowledge-QA-App/backend/docker-compose.yml",
+      "file_type": "code",
+      "description": "Vector database service container running Qdrant on port 6333."
+    },
+    {
+      "id": "backend_indictrans2_service",
+      "label": "IndicTrans2 Service",
+      "type": "service",
+      "file_path": "/home/hidayat/Documents/Islamic-Knowledge-QA-App/backend/docker-compose.yml",
+      "file_type": "code",
+      "description": "Service running the IndicTrans2 machine translation models on port 8001."
+    },
+    {
+      "id": "backend_tts_service",
+      "label": "TTS Service",
+      "type": "service",
+      "file_path": "/home/hidayat/Documents/Islamic-Knowledge-QA-App/backend/docker-compose.yml",
+      "file_type": "code",
+      "description": "Service running the Indic-Parler TTS models on port 8002."
+    },
+    {
+      "id": "backend_stt_service",
+      "label": "STT Service",
+      "type": "service",
+      "file_path": "/home/hidayat/Documents/Islamic-Knowledge-QA-App/backend/docker-compose.yml",
+      "file_type": "code",
+      "description": "Service running the faster-whisper STT models on port 8003."
+    },
+    {
+      "id": "cpp_whisper_jni",
+      "label": "whisper_jni",
+      "type": "library",
+      "file_path": "/home/hidayat/Documents/Islamic-Knowledge-QA-App/android-app/app/src/main/cpp/CMakeLists.txt",
+      "file_type": "code",
+      "description": "Custom JNI wrapper for the Android app linking against whisper.cpp."
+    },
+    {
+      "id": "backend_requirements_fastapi",
+      "label": "FastAPI",
+      "type": "package",
+      "file_path": "/home/hidayat/Documents/Islamic-Knowledge-QA-App/backend/requirements.txt",
+      "file_type": "code",
+      "description": "Modern web framework for building APIs."
+    },
+    {
+      "id": "backend_requirements_uvicorn",
+      "label": "Uvicorn",
+      "type": "package",
+      "file_path": "/home/hidayat/Documents/Islamic-Knowledge-QA-App/backend/requirements.txt",
+      "file_type": "code",
+      "description": "ASGI server that runs the FastAPI application."
+    },
+    {
+      "id": "backend_requirements_qdrant_client",
+      "label": "Qdrant Client",
+      "type": "package",
+      "file_path": "/home/hidayat/Documents/Islamic-Knowledge-QA-App/backend/requirements.txt",
+      "file_type": "code",
+      "description": "Client library for Qdrant vector database."
+    },
+    {
+      "id": "backend_requirements_llama_index",
+      "label": "LlamaIndex Core",
+      "type": "package",
+      "file_path": "/home/hidayat/Documents/Islamic-Knowledge-QA-App/backend/requirements.txt",
+      "file_type": "code",
+      "description": "Core library for building RAG pipelines."
+    },
+    {
+      "id": "backend_requirements_sentence_transformers",
+      "label": "sentence-transformers",
+      "type": "package",
+      "file_path": "/home/hidayat/Documents/Islamic-Knowledge-QA-App/backend/requirements.txt",
+      "file_type": "code",
+      "description": "Converts text into vector embeddings."
+    },
+    {
+      "id": "backend_requirements_indictrans2_indictranstoolkit",
+      "label": "IndicTransToolkit",
+      "type": "package",
+      "file_path": "/home/hidayat/Documents/Islamic-Knowledge-QA-App/backend/requirements_indictrans2.txt",
+      "file_type": "code",
+      "description": "Toolkit for IndicTrans2 translation models."
+    },
+    {
+      "id": "backend_requirements_stt_faster_whisper",
+      "label": "faster-whisper",
+      "type": "package",
+      "file_path": "/home/hidayat/Documents/Islamic-Knowledge-QA-App/backend/requirements_stt.txt",
+      "file_type": "code",
+      "description": "Accelerated Whisper engine for speech-to-text."
+    },
+    {
+      "id": "backend_namaz_mp3",
+      "label": "namaz.mp3",
+      "type": "file",
+      "file_path": "/home/hidayat/Documents/Islamic-Knowledge-QA-App/backend/namaz.mp3",
+      "file_type": "document",
+      "description": "Audio file for Namaz content."
+    },
+    {
+      "id": "backend_namaz_wav",
+      "label": "namaz.wav",
+      "type": "file",
+      "file_path": "/home/hidayat/Documents/Islamic-Knowledge-QA-App/backend/namaz.wav",
+      "file_type": "document",
+      "description": "Audio file for Namaz content."
+    },
+    {
+      "id": "backend_wazu_mp3",
+      "label": "wazu.mp3",
+      "type": "file",
+      "file_path": "/home/hidayat/Documents/Islamic-Knowledge-QA-App/backend/wazu.mp3",
+      "file_type": "document",
+      "description": "Audio file for Wazu content."
+    },
+    {
+      "id": "backend_wazu_wav",
+      "label": "wazu.wav",
+      "type": "file",
+      "file_path": "/home/hidayat/Documents/Islamic-Knowledge-QA-App/backend/wazu.wav",
+      "file_type": "document",
+      "description": "Audio file for Wazu content."
+    },
+    {
+      "id": "rushd_ul_ilm_system_design_v3_qwen3_4b",
+      "label": "Qwen3:4b",
+      "type": "concept",
+      "file_path": "/home/hidayat/Documents/Islamic-Knowledge-QA-App/Rushd-ul-Ilm_System_Design_v3.pdf",
+      "file_type": "concept",
+      "description": "Local LLM used for generating cited answers.",
+      "rationale": "Selected because it fits the 4GB VRAM limit on the developer's machine."
+    },
+    {
+      "id": "rushd_ul_ilm_system_design_v3_qdrant",
+      "label": "Qdrant",
+      "type": "concept",
+      "file_path": "/home/hidayat/Documents/Islamic-Knowledge-QA-App/Rushd-ul-Ilm_System_Design_v3.pdf",
+      "file_type": "concept",
+      "description": "Vector database used for semantic search."
+    },
+    {
+      "id": "rushd_ul_ilm_system_design_v3_indictrans2",
+      "label": "IndicTrans2",
+      "type": "concept",
+      "file_path": "/home/hidayat/Documents/Islamic-Knowledge-QA-App/Rushd-ul-Ilm_System_Design_v3.pdf",
+      "file_type": "concept",
+      "description": "Translation engine for Telugu/Urdu to English."
+    },
+    {
+      "id": "rushd_ul_ilm_system_design_v3_faster_whisper",
+      "label": "faster-whisper-large-v3-turbo",
+      "type": "concept",
+      "file_path": "/home/hidayat/Documents/Islamic-Knowledge-QA-App/Rushd-ul-Ilm_System_Design_v3.pdf",
+      "file_type": "concept",
+      "description": "Online STT engine for Telugu and Urdu."
+    },
+    {
+      "id": "rushd_ul_ilm_system_design_v3_graphiti",
+      "label": "Graphiti",
+      "type": "concept",
+      "file_path": "/home/hidayat/Documents/Islamic-Knowledge-QA-App/Rushd-ul-Ilm_System_Design_v3.pdf",
+      "file_type": "concept",
+      "description": "Temporal knowledge graph memory for AI agents."
+    },
+    {
+      "id": "rushd_ul_ilm_system_design_v3_mem0",
+      "label": "Mem0",
+      "type": "concept",
+      "file_path": "/home/hidayat/Documents/Islamic-Knowledge-QA-App/Rushd-ul-Ilm_System_Design_v3.pdf",
+      "file_type": "concept",
+      "description": "Cross-session AI agent memory."
+    }
+  ],
+  "edges": [
+    {
+      "source": "repository_mainrepository_mainrepository",
+      "target": "remote_apiservice_apiservice",
+      "type": "calls",
+      "status": "EXTRACTED",
+      "confidence_score": 1.0
+    },
+    {
+      "source": "repository_mainrepository_mainrepository",
+      "target": "repository_answerhistoryrepository_answerhistoryrepository",
+      "type": "calls",
+      "status": "EXTRACTED",
+      "confidence_score": 1.0
+    },
+    {
+      "source": "repository_mainrepository_mainrepository",
+      "target": "model_answermodels_fatwaanswer",
+      "type": "related_to",
+      "status": "EXTRACTED",
+      "confidence_score": 1.0
+    },
+    {
+      "source": "repository_answerhistoryrepository_answerhistoryrepository",
+      "target": "local_savedanswerdao_savedanswerdao",
+      "type": "calls",
+      "status": "EXTRACTED",
+      "confidence_score": 1.0
+    },
+    {
+      "source": "local_rushdulilmdatabase_rushdulilmdatabase",
+      "target": "local_savedanswerdao_savedanswerdao",
+      "type": "related_to",
+      "status": "EXTRACTED",
+      "confidence_score": 1.0
+    },
+    {
+      "source": "local_rushdulilmdatabase_rushdulilmdatabase",
+      "target": "local_savedanswer_savedanswer",
+      "type": "related_to",
+      "status": "EXTRACTED",
+      "confidence_score": 1.0
+    },
+    {
+      "source": "local_rushdulilmdatabase_rushdulilmdatabase",
+      "target": "local_fatwasourceconverter_fatwasourceconverter",
+      "type": "related_to",
+      "status": "EXTRACTED",
+      "confidence_score": 1.0
+    },
+    {
+      "source": "di_databasemodule_databasemodule",
+      "target": "local_rushdulilmdatabase_rushdulilmdatabase",
+      "type": "calls",
+      "status": "EXTRACTED",
+      "confidence_score": 1.0
+    },
+    {
+      "source": "di_databasemodule_databasemodule",
+      "target": "local_savedanswerdao_savedanswerdao",
+      "type": "calls",
+      "status": "EXTRACTED",
+      "confidence_score": 1.0
+    },
+    {
+      "source": "di_networkmodule_networkmodule",
+      "target": "remote_apiservice_apiservice",
+      "type": "calls",
+      "status": "EXTRACTED",
+      "confidence_score": 1.0
+    },
+    {
+      "source": "remote_apiservice_apiservice",
+      "target": "remote_networkmodels_queryrequest",
+      "type": "related_to",
+      "status": "EXTRACTED",
+      "confidence_score": 1.0
+    },
+    {
+      "source": "remote_apiservice_apiservice",
+      "target": "remote_networkmodels_queryresponse",
+      "type": "related_to",
+      "status": "EXTRACTED",
+      "confidence_score": 1.0
+    },
+    {
+      "source": "repository_userpreferencesrepository_userpreferencesrepository",
+      "target": "model_applanguage_applanguage",
+      "type": "related_to",
+      "status": "EXTRACTED",
+      "confidence_score": 1.0
+    },
+    {
+      "source": "local_fatwasourceconverter_fatwasourceconverter",
+      "target": "model_answermodels_fatwasource",
+      "type": "related_to",
+      "status": "EXTRACTED",
+      "confidence_score": 1.0
+    },
+    {
+      "source": "screens_navgraph_rushdulilmnavgraph",
+      "target": "screens_homescreen_homescreen",
+      "type": "calls",
+      "status": "EXTRACTED",
+      "confidence_score": 1.0
+    },
+    {
+      "source": "screens_navgraph_rushdulilmnavgraph",
+      "target": "screens_answerscreen_answerscreen",
+      "type": "calls",
+      "status": "EXTRACTED",
+      "confidence_score": 1.0
+    },
+    {
+      "source": "screens_navgraph_rushdulilmnavgraph",
+      "target": "screens_answershistoryscreen_answershistoryscreen",
+      "type": "calls",
+      "status": "EXTRACTED",
+      "confidence_score": 1.0
+    },
+    {
+      "source": "screens_navgraph_rushdulilmnavgraph",
+      "target": "screens_videolibraryscreen_videolibraryscreen",
+      "type": "calls",
+      "status": "EXTRACTED",
+      "confidence_score": 1.0
+    },
+    {
+      "source": "screens_navgraph_rushdulilmnavgraph",
+      "target": "screens_settingsscreen_settingsscreen",
+      "type": "calls",
+      "status": "EXTRACTED",
+      "confidence_score": 1.0
+    },
+    {
+      "source": "screens_navgraph_rushdulilmnavgraph",
+      "target": "screens_routes_routes",
+      "type": "imports",
+      "status": "EXTRACTED",
+      "confidence_score": 1.0
+    },
+    {
+      "source": "screens_homescreen_homescreen",
+      "target": "components_languageselector_languageselector",
+      "type": "calls",
+      "status": "EXTRACTED",
+      "confidence_score": 1.0
+    },
+    {
+      "source": "screens_homescreen_homescreen",
+      "target": "components_sourceselector_sourceselector",
+      "type": "calls",
+      "status": "EXTRACTED",
+      "confidence_score": 1.0
+    },
+    {
+      "source": "screens_homescreen_homescreen",
+      "target": "components_micbutton_micbutton",
+      "type": "calls",
+      "status": "EXTRACTED",
+      "confidence_score": 1.0
+    },
+    {
+      "source": "screens_homescreen_homescreen",
+      "target": "utils_networkutils_networktier",
+      "type": "imports",
+      "status": "EXTRACTED",
+      "confidence_score": 1.0
+    },
+    {
+      "source": "screens_answerscreen_answerscreen",
+      "target": "viewmodel_answerviewmodel_answerviewmodel",
+      "type": "imports",
+      "status": "EXTRACTED",
+      "confidence_score": 1.0
+    },
+    {
+      "source": "screens_answerscreen_answerscreen",
+      "target": "screens_answerscreen_answervideocard",
+      "type": "calls",
+      "status": "EXTRACTED",
+      "confidence_score": 1.0
+    },
+    {
+      "source": "screens_answershistoryscreen_answershistoryscreen",
+      "target": "screens_answershistoryscreen_savedanswercard",
+      "type": "calls",
+      "status": "EXTRACTED",
+      "confidence_score": 1.0
+    },
+    {
+      "source": "screens_settingsscreen_settingsscreen",
+      "target": "screens_settingsscreen_settingssectiontitle",
+      "type": "calls",
+      "status": "EXTRACTED",
+      "confidence_score": 1.0
+    },
+    {
+      "source": "screens_settingsscreen_settingsscreen",
+      "target": "screens_settingsscreen_settingsradiobutton",
+      "type": "calls",
+      "status": "EXTRACTED",
+      "confidence_score": 1.0
+    },
+    {
+      "source": "screens_settingsscreen_settingsscreen",
+      "target": "screens_settingsscreen_settingsswitch",
+      "type": "calls",
+      "status": "EXTRACTED",
+      "confidence_score": 1.0
+    },
+    {
+      "source": "screens_settingsscreen_settingsscreen",
+      "target": "screens_settingsscreen_downloaditem",
+      "type": "calls",
+      "status": "EXTRACTED",
+      "confidence_score": 1.0
+    },
+    {
+      "source": "screens_videolibraryscreen_videolibraryscreen",
+      "target": "components_videocard_videocard",
+      "type": "calls",
+      "status": "EXTRACTED",
+      "confidence_score": 1.0
+    },
+    {
+      "source": "viewmodel_answerviewmodel_answerviewmodel",
+      "target": "utils_networkutils_detectnetworktier",
+      "type": "calls",
+      "status": "EXTRACTED",
+      "confidence_score": 1.0
+    },
+    {
+      "source": "viewmodel_answerviewmodel_answerviewmodel",
+      "target": "utils_networkutils_networktier",
+      "type": "imports",
+      "status": "EXTRACTED",
+      "confidence_score": 1.0
+    },
+    {
+      "source": "utils_networkutils_detectnetworktier",
+      "target": "utils_networkutils_pingserver",
+      "type": "calls",
+      "status": "EXTRACTED",
+      "confidence_score": 1.0
+    },
+    {
+      "source": "theme_theme_rushdulilmtheme",
+      "target": "theme_color_islamicgreen",
+      "type": "imports",
+      "status": "EXTRACTED",
+      "confidence_score": 1.0
+    },
+    {
+      "source": "theme_theme_rushdulilmtheme",
+      "target": "theme_color_quranicblue",
+      "type": "imports",
+      "status": "EXTRACTED",
+      "confidence_score": 1.0
+    },
+    {
+      "source": "theme_theme_rushdulilmtheme",
+      "target": "theme_color_textprimary",
+      "type": "imports",
+      "status": "EXTRACTED",
+      "confidence_score": 1.0
+    },
+    {
+      "source": "theme_theme_rushdulilmtheme",
+      "target": "theme_color_backgroundcream",
+      "type": "imports",
+      "status": "EXTRACTED",
+      "confidence_score": 1.0
+    },
+    {
+      "source": "theme_theme_rushdulilmtheme",
+      "target": "theme_color_errorred",
+      "type": "imports",
+      "status": "EXTRACTED",
+      "confidence_score": 1.0
+    },
+    {
+      "source": "theme_theme_rushdulilmtheme",
+      "target": "theme_type_typography",
+      "type": "imports",
+      "status": "EXTRACTED",
+      "confidence_score": 1.0
+    },
+    {
+      "source": "components_micbutton_micbutton",
+      "target": "theme_theme_rushdulilmtheme",
+      "type": "calls",
+      "status": "EXTRACTED",
+      "confidence_score": 1.0
+    },
+    {
+      "source": "components_sourceselector_sourceselector",
+      "target": "theme_theme_rushdulilmtheme",
+      "type": "calls",
+      "status": "EXTRACTED",
+      "confidence_score": 1.0
+    },
+    {
+      "source": "backend_fastapi_server",
+      "target": "backend_rag_pipeline_ragpipeline",
+      "type": "imports",
+      "status": "EXTRACTED",
+      "confidence_score": 1.0
+    },
+    {
+      "source": "backend_fastapi_server",
+      "target": "backend_translation_service",
+      "type": "calls",
+      "status": "INFERRED",
+      "confidence_score": 0.85
+    },
+    {
+      "source": "backend_rag_pipeline_ragpipeline",
+      "target": "backend_rag_pipeline_multicollectionretriever",
+      "type": "calls",
+      "status": "EXTRACTED",
+      "confidence_score": 1.0
+    },
+    {
+      "source": "backend_ingest_deoband",
+      "target": "backend_ingest_islamqa",
+      "type": "semantically_similar_to",
+      "status": "INFERRED",
+      "confidence_score": 0.95
+    },
+    {
+      "source": "backend_ingest_islamqa",
+      "target": "backend_qdrant_test_query",
+      "type": "semantically_similar_to",
+      "status": "INFERRED",
+      "confidence_score": 0.95
+    },
+    {
+      "source": "backend_fastapi_service",
+      "target": "backend_qdrant_service",
+      "type": "related_to",
+      "status": "INFERRED",
+      "confidence_score": 0.95
+    },
+    {
+      "source": "backend_fastapi_service",
+      "target": "backend_indictrans2_service",
+      "type": "related_to",
+      "status": "INFERRED",
+      "confidence_score": 0.95
+    },
+    {
+      "source": "backend_fastapi_service",
+      "target": "backend_tts_service",
+      "type": "related_to",
+      "status": "INFERRED",
+      "confidence_score": 0.95
+    },
+    {
+      "source": "backend_fastapi_service",
+      "target": "backend_stt_service",
+      "type": "related_to",
+      "status": "INFERRED",
+      "confidence_score": 0.95
+    },
+    {
+      "source": "report_documentation_docker",
+      "target": "backend_fastapi_service",
+      "type": "discusses",
+      "status": "EXTRACTED",
+      "confidence_score": 1.0
+    },
+    {
+      "source": "report_documentation_docker",
+      "target": "backend_qdrant_service",
+      "type": "discusses",
+      "status": "EXTRACTED",
+      "confidence_score": 1.0
+    },
+    {
+      "source": "report_documentation_docker",
+      "target": "backend_indictrans2_service",
+      "type": "discusses",
+      "status": "EXTRACTED",
+      "confidence_score": 1.0
+    },
+    {
+      "source": "report_documentation_ingestion",
+      "target": "backend_qdrant_service",
+      "type": "discusses",
+      "status": "EXTRACTED",
+      "confidence_score": 1.0
+    },
+    {
+      "source": "report_documentation_translation",
+      "target": "backend_indictrans2_service",
+      "type": "discusses",
+      "status": "EXTRACTED",
+      "confidence_score": 1.0
+    },
+    {
+      "source": "agent_rules_architecture",
+      "target": "report_documentation_overview",
+      "type": "semantically_similar_to",
+      "status": "INFERRED",
+      "confidence_score": 0.95
+    },
+    {
+      "source": "backend_requirements_fastapi",
+      "target": "backend_requirements_uvicorn",
+      "type": "related_to",
+      "status": "INFERRED",
+      "confidence_score": 0.85
+    },
+    {
+      "source": "backend_requirements_llama_index",
+      "target": "rushd_ul_ilm_system_design_v3_qwen3_4b",
+      "type": "semantically_similar_to",
+      "status": "INFERRED",
+      "confidence_score": 0.85
+    },
+    {
+      "source": "backend_requirements_qdrant_client",
+      "target": "rushd_ul_ilm_system_design_v3_qdrant",
+      "type": "semantically_similar_to",
+      "status": "INFERRED",
+      "confidence_score": 0.95
+    },
+    {
+      "source": "backend_requirements_indictrans2_indictranstoolkit",
+      "target": "rushd_ul_ilm_system_design_v3_indictrans2",
+      "type": "semantically_similar_to",
+      "status": "INFERRED",
+      "confidence_score": 0.95
+    },
+    {
+      "source": "backend_requirements_stt_faster_whisper",
+      "target": "rushd_ul_ilm_system_design_v3_faster_whisper",
+      "type": "semantically_similar_to",
+      "status": "INFERRED",
+      "confidence_score": 0.95
+    }
+  ],
+  "hyperedges": [
+    {
+      "id": "room_database_system",
+      "nodes": [
+        "local_rushdulilmdatabase_rushdulilmdatabase",
+        "local_savedanswerdao_savedanswerdao",
+        "local_savedanswer_savedanswer",
+        "local_fatwasourceconverter_fatwasourceconverter"
+      ],
+      "type": "core_concept",
+      "status": "INFERRED",
+      "confidence_score": 0.85,
+      "description": "All components that make up the local Room database offline storage system"
+    },
+    {
+      "id": "network_communication_layer",
+      "nodes": [
+        "remote_apiservice_apiservice",
+        "remote_networkmodels_queryrequest",
+        "remote_networkmodels_queryresponse",
+        "di_networkmodule_networkmodule"
+      ],
+      "type": "core_concept",
+      "status": "INFERRED",
+      "confidence_score": 0.85,
+      "description": "Network module and data models comprising the remote API communication layer"
+    },
+    {
+      "id": "android_viewmodels",
+      "nodes": [
+        "viewmodel_answershistoryviewmodel",
+        "viewmodel_homeviewmodel",
+        "viewmodel_settingsviewmodel",
+        "viewmodel_videolibraryviewmodel"
+      ],
+      "type": "android_viewmodels",
+      "status": "INFERRED",
+      "confidence_score": 0.85,
+      "description": "All Android MVVM ViewModels managing app UI state."
+    },
+    {
+      "id": "backend_fastapi_services",
+      "nodes": [
+        "backend_fastapi_server",
+        "backend_stt_service",
+        "backend_translation_service",
+        "backend_tts_service"
+      ],
+      "type": "fastapi_services",
+      "status": "INFERRED",
+      "confidence_score": 0.85,
+      "description": "All FastAPI backend services in the Python server layer."
+    },
+    {
+      "id": "backend_model_downloaders",
+      "nodes": [
+        "backend_download_indictrans2",
+        "backend_download_model",
+        "backend_download_qwen3_embed",
+        "backend_download_tts"
+      ],
+      "type": "model_downloaders",
+      "status": "INFERRED",
+      "confidence_score": 0.85,
+      "description": "Scripts used to download AI models locally."
+    },
+    {
+      "id": "docker_compose_services",
+      "nodes": [
+        "backend_fastapi_service",
+        "backend_qdrant_service",
+        "backend_indictrans2_service",
+        "backend_tts_service",
+        "backend_stt_service"
+      ],
+      "type": "core_concept",
+      "status": "INFERRED",
+      "confidence_score": 0.95,
+      "description": "All AI and backend services orchestrated by Docker Compose."
+    }
+  ],
+  "input_tokens": 0,
+  "output_tokens": 0
+}

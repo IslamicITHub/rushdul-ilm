@@ -1,0 +1,9 @@
+
+--- Starting Instant Local Test ---
+✅ Found 'namaz.mp3'. Simulating upload to /transcribe endpoint...
+Loading faster-whisper model: ./local_models/faster-whisper-large-v3-turbo-ct2 in INT8 mode on demand...
+Transcription complete in 3.27s:  نماز پڑھلے کا طریقہ کیا ہے
+HTTP Status Code: 200
+
+--- Transcription Results ---
+{'transcription': 'نماز پڑھلے کا طریقہ کیا ہے', 'language': 'ur', 'language_probability': 1, 'processing_time': 3.2705299854278564}

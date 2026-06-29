@@ -30,8 +30,7 @@ from parler_tts import ParlerTTSForConditionalGeneration
 from transformers import AutoTokenizer
 # ^ 'AutoTokenizer' breaks down whole sentences into smaller pieces (tokens) that the AI can understand
 
-app = FastAPI(title="Rushd-ul-Ilm TTS Service")
-# ^ We create our web server application and give it a title
+from contextlib import asynccontextmanager
 
 device = "cuda" if torch.cuda.is_available() else "cpu"
 # ^ We check if an Nvidia GPU is available ('cuda'). If not, we fall back to using the 'cpu'
@@ -39,27 +38,29 @@ device = "cuda" if torch.cuda.is_available() else "cpu"
 model_id = "/app/local_models/indic-parler-tts"
 # ^ The exact folder path inside our Docker container where the downloaded AI brain is stored
 
-print(f"Loading TTS model from {model_id} into CPU memory (for on-demand GPU offloading)...")
-# ^ We print a message so the developer knows the server is starting up
+model = None
+tokenizer = None
 
-try:
-# ^ We use a 'try' block so that if the AI brain fails to load, the server doesn't just crash instantly
-    model = ParlerTTSForConditionalGeneration.from_pretrained(model_id, torch_dtype=torch.float16).to("cpu")
-    # ^ We load the massive AI brain into RAM (CPU memory). We use 'float16' to shrink it so it fits in 4GB.
-    
-    tokenizer = AutoTokenizer.from_pretrained(model_id)
-    # ^ We load the tokenizer (the AI's dictionary) into memory
-    
-    print("Model loaded successfully.")
-    # ^ We print success if the massive model was loaded without running out of RAM
-except Exception as e:
-# ^ If anything goes wrong (like missing files or Out of Memory)
-    print(f"Failed to load model: {e}")
-    # ^ We print the exact error
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+# ^ This lifespan function loads the AI brain into memory only when the web server actually starts up
+    global model, tokenizer
+    print(f"Loading TTS model from {model_id} into CPU memory (for on-demand GPU offloading)...")
+    try:
+        model = ParlerTTSForConditionalGeneration.from_pretrained(model_id, torch_dtype=torch.float16, low_cpu_mem_usage=True).to("cpu")
+        tokenizer = AutoTokenizer.from_pretrained(model_id)
+        print("Model loaded successfully.")
+    except Exception as e:
+        print(f"Failed to load model: {e}")
+        model = None
+        tokenizer = None
+    yield
+    # ^ The server handles requests while paused here. When shutting down, it resumes and clears memory.
     model = None
-    # ^ We set model to nothing
     tokenizer = None
-    # ^ We set tokenizer to nothing
+
+app = FastAPI(title="Rushd-ul-Ilm TTS Service", lifespan=lifespan)
+# ^ We create our web server application, give it a title, and attach our memory-loading lifespan
 
 class TTSRequest(BaseModel):
 # ^ This defines the shape of the data the Android app will send us

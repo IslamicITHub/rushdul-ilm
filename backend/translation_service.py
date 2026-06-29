@@ -138,6 +138,8 @@ async def translate(request: TranslationRequest):
         # ^ Tell the toolkit what language it will become
     )
     # ^ Save the cleaned text into a 'batch'
+    # This line was added for debugging purposes
+    print(f"[DEBUG] The contents of the batch variable that holds the cleared text is : \n{batch}")
     
     if device == "cuda":
     # ^ Right before the heavy lifting starts...
@@ -158,6 +160,7 @@ async def translate(request: TranslationRequest):
         # ^ Tell the AI which parts of the grid are real words and which are blank padding
     ).to(device)
     # ^ Move these math numbers directly into the Graphics Card
+    print(f"[DEBUG] The contents of the batch variable that holds the cleared text is : \n{batch}")
     
     with torch.no_grad():
     # ^ Tell PyTorch NOT to track math gradients (saves a massive amount of memory since we aren't training)
@@ -165,16 +168,16 @@ async def translate(request: TranslationRequest):
         # ^ Force the AI to think and generate the translated numbers
             **inputs, 
             # ^ Pass in our prepared numbers
-            max_length=256,
+            #max_length=256,
             # ^ Don't generate more than 256 words
             use_cache=True,
             # ^ Speed up the process by remembering past thoughts
             min_length=0,
             # ^ Don't force it to keep talking if it's done
-            num_beams=5,
-            # ^ Make the AI explore 5 different possible translations simultaneously to find the best sounding one
+            num_beams=1,
+            # ^ Make the AI explore 2 different possible translations simultaneously (Reduced from 5 to save VRAM)
             num_return_sequences=1,
-            # ^ Only return the absolute best 1 translation out of the 5
+            # ^ Only return the absolute best 1 translation out of the 2
         )
         # ^ Save the generated numbers into 'outputs'
         
@@ -208,7 +211,7 @@ async def translate(request: TranslationRequest):
     # ^ Run the text through the Indian toolkit one last time to polish the grammar
     translated_text = translations[0]
     # ^ Grab the first (and only) translation from the list
-    
+    print(f"[DEBUG] The contents of the batch variable that holds the cleared text is : \n{batch}")
     return {"translation": translated_text}
     # ^ Send the final translated text back to whoever asked for it
 
