@@ -1,4 +1,4 @@
-<![CDATA[# Security Policy
+# Security Policy
 
 ## Supported Versions
 
@@ -41,4 +41,4 @@ This project is built with a **privacy-first** design:
 - The app uses `network_security_config.xml` to control HTTP traffic permissions
 - Production deployments should use HTTPS for all server communication
 - The development configuration allows cleartext HTTP only for `10.0.2.2` (Android emulator host)
-]]>
+

@@ -1,4 +1,4 @@
-<![CDATA[# 🤝 Contributing to Rushd-ul-Ilm
+# 🤝 Contributing to Rushd-ul-Ilm
 
 > **بِسْمِ اللَّهِ الرَّحْمَنِ الرَّحِيم** — *In the name of Allah, the Most Gracious, the Most Merciful*
 
@@ -315,4 +315,4 @@ Every contribution to Rushd-ul-Ilm helps bridge the digital divide for Muslims w
 ---
 
 > **Navigation**: [← README](README.md) | [Architecture →](docs/ARCHITECTURE.md) | [Development Status →](docs/DEVELOPMENT_STATUS.md)
-]]>
+

@@ -1,4 +1,4 @@
-<![CDATA[# 🏗️ System Architecture — Rushd-ul-Ilm
+# 🏗️ System Architecture — Rushd-ul-Ilm
 
 > Detailed technical architecture documentation for developers and contributors.
 
@@ -407,4 +407,4 @@ The app uses `ConnectivityManager.NetworkCallback` + `callbackFlow` for real-tim
 ---
 
 > **Next**: See [DEVELOPMENT_STATUS.md](DEVELOPMENT_STATUS.md) for current build progress and known issues.
-]]>
+

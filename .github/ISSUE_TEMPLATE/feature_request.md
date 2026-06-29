@@ -1,4 +1,4 @@
-<![CDATA[---
+---
 name: ✨ Feature Request
 about: Suggest a new feature or improvement
 title: '[Feature] '
@@ -37,4 +37,4 @@ If applicable, add sketches or mockups of the proposed feature.
 
 ## 💡 Additional Context
 Add any other context, references, or examples here.
-]]>
+

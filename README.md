@@ -1,4 +1,4 @@
-<![CDATA[<div align="center">
+<div align="center">
 
 # رشد العلم — Rushd-ul-Ilm
 
@@ -602,4 +602,4 @@ You are free to use, modify, and distribute this software, but any derivative wo
 **[⭐ Star this repo](https://github.com/IslamicITHub/rushdul-ilm) if you find this project beneficial!**
 
 </div>
-]]>
+
