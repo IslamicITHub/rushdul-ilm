@@ -1,1 +1,3 @@
-{"nodes": [{"id": "home_hidayat_documents_islamic_knowledge_qa_app_android_app_app_src_main_cpp_whisper_cpp_bindings_java_src_main_java_io_github_ggerganov_whispercpp_ggml_ggmltype_java", "label": "GgmlType.java", "file_type": "code", "source_file": "android-app/app/src/main/cpp/whisper.cpp/bindings/java/src/main/java/io/github/ggerganov/whispercpp/ggml/GgmlType.java", "source_location": "L1"}], "edges": [], "raw_calls": []}
+version https://git-lfs.github.com/spec/v1
+oid sha256:d3bf954e17aae820dc81fcc0158a2b5b30343e481f7e579f44c70b5db74427cd
+size 428

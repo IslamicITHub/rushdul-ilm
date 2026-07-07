@@ -1,14 +1,3 @@
-{
-	"backtraceGraph" : 
-	{
-		"commands" : [],
-		"files" : [],
-		"nodes" : []
-	},
-	"installers" : [],
-	"paths" : 
-	{
-		"build" : "whisper.cpp/src",
-		"source" : "whisper.cpp/src"
-	}
-}
+version https://git-lfs.github.com/spec/v1
+oid sha256:8c3096ba66e868dd462c479fc50a8be95f879ce0ec584c0f0b45a850be1f9f87
+size 182

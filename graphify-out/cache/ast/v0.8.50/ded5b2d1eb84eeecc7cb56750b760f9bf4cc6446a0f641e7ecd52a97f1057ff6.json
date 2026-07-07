@@ -1,1 +1,3 @@
-{"nodes": [{"id": "home_hidayat_documents_islamic_knowledge_qa_app_android_app_app_src_main_cpp_whisper_cpp_ggml_src_ggml_sycl_presets_hpp", "label": "presets.hpp", "file_type": "code", "source_file": "android-app/app/src/main/cpp/whisper.cpp/ggml/src/ggml-sycl/presets.hpp", "source_location": "L1"}], "edges": [], "raw_calls": []}
+version https://git-lfs.github.com/spec/v1
+oid sha256:efcf1dca947ad9a01821a49b02cddb18aeb96800f41cb2cb586594633fc714b6
+size 332

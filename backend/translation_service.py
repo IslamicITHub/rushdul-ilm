@@ -59,7 +59,7 @@ def load_model(direction: str):
     # ^ Load the actual translation AI brain
         model_name,
         # ^ Pass the folder path
-        torch_dtype=torch.float16,
+        torch_dtype=torch.float32,
         # ^ Shrink the brain's numbers to float16 so it takes up half the space (fitting in 4GB VRAM)
         trust_remote_code=True
         # ^ Allow custom code from the AI creators to run
@@ -139,7 +139,7 @@ async def translate(request: TranslationRequest):
     )
     # ^ Save the cleaned text into a 'batch'
     # This line was added for debugging purposes
-    print(f"[DEBUG] The contents of the batch variable that holds the cleared text is : \n{batch}")
+    #print(f"[DEBUG] The contents of the batch variable that holds the cleared text is : \n{batch}")
     
     if device == "cuda":
     # ^ Right before the heavy lifting starts...
@@ -160,7 +160,7 @@ async def translate(request: TranslationRequest):
         # ^ Tell the AI which parts of the grid are real words and which are blank padding
     ).to(device)
     # ^ Move these math numbers directly into the Graphics Card
-    print(f"[DEBUG] The contents of the batch variable that holds the cleared text is : \n{batch}")
+    #print(f"[DEBUG] The contents of the batch variable that holds the cleared text is : \n{batch}")
     
     with torch.no_grad():
     # ^ Tell PyTorch NOT to track math gradients (saves a massive amount of memory since we aren't training)

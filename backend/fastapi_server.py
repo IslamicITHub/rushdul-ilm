@@ -48,16 +48,13 @@ app = FastAPI(
 # 🏛️ ANALOGY: QueryRequest is like a custom mail envelope with printed fields for "Question", "Chat History", and "Sources".
 #    If the sender leaves the question empty or uses the wrong format, the post office rejects the envelope immediately.
 class QueryRequest(BaseModel):
-# ^ Declares QueryRequest class inheriting from Pydantic's BaseModel
     question: str
-    # ^ The user's question text string (transcribed from audio or typed)
     chat_history: list = []
-    # ^ An optional list of dictionaries representing previous chat turns for contextual Q&A
     sources: list = ["islamqa", "deoband"]
-    # ^ Filter list containing approved Islamic source domains, defaulting to all
     language: str = "en"
-    # ^ The user's language selection tag (e.g. "te" for Telugu), defaults to English
-# ^ Ends QueryRequest class declaration
+    enable_routing: bool = True
+    enable_multi_query: bool = True
+    enable_reranking: bool = True
 
 TRANSLATION_API_URL = "http://localhost:8001/translate"
 # ^ The network address mapping connections to our local IndicTrans2 translation endpoint
@@ -153,7 +150,14 @@ def ask_question(request: QueryRequest):
         # ^ Prints debug comparison logs
         
         # Query the RAG pipeline using translated English question
-        result = rag.ask(english_question, chat_history=request.chat_history, sources=sources)
+        result = rag.ask(
+            english_question, 
+            chat_history=request.chat_history, 
+            sources=sources,
+            enable_routing=request.enable_routing,
+            enable_multi_query=request.enable_multi_query,
+            enable_reranking=request.enable_reranking
+        )
         # ^ Queries LlamaIndex database mapping using English search query
         
         # 🏛️ Translate English generated answer back to user's preferred language

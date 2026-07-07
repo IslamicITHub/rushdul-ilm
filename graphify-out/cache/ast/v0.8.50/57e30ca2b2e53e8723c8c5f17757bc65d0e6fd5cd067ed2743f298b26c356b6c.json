@@ -1,1 +1,3 @@
-{"nodes": [{"id": "home_hidayat_documents_islamic_knowledge_qa_app_android_app_app_src_main_cpp_whisper_cpp_bindings_java_build_gradle", "label": "build.gradle", "file_type": "code", "source_file": "android-app/app/src/main/cpp/whisper.cpp/bindings/java/build.gradle", "source_location": "L1"}], "edges": [], "raw_calls": []}
+version https://git-lfs.github.com/spec/v1
+oid sha256:da88580587314aca9307dfdaaf4fb07338fde6151fd6573163845f7dadc5b1b1
+size 325

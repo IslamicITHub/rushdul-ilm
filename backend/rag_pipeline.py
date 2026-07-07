@@ -84,7 +84,7 @@ class CombineQAPostprocessor(BaseNodePostprocessor):
 #    gather the top books from all searches, sort them by relevance, and hand back the best collection.
 class MultiCollectionRetriever(BaseRetriever):
 # ^ Declares class MultiCollectionRetriever inheriting from LlamaIndex's BaseRetriever
-    def __init__(self, client: QdrantClient, collections: List[str], embed_model, similarity_top_k: int = 10):
+    def __init__(self, client: QdrantClient, collections: List[str], embed_model, similarity_top_k: int = 10, search_queries: List[str] = None, enable_reranking: bool = False):
     # ^ Constructor initializing client, collections list, embedding model, and search result limits
         self.client = client
         # ^ Binds the active Qdrant client connection driver instance to self
@@ -94,35 +94,80 @@ class MultiCollectionRetriever(BaseRetriever):
         # ^ Binds the active embedding translator model instance to self
         self.similarity_top_k = similarity_top_k
         # ^ Binds default search return size count parameter to self
+        self.search_queries = search_queries
+        # ^ Binds multi-query search strings
+        self.enable_reranking = enable_reranking
+        # ^ Flag to enable CrossEncoder reranking
+        
+        # Initialize CrossEncoder if reranking is enabled
+        self.reranker = None
+        if self.enable_reranking:
+            try:
+                from sentence_transformers import CrossEncoder
+                print("[*] Loading CrossEncoder for Reranking...")
+                self.reranker = CrossEncoder("cross-encoder/ms-marco-TinyBERT-L-2-v2", max_length=512)
+            except Exception as e:
+                print(f"[!] Failed to load CrossEncoder: {e}")
+                self.enable_reranking = False
+
         super().__init__()
         # ^ Triggers base retriever constructor to initialize internals properly
 # ^ Ends constructor block
 
     def _retrieve(self, query_bundle, **kwargs) -> List[NodeWithScore]:
     # ^ Internal abstract method implementation executing search operations and returning list of NodeWithScore
-        query_vector = self.embed_model.get_query_embedding(query_bundle.query_str)
-        # ^ Translates user question string into a mathematical coordinate vector array using embedding model
-        all_points = []
-        # ^ Initializes an empty list to gather search points across collections
-        for coll in self.collections:
-        # ^ Loops through every collection name in the list
-            search_res = self.client.query_points(
-            # ^ Calls Qdrant client to execute vector query search
-                collection_name=coll, 
-                # ^ Specifies target collection name
-                query=query_vector, 
-                # ^ Supplies user question coordinate vector array
-                limit=self.similarity_top_k
-                # ^ Restricts search result size to top k limit
-            )
-            # ^ Ends query_points call
-            all_points.extend(search_res.points)
-            # ^ Appends search points results to aggregate list
+        # Fallback to the original query_bundle string if no custom queries provided
+        queries_to_run = self.search_queries if self.search_queries else [query_bundle.query_str]
         
-        all_points.sort(key=lambda x: x.score, reverse=True)
-        # ^ Sorts all gathered points by search relevance score in descending order
-        all_points = all_points[:self.similarity_top_k]
-        # ^ Slices list to retain top k highest scoring results overall
+        all_points_dict = {}
+        # ^ Initializes a dict to gather unique search points across collections
+        
+        for q_str in queries_to_run:
+            query_vector = self.embed_model.get_query_embedding(q_str)
+            # ^ Translates search string into vector array
+            
+            for coll in self.collections:
+            # ^ Loops through every collection name in the list
+                search_res = self.client.query_points(
+                # ^ Calls Qdrant client to execute vector query search
+                    collection_name=coll, 
+                    query=query_vector, 
+                    limit=self.similarity_top_k * 2 if self.enable_reranking else self.similarity_top_k
+                    # ^ Fetch more results initially if we plan to rerank them down
+                )
+                
+                for p in search_res.points:
+                    all_points_dict[p.id] = p
+                    # ^ Deduplicates points using point ID as key
+        
+        all_points = list(all_points_dict.values())
+        
+        if self.enable_reranking and self.reranker and all_points:
+            # Prepare pairs of (query, document) for the CrossEncoder
+            pairs = []
+            for p in all_points:
+                doc_text = p.payload.get("answer", p.payload.get("text", ""))
+                pairs.append((query_bundle.query_str, doc_text))
+            
+            # Predict similarity scores using CrossEncoder
+            scores = self.reranker.predict(pairs)
+            
+            # Update the points with their new cross-encoder scores
+            for i, p in enumerate(all_points):
+                p.score = float(scores[i])
+            
+            # Sort by new scores and slice to top-k
+            all_points.sort(key=lambda x: x.score, reverse=True)
+            all_points = all_points[:self.similarity_top_k]
+            
+            # (Optional Threshold Bouncer Strategy)
+            # Filter out results that are terribly irrelevant (score < 0)
+            all_points = [p for p in all_points if p.score > 0.0]
+        else:
+            # Standard vector similarity sorting
+            all_points.sort(key=lambda x: x.score, reverse=True)
+            all_points = all_points[:self.similarity_top_k]
+
         
         nodes = []
         # ^ Initializes empty list to collect compiled NodeWithScore objects
@@ -221,37 +266,71 @@ class RagPipeline:
         # ^ Assigns our embedding model globally to LlamaIndex pipelines
 # ^ Ends constructor block
 
-    def _generate_search_query(self, user_question: str) -> str:
+    def _generate_search_query(self, user_question: str, enable_multi_query: bool = False) -> List[str]:
     # ^ Internal method to analyze and expand user questions before database searches
-        prompt = (
-        # ^ Prompts prompt string block containing instructions for LLM query expansion
-            f"User Question: '{user_question}'\n\n"
-            # ^ Inserts raw user question text inside prompt string context
-            "Task: Rewrite this into a descriptive search query for a Vector Database of Islamic Fatwas.\n"
-            "Instructions:\n"
-            "1. If the question is just a broad topic (e.g., 'Prayer', 'Salah', 'Fasting', 'Bank Interest'), rewrite it as: "
-            "'Specific rulings, conditions, and scenarios regarding [Topic] to identify user intent.'\n"
-            "2. If it's a specific question, expand it with synonyms (e.g., 'Wudu' -> 'Ablution, Taharah, washing before prayer').\n"
-            "3. Return ONLY the rewritten query text."
-        )
-        # ^ Ends prompt block configuration
-        response = Settings.llm.complete(prompt)
-        # ^ Executes completions query call using active LLM configurations
-        return str(response).strip()
-        # ^ Returns stripped string representation of LLM query response
+        if enable_multi_query:
+            prompt = (
+                f"User Question: '{user_question}'\n\n"
+                "Task: Generate 3 distinct search queries to look up in an Islamic Fatwa Vector Database.\n"
+                "Instructions:\n"
+                "1. First query capturing the direct intent.\n"
+                "2. Second query using synonyms or Arabic Fiqh terms (e.g. Salah, Wudu).\n"
+                "3. Third query focusing on broader prerequisites or scenarios.\n"
+                "Return ONLY the 3 queries on separate lines, with no numbering, bullets, or extra text."
+            )
+            response = str(Settings.llm.complete(prompt)).strip().split('\n')
+            queries = [q.strip("- 1234567890.*") for q in response if q.strip()]
+            return queries[:3] if queries else [user_question]
+        else:
+            prompt = (
+            # ^ Prompts prompt string block containing instructions for LLM query expansion
+                f"User Question: '{user_question}'\n\n"
+                # ^ Inserts raw user question text inside prompt string context
+                "Task: Rewrite this into a descriptive search query for a Vector Database of Islamic Fatwas.\n"
+                "Instructions:\n"
+                "1. If the question is just a broad topic (e.g., 'Prayer', 'Salah', 'Fasting', 'Bank Interest'), rewrite it as: "
+                "'Specific rulings, conditions, and scenarios regarding [Topic] to identify user intent.'\n"
+                "2. If it's a specific question, expand it with synonyms (e.g., 'Wudu' -> 'Ablution, Taharah, washing before prayer').\n"
+                "3. Return ONLY the rewritten query text."
+            )
+            # ^ Ends prompt block configuration
+            response = Settings.llm.complete(prompt)
+            # ^ Executes completions query call using active LLM configurations
+            return [str(response).strip()]
+            # ^ Returns stripped string representation of LLM query response
 # ^ Ends _generate_search_query function
 
-    def ask(self, user_question: str, chat_history: list = None, sources: list = None):
+    def ask(self, user_question: str, chat_history: list = None, sources: list = None, enable_routing=True, enable_multi_query=True, enable_reranking=True):
     # ^ Main interface method routing queries, retrieving context, and running Q&A operations
+    
+        if enable_routing:
+            # The Routing (Receptionist) approach
+            route_prompt = (
+                f"User Question: '{user_question}'\n\n"
+                "Task: Determine if this question is related to Islam, Islamic Fiqh, Quran, Hadith, or general Islamic knowledge.\n"
+                "If it is related, output 'YES'. If it is completely unrelated to Islam (e.g., coding, secular politics, math), output 'NO'.\n"
+                "Output ONLY 'YES' or 'NO'."
+            )
+            route_response = str(Settings.llm.complete(route_prompt)).strip().upper()
+            if "NO" in route_response:
+                return {
+                    "answer": "I am a dedicated Islamic Knowledge AI assistant. Your question does not appear to be related to Islam or Islamic Fiqh, so I cannot answer it.",
+                    "question": user_question,
+                    "expanded_search_query": "N/A (Rejected by Semantic Router)",
+                    "sources": [],
+                    "is_clarification": False,
+                    "error": None
+                }
+    
         if not sources:
         # ^ Conditional check checking if source filters list is empty
             sources = ["islamqa","deoband"]
             # ^ Defaults filters to search both approved databases if none requested
 
-        search_query = self._generate_search_query(user_question)
-        # ^ Expands user question into searchable query using internal generator helper
-        print(f"[*] Expanded Search Query for Qdrant: {search_query}")
-        # ^ Prints expanded query string to terminal console log
+        search_queries = self._generate_search_query(user_question, enable_multi_query=enable_multi_query)
+        # ^ Expands user question into a list of searchable queries using internal generator helper
+        print(f"[*] Expanded Search Queries for Qdrant: {search_queries}")
+        # ^ Prints expanded query strings to terminal console log
 
         retriever = MultiCollectionRetriever(
         # ^ Instantiates custom multi-collection retriever helper class
@@ -261,8 +340,10 @@ class RagPipeline:
             # ^ Supplies the target sources filters list
             embed_model=self.embed_model,
             # ^ Supplies the active embedding model instance
-            similarity_top_k=20
+            similarity_top_k=20,
             # ^ Configures search result window size to top 20 vectors
+            search_queries=search_queries,
+            enable_reranking=enable_reranking
         )
         # ^ Ends retriever configuration
         
@@ -343,7 +424,7 @@ class RagPipeline:
             # ^ Raw answer response text string generated by LLM
             "question": user_question,
             # ^ Original question text string submitted by user
-            "expanded_search_query": search_query,
+            "expanded_search_query": " | ".join(search_queries),
             # ^ The expanded query string used for database matching
             "sources": source_urls,
             # ^ List containing reference source URLs

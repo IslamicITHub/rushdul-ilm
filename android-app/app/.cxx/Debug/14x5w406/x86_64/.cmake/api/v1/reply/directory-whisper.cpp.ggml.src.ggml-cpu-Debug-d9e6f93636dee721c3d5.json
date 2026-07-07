@@ -1,14 +1,3 @@
-{
-	"backtraceGraph" : 
-	{
-		"commands" : [],
-		"files" : [],
-		"nodes" : []
-	},
-	"installers" : [],
-	"paths" : 
-	{
-		"build" : "whisper.cpp/ggml/src/ggml-cpu",
-		"source" : "whisper.cpp/ggml/src/ggml-cpu"
-	}
-}
+version https://git-lfs.github.com/spec/v1
+oid sha256:d865bb677532eba338f0883535cb079279cc4c79b075aee01b13a5c31432469d
+size 210

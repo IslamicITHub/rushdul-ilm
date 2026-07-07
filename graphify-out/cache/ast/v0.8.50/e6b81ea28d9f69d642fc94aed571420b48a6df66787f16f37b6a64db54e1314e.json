@@ -1,1 +1,3 @@
-{"nodes": [{"id": "home_hidayat_documents_islamic_knowledge_qa_app_android_app_app_src_main_cpp_whisper_cpp_bindings_ruby_ext_ruby_whisper_log_settable_h", "label": "ruby_whisper_log_settable.h", "file_type": "code", "source_file": "android-app/app/src/main/cpp/whisper.cpp/bindings/ruby/ext/ruby_whisper_log_settable.h", "source_location": "L1"}], "edges": [], "raw_calls": []}
+version https://git-lfs.github.com/spec/v1
+oid sha256:54c2d7834345aa83d6d4868f8bef63a0b3196e6cc5d680d5d2ae5cce1f4d674a
+size 378
