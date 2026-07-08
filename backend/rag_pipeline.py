@@ -116,13 +116,17 @@ class MultiCollectionRetriever(BaseRetriever):
 
     def _retrieve(self, query_bundle, **kwargs) -> List[NodeWithScore]:
     # ^ Internal abstract method implementation executing search operations and returning list of NodeWithScore
-        # Fallback to the original query_bundle string if no custom queries provided
         queries_to_run = self.search_queries if self.search_queries else [query_bundle.query_str]
+        
+        print(f"\n[DEBUG RAG] Starting vector retrieval using {len(queries_to_run)} query variations.")
+        # ^ Debug log indicating how many queries are about to be fired against the database
         
         all_points_dict = {}
         # ^ Initializes a dict to gather unique search points across collections
         
         for q_str in queries_to_run:
+            print(f"[DEBUG RAG] -> Searching vectors for: '{q_str}'")
+            # ^ Debug log showing the exact query string being searched
             query_vector = self.embed_model.get_query_embedding(q_str)
             # ^ Translates search string into vector array
             
@@ -141,8 +145,12 @@ class MultiCollectionRetriever(BaseRetriever):
                     # ^ Deduplicates points using point ID as key
         
         all_points = list(all_points_dict.values())
+        print(f"[DEBUG RAG] Finished searching. Deduplicated to {len(all_points)} unique points fetched from database.")
+        # ^ Debug log showing total unique documents retrieved before reranking
         
         if self.enable_reranking and self.reranker and all_points:
+            print(f"[DEBUG RAG] CrossEncoder Reranking is ENABLED. Reranking {len(all_points)} points...")
+            # ^ Debug log indicating CrossEncoder process has started
             # Prepare pairs of (query, document) for the CrossEncoder
             pairs = []
             for p in all_points:
@@ -158,15 +166,29 @@ class MultiCollectionRetriever(BaseRetriever):
             
             # Sort by new scores and slice to top-k
             all_points.sort(key=lambda x: x.score, reverse=True)
+            
+            # TinyBERT outputs raw logits (can be negative even for relevant text).
+            # We remove the strict > 0.0 threshold and just rely on top_k sorting.
             all_points = all_points[:self.similarity_top_k]
             
-            # (Optional Threshold Bouncer Strategy)
-            # Filter out results that are terribly irrelevant (score < 0)
-            all_points = [p for p in all_points if p.score > 0.0]
+            if all_points:
+            # ^ Conditional block preventing index out of bounds error
+                print(f"[DEBUG RAG] Post-Reranking complete. Top score: {all_points[0].score:.4f} | Retained top {len(all_points)} most relevant points.")
+                # ^ Debug log showing top score and count after filtering
+            else:
+                print("[DEBUG RAG] Post-Reranking complete. Warning: No points were returned from database.")
+                # ^ Debug log warning if db was completely empty
         else:
+            print("[DEBUG RAG] CrossEncoder Reranking is DISABLED. Falling back to default vector similarity sorting.")
+            # ^ Debug log indicating default execution path
             # Standard vector similarity sorting
             all_points.sort(key=lambda x: x.score, reverse=True)
             all_points = all_points[:self.similarity_top_k]
+            if all_points:
+            # ^ Conditional block preventing index out of bounds error
+                print(f"[DEBUG RAG] Default sorting complete. Top score: {all_points[0].score:.4f} | Retained top {len(all_points)} points.")
+                # ^ Debug log showing default top score
+
 
         
         nodes = []
@@ -177,6 +199,8 @@ class MultiCollectionRetriever(BaseRetriever):
             # ^ Extracts original question text from point metadata payload
             answer = p.payload.get("answer", "")
             # ^ Extracts fatwa answer text from point metadata payload
+            q_and_a = p.payload.get("question_and_answer", "")
+            # ^ Extracts combined question and answer used by Deoband collection
             text = p.payload.get("text", "")
             # ^ Extracts legacy text field from point metadata payload as fallback
             
@@ -186,6 +210,10 @@ class MultiCollectionRetriever(BaseRetriever):
             # ^ Conditional check, validating if qa payload values are present
                 combined_text = f"Question: {question}\nAnswer: {answer}"
                 # ^ Merges question and answer strings together
+            elif q_and_a:
+            # ^ Fallback to check if Deoband combined field exists
+                combined_text = q_and_a
+                # ^ Uses Deoband combined string
             else:
             # ^ Fallback execution path
                 combined_text = text
@@ -195,6 +223,27 @@ class MultiCollectionRetriever(BaseRetriever):
             # ^ Compiles new TextNode containing combined texts and original metadata payload
             nodes.append(NodeWithScore(node=node, score=p.score))
             # ^ Appends compiled node wrapped in node-score class container to list
+            
+        if nodes:
+        # ^ Validates if node list is not empty
+            print(f"\n[DEBUG RAG] --- ALL FINAL RETRIEVED CONTEXTS ({len(nodes)}) ---")
+            # ^ Debug header indicating how many contexts are being passed to LLM
+            for i, n in enumerate(nodes):
+            # ^ Loops through all final retrieved nodes passed to LLM
+                source_url = n.node.metadata.get('url', 'Unknown URL')
+                # ^ Extracts URL string for debugging
+                
+                raw_text = n.node.text.replace('\n', ' ')
+                text_snippet = raw_text[:200] + "..." if len(raw_text) > 200 else raw_text
+                # ^ Extracts the actual answer text and trims it for terminal readability
+                
+                print(f"[{i+1}] Score: {n.score:.4f} | Source: {source_url}")
+                # ^ Prints rank, score and url for the result
+                print(f"    Snippet: {text_snippet}")
+                # ^ Prints the actual text snippet that the LLM will read
+            print(f"[DEBUG RAG] ----------------------------------------\n")
+            # ^ Debug footer
+            
         return nodes
         # ^ Returns the list of retrieved nodes
 # ^ Ends MultiCollectionRetriever class definition
@@ -340,7 +389,7 @@ class RagPipeline:
             # ^ Supplies the target sources filters list
             embed_model=self.embed_model,
             # ^ Supplies the active embedding model instance
-            similarity_top_k=20,
+            similarity_top_k=10,
             # ^ Configures search result window size to top 20 vectors
             search_queries=search_queries,
             enable_reranking=enable_reranking
@@ -444,12 +493,12 @@ if __name__ == "__main__":
     pipeline = RagPipeline()
     # ^ Instantiates test pipeline class instance
     
-    test_q = "Where will the Prophet Muhammed PBUH's parents go according to hadiths. Will they go to heaven or hell"
+    test_q = "what invalidates fasting in the month of Ramadaan"
     # ^ Defines test question string
     print(f"[*] Testing query: {test_q}")
     # ^ Prints test question to terminal console
     
-    result = pipeline.ask(test_q)
+    result = pipeline.ask(test_q, sources=['deoband', 'islamqa'])
     # ^ Runs ask function querying local pipeline configurations
     print("\n--- AI ANSWER ---")
     # ^ Prints output section title header

@@ -166,6 +166,20 @@ To synthesize high-quality speech offline, the `ai4bharat/indic-parler-tts` mode
 
 ---
 
+## 🛠️ Sprint 4.4 — Advanced RAG Pipeline Optimization
+**Status:** ✅ COMPLETE
+
+### 1. RAG Hallucination Mitigation Strategies
+The RAG pipeline (`backend/rag_pipeline.py`) was significantly upgraded to reduce LLM hallucinations and increase answer accuracy, implementing three major features:
+- **Query Routing:** Intercepts incoming user queries and explicitly asks a lightweight LLM router if the question is related to Islam. If not, it safely rejects it before searching the vector database, preventing off-topic hallucinations.
+- **Multi-Query Expansion:** Rewrites the user's single query into three different semantic variations (e.g. asking the same thing in different words or languages). All variations are searched in parallel against Qdrant to ensure broad recall and minimize misses on edge-case terminology.
+- **CrossEncoder Reranking:** Takes all the loosely matched vector results and passes them through a deep NLP scorer (`cross-encoder/ms-marco-TinyBERT-L-2-v2`). This reranks the top matches based on actual semantic meaning rather than just cosine distance, ensuring only the most highly relevant fatwas are passed to the LLM.
+
+### 2. Debugging and Robustness
+- **Feature Flags:** The `fastapi_server.py` endpoint was updated to accept toggle flags (`enable_routing`, `enable_multi_query`, `enable_reranking`) so the client can enable/disable these features dynamically for testing and performance tuning.
+- **Terminal Tracing:** Comprehensive beginner-friendly console logging was added to `rag_pipeline.py`. The terminal now prints the original query, expanded queries, reranker scores, and the actual fatwa text snippets being sent to the LLM.
+- **Data Integrity Fixes:** Resolved a critical bug where Deoband fatwa texts were ignored because their Qdrant payloads used the key `question_and_answer` instead of `question`/`answer`. The pipeline now safely checks both formats, ensuring the LLM always receives the full text.
+
 ## 📁 File Structure (Backend)
 ```
 backend/

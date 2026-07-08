@@ -41,8 +41,8 @@ models = {}
 tokenizers = {}
 # ^ A blank dictionary to store the AI dictionaries (tokenizers) in memory
 
-device = "cuda" if torch.cuda.is_available() else "cpu"
-# ^ Check if an Nvidia GPU is available ('cuda'). If not, fall back to using the 'cpu'
+device = "cpu"
+# ^ Forced to CPU (16GB RAM) to avoid CUDA Out-of-Memory crashes with the 4GB RTX 3050, as requested by developer
 
 def load_model(direction: str):
 # ^ A function to load the massive AI brain into memory
@@ -60,7 +60,7 @@ def load_model(direction: str):
         model_name,
         # ^ Pass the folder path
         torch_dtype=torch.float32,
-        # ^ Shrink the brain's numbers to float16 so it takes up half the space (fitting in 4GB VRAM)
+        # ^ We keep it in float32 because CPU processors handle float32 math natively and much faster than float16
         trust_remote_code=True
         # ^ Allow custom code from the AI creators to run
     ).to("cpu")
@@ -128,92 +128,101 @@ async def translate(request: TranslationRequest):
     ip = IndicProcessor(inference=True)
     # ^ Start the toolkit in 'inference' (translation) mode
     
-    batch = ip.preprocess_batch(
-    # ^ Clean the incoming text before the AI sees it
-        [request.text],
-        # ^ The text to clean
-        src_lang=request.source_lang,
-        # ^ Tell the toolkit what language it currently is
-        tgt_lang=request.target_lang,
-        # ^ Tell the toolkit what language it will become
-    )
-    # ^ Save the cleaned text into a 'batch'
-    # This line was added for debugging purposes
-    #print(f"[DEBUG] The contents of the batch variable that holds the cleared text is : \n{batch}")
+    # 1. SPLIT TEXT BY LINES TO PRESERVE MARKDOWN & AVOID TRUNCATION
+    original_lines = request.text.split('\n')
+    # ^ Split the massive LLM answer by newlines to preserve Markdown lists and paragraphs
     
+    lines_to_translate = []
+    for i, line in enumerate(original_lines):
+        if line.strip():
+        # ^ We only want to spend time (and VRAM) translating lines that actually contain text
+            lines_to_translate.append((i, line))
+            
+    translated_lines_dict = {}
+    CHUNK_SIZE = 4
+    # ^ Process 4 lines at a time so we don't blow up the 4GB RTX 3050 VRAM
+
     if device == "cuda":
     # ^ Right before the heavy lifting starts...
         model.to(device)
-        # ^ Move the massive AI brain from regular RAM into the Graphics Card (GPU) for super-fast math
-
-    inputs = tokenizer(
-    # ^ Convert the cleaned text words into math numbers
-        batch, 
-        # ^ The cleaned text
-        truncation=True,
-        # ^ Chop off text if it's too long
-        padding="longest",
-        # ^ Add blank spaces if it's too short
-        return_tensors="pt",
-        # ^ Return PyTorch tensors (math grids)
-        return_attention_mask=True
-        # ^ Tell the AI which parts of the grid are real words and which are blank padding
-    ).to(device)
-    # ^ Move these math numbers directly into the Graphics Card
-    #print(f"[DEBUG] The contents of the batch variable that holds the cleared text is : \n{batch}")
-    
-    with torch.no_grad():
-    # ^ Tell PyTorch NOT to track math gradients (saves a massive amount of memory since we aren't training)
-        outputs = model.generate(
-        # ^ Force the AI to think and generate the translated numbers
-            **inputs, 
-            # ^ Pass in our prepared numbers
-            #max_length=256,
-            # ^ Don't generate more than 256 words
-            use_cache=True,
-            # ^ Speed up the process by remembering past thoughts
-            min_length=0,
-            # ^ Don't force it to keep talking if it's done
-            num_beams=1,
-            # ^ Make the AI explore 2 different possible translations simultaneously (Reduced from 5 to save VRAM)
-            num_return_sequences=1,
-            # ^ Only return the absolute best 1 translation out of the 2
-        )
-        # ^ Save the generated numbers into 'outputs'
+        # ^ Move the massive AI brain from regular RAM into the Graphics Card (GPU)
         
+    for i in range(0, len(lines_to_translate), CHUNK_SIZE):
+    # ^ Loop through the text chunks
+        chunk = lines_to_translate[i:i+CHUNK_SIZE]
+        indices = [x[0] for x in chunk]
+        texts = [x[1] for x in chunk]
+        
+        batch = ip.preprocess_batch(
+        # ^ Clean the incoming text chunk before the AI sees it
+            texts,
+            src_lang=request.source_lang,
+            tgt_lang=request.target_lang,
+        )
+        
+        inputs = tokenizer(
+        # ^ Convert the cleaned text words into math numbers
+            batch, 
+            truncation=True,
+            max_length=512,
+            # ^ Allow up to 512 tokens per line (solves the "incomplete translation" issue)
+            padding="longest",
+            return_tensors="pt",
+            return_attention_mask=True
+        ).to(device)
+        
+        with torch.no_grad():
+        # ^ Tell PyTorch NOT to track math gradients (saves a massive amount of memory)
+            outputs = model.generate(
+            # ^ Force the AI to generate the translated numbers
+                **inputs, 
+                max_new_tokens=512,
+                # ^ Force it to translate the full line completely without stopping early
+                use_cache=True,
+                min_length=0,
+                num_beams=1,
+                # ^ Keep beam search low to save VRAM
+                num_return_sequences=1,
+            )
+            
+        generated_tokens = tokenizer.batch_decode(
+        # ^ Convert the math numbers back into actual human words
+            outputs,
+            skip_special_tokens=True,
+            clean_up_tokenization_spaces=True,
+        )
+        
+        translations = ip.postprocess_batch(generated_tokens, lang=request.target_lang)
+        # ^ Polish the translated grammar
+        
+        for idx, trans in zip(indices, translations):
+            translated_lines_dict[idx] = trans
+            # ^ Save the polished translation back to its original line number
+
     if device == "cuda":
-    # ^ Now that the translation is finished...
+    # ^ Now that ALL translation chunks are finished...
         model.to("cpu")
         # ^ Move the massive brain OUT of the Graphics Card and back to regular RAM
-        del inputs
-        # ^ Delete the input numbers from the Graphics Card
-        outputs = outputs.to("cpu")
-        # ^ Move the final translated numbers back to regular RAM
         import gc
-        # ^ Import the garbage collector
         gc.collect()
-        # ^ Force Python to clean up
         torch.cuda.empty_cache()
-        # ^ Empty the Graphics Card trash bin completely, freeing space for TTS or Ollama!
+        # ^ Empty the Graphics Card trash bin completely, freeing space!
         
-    generated_tokens = tokenizer.batch_decode(
-    # ^ Convert the math numbers back into actual human words
-        outputs,
-        # ^ The generated numbers
-        skip_special_tokens=True,
-        # ^ Hide behind-the-scenes AI tags like <end_of_sentence>
-        clean_up_tokenization_spaces=True,
-        # ^ Fix weird spaces around punctuation
-    )
-    # ^ Save the human words
+    # 2. REASSEMBLE THE MARKDOWN TEXT
+    final_lines = []
+    for i, original_line in enumerate(original_lines):
+        if i in translated_lines_dict:
+            final_lines.append(translated_lines_dict[i])
+            # ^ Put the translated line exactly where it belongs
+        else:
+            final_lines.append(original_line) 
+            # ^ Keep empty lines completely intact to preserve Markdown spacing
+
+    translated_text = '\n'.join(final_lines)
+    # ^ Glue the translated lines back together with newlines
     
-    translations = ip.postprocess_batch(generated_tokens, lang=request.target_lang)
-    # ^ Run the text through the Indian toolkit one last time to polish the grammar
-    translated_text = translations[0]
-    # ^ Grab the first (and only) translation from the list
-    print(f"[DEBUG] The contents of the batch variable that holds the cleared text is : \n{batch}")
     return {"translation": translated_text}
-    # ^ Send the final translated text back to whoever asked for it
+    # ^ Send the completely preserved, translated Markdown text back to the Android app
 
 @app.get("/health")
 # ^ We create a simple '/health' endpoint

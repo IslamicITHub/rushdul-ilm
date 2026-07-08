@@ -3385,3 +3385,43 @@ NOTES_FOR_NEXT_AGENT:
 
 GRAPHITI_UPDATED: NOT RUNNING
 MEM0_UPDATED:     NOT RUNNING
+
+---
+
+## Session 2026-07-07 18:10
+AGENT: Antigravity
+PHASE: 4 — Connect Android to Backend
+SPRINT: Ad-hoc — RAG Optimization & Debugging
+SUB_SPRINT: N/A
+MICRO_TASK_COMPLETED: Ad-hoc (RAG Optimization)
+MICRO_TASK_DESCRIPTION: Improve RAG hallucination handling with Routing, Multi-Query, and Reranking and add visibility/debug logging.
+SESSION_DURATION: 120 minutes
+
+TASKS_COMPLETED:
+  - Upgraded the RAG pipeline in `backend/rag_pipeline.py` to support three advanced RAG concepts: **Query Routing** (validating if a query is Islamic before searching), **Multi-Query Expansion** (generating varied perspectives of the question), and **CrossEncoder Reranking** (re-scoring Qdrant vector matches based on deep semantic relevance).
+  - Integrated feature flags (`enable_routing`, `enable_multi_query`, `enable_reranking`) in `fastapi_server.py` to allow the client to toggle the new RAG features.
+  - Implemented beginner-friendly debug print statements tracing the entire flow from query routing and expansion to reranker scores.
+  - Fixed a logical bug in `backend/rag_pipeline.py` where Deoband fatwa texts were ignored because they used the key `question_and_answer` instead of `question`/`answer`. The pipeline now extracts text properly across all collections.
+  - Resolved `IndexError` when reranker filters yield empty lists, defaulting safely to original vector top matches.
+
+FILES_CREATED:
+  - None
+
+FILES_MODIFIED:
+  - backend/fastapi_server.py — Added RAG feature flags to `QueryRequest` model and `rag.ask()` calls.
+  - backend/rag_pipeline.py — Major refactor to add Routing, Multi-Query, Reranking logic and debug terminal tracing. Fixed Deoband text extraction.
+
+DONE_CONDITION_MET: YES — The RAG pipeline processes advanced routing, multi-query, and reranking and prints fully traceable debug outputs to the terminal, avoiding empty responses.
+
+CURRENT_MICRO_TASK: Ad-hoc (RAG Optimization)
+NEXT_MICRO_TASK: Phase 6 tasks
+NEXT_MICRO_TASK_DESCRIPTION: Continue remaining tasks.
+
+BLOCKERS: None.
+
+NOTES_FOR_NEXT_AGENT:
+  - CrossEncoder used is `cross-encoder/ms-marco-TinyBERT-L-2-v2`. It outputs raw logits, not probabilities, so score thresholds are disabled (allowing negative scores) to avoid filtering out highly relevant contexts.
+  - Deoband collections use `question_and_answer` payload key, IslamQA uses `question` and `answer`. `rag_pipeline.py` safely handles both.
+
+GRAPHITI_UPDATED: NOT RUNNING
+MEM0_UPDATED:     NOT RUNNING
