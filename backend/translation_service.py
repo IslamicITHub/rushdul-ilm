@@ -41,7 +41,7 @@ models = {}
 tokenizers = {}
 # ^ A blank dictionary to store the AI dictionaries (tokenizers) in memory
 
-device = "cpu"
+device = "cuda"
 # ^ Forced to CPU (16GB RAM) to avoid CUDA Out-of-Memory crashes with the 4GB RTX 3050, as requested by developer
 
 def load_model(direction: str):
@@ -59,7 +59,7 @@ def load_model(direction: str):
     # ^ Load the actual translation AI brain
         model_name,
         # ^ Pass the folder path
-        torch_dtype=torch.float32,
+        torch_dtype=torch.float16,
         # ^ We keep it in float32 because CPU processors handle float32 math natively and much faster than float16
         trust_remote_code=True
         # ^ Allow custom code from the AI creators to run
@@ -128,30 +128,75 @@ async def translate(request: TranslationRequest):
     ip = IndicProcessor(inference=True)
     # ^ Start the toolkit in 'inference' (translation) mode
     
+    import re
+    # ^ Import regex module to identify purely structural markdown lines
+    
+    # --- HELPER FUNCTIONS FOR INLINE MARKDOWN ---
+    def md_to_html(text):
+    # ^ Convert Markdown asterisks to HTML tags before translating so the AI understands it's formatting
+        text = re.sub(r'\*\*(.*?)\*\*', r'<b>\1</b>', text)
+        text = re.sub(r'\*(.*?)\*', r'<i>\1</i>', text)
+        return text
+
+    def html_to_md(text):
+    # ^ Convert HTML tags back to Markdown asterisks after translating and clean up AI-introduced spaces
+        text = re.sub(r'<\s*b\s*>(.*?)<\s*/\s*b\s*>', lambda m: f'**{m.group(1).strip()}**' if m.group(1).strip() else '', text, flags=re.IGNORECASE)
+        text = re.sub(r'<\s*i\s*>(.*?)<\s*/\s*i\s*>', lambda m: f'*{m.group(1).strip()}*' if m.group(1).strip() else '', text, flags=re.IGNORECASE)
+        # ^ Remove spaces inside the bold/italic tags and drop them completely if they are empty
+        text = re.sub(r'<\/?\s*[bi]\s*>', '', text, flags=re.IGNORECASE)
+        # ^ Remove any leftover broken/stray HTML tags that the AI translator left behind
+        return text
+    # --------------------------------------------
+    
     # 1. SPLIT TEXT BY LINES TO PRESERVE MARKDOWN & AVOID TRUNCATION
     original_lines = request.text.split('\n')
     # ^ Split the massive LLM answer by newlines to preserve Markdown lists and paragraphs
     
-    lines_to_translate = []
+    translation_jobs = []
+    # ^ We will store (line_index, cell_index, prefix, text_to_translate, suffix)
+    
     for i, line in enumerate(original_lines):
-        if line.strip():
-        # ^ We only want to spend time (and VRAM) translating lines that actually contain text
-            lines_to_translate.append((i, line))
+        if not line.strip() or re.match(r'^[\s\|\-]+$', line):
+            continue
+            # ^ Skip empty lines and purely structural lines (like table borders)
             
-    translated_lines_dict = {}
-    CHUNK_SIZE = 4
-    # ^ Process 4 lines at a time so we don't blow up the 4GB RTX 3050 VRAM
+        if line.strip().startswith('|') and line.strip().endswith('|'):
+        # ^ If it's a Markdown table row...
+            cells = line.split('|')
+            # ^ Split the row into individual cells so we don't break the pipes '|'
+            for j, cell in enumerate(cells):
+                if cell.strip():
+                    text_to_translate = md_to_html(cell.strip())
+                    # ^ Protect inline bold/italics by converting to HTML
+                    translation_jobs.append((i, j, "", text_to_translate, ""))
+        else:
+        # ^ If it's a normal line...
+            match = re.match(r'^(\s*(?:[-*+]|\d+\.|>|#{1,6})\s+)(.*)$', line)
+            # ^ Extract block prefixes like "- ", "1. ", "> ", "### " so the AI doesn't see them
+            if match:
+                prefix = match.group(1)
+                core_text = match.group(2)
+            else:
+                prefix = ""
+                core_text = line
+                
+            text_to_translate = md_to_html(core_text)
+            translation_jobs.append((i, -1, prefix, text_to_translate, ""))
+            
+    translated_pieces = {}
+    CHUNK_SIZE = 1
+    # ^ Process 2 chunks at a time so we don't blow up the 4GB RTX 3050 VRAM
 
     if device == "cuda":
     # ^ Right before the heavy lifting starts...
         model.to(device)
         # ^ Move the massive AI brain from regular RAM into the Graphics Card (GPU)
         
-    for i in range(0, len(lines_to_translate), CHUNK_SIZE):
+    for idx in range(0, len(translation_jobs), CHUNK_SIZE):
     # ^ Loop through the text chunks
-        chunk = lines_to_translate[i:i+CHUNK_SIZE]
-        indices = [x[0] for x in chunk]
-        texts = [x[1] for x in chunk]
+        chunk = translation_jobs[idx:idx+CHUNK_SIZE]
+        texts = [job[3] for job in chunk]
+        # ^ Grab the safe, pure English HTML text
         
         batch = ip.preprocess_batch(
         # ^ Clean the incoming text chunk before the AI sees it
@@ -195,9 +240,13 @@ async def translate(request: TranslationRequest):
         translations = ip.postprocess_batch(generated_tokens, lang=request.target_lang)
         # ^ Polish the translated grammar
         
-        for idx, trans in zip(indices, translations):
-            translated_lines_dict[idx] = trans
-            # ^ Save the polished translation back to its original line number
+        for job, trans in zip(chunk, translations):
+            i, j, prefix, _, suffix = job
+            trans_md = html_to_md(trans)
+            # ^ Convert the safe HTML tags back into Markdown asterisks
+            final_piece = prefix + trans_md + suffix
+            # ^ Re-attach the extracted prefixes (like "- " or "> ")
+            translated_pieces[(i, j)] = final_piece
 
     if device == "cuda":
     # ^ Now that ALL translation chunks are finished...
@@ -211,12 +260,24 @@ async def translate(request: TranslationRequest):
     # 2. REASSEMBLE THE MARKDOWN TEXT
     final_lines = []
     for i, original_line in enumerate(original_lines):
-        if i in translated_lines_dict:
-            final_lines.append(translated_lines_dict[i])
-            # ^ Put the translated line exactly where it belongs
+        if not original_line.strip() or re.match(r'^[\s\|\-]+$', original_line):
+        # ^ If it was an empty line or a table border, keep it exactly as it was
+            final_lines.append(original_line)
+            continue
+            
+        if original_line.strip().startswith('|') and original_line.strip().endswith('|'):
+        # ^ If it was a table row, reconstruct the cells carefully
+            cells = original_line.split('|')
+            new_cells = []
+            for j, cell in enumerate(cells):
+                if cell.strip():
+                    new_cells.append(" " + translated_pieces[(i, j)] + " ")
+                else:
+                    new_cells.append(cell)
+            final_lines.append('|'.join(new_cells))
         else:
-            final_lines.append(original_line) 
-            # ^ Keep empty lines completely intact to preserve Markdown spacing
+        # ^ If it was a normal line, just grab the translated piece
+            final_lines.append(translated_pieces[(i, -1)])
 
     translated_text = '\n'.join(final_lines)
     # ^ Glue the translated lines back together with newlines

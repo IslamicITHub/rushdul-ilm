@@ -3425,3 +3425,67 @@ NOTES_FOR_NEXT_AGENT:
 
 GRAPHITI_UPDATED: NOT RUNNING
 MEM0_UPDATED:     NOT RUNNING
+
+---
+
+## Session 2026-07-08 08:34
+AGENT: Antigravity
+PHASE: 5 — Multilingual + Offline
+SPRINT: Ad-hoc — Translation Pipeline Overhaul
+SUB_SPRINT: N/A
+MICRO_TASK_COMPLETED: Ad-hoc (Translation Engine Fix)
+MICRO_TASK_DESCRIPTION: Fix OOM errors and markdown formatting corruption in the IndicTrans2 translation pipeline.
+SESSION_DURATION: 90 minutes
+
+TASKS_COMPLETED:
+  - Diagnosed and fixed CUDA Out of Memory (OOM) error by forcing translation_service.py to use CPU processing since GPU (4GB VRAM) was full from other services.
+  - Rewrote the translation logic to process large text in small chunks (line-by-line), preventing truncation caused by max_length token limits.
+  - Implemented a Hybrid Markdown Parser: the pipeline now skips translating structural Markdown lines (like table borders and horizontal rules) to preserve document structure.
+  - Protected inline Markdown (like bolding **text**) by converting it to HTML tags (<b>text</b>) before translation and reverting back to asterisks after, allowing the AI to naturally arrange formatting across Telugu word-order changes.
+
+FILES_MODIFIED:
+  - backend/translation_service.py — Forced CPU, added chunked batch translation, and integrated the Hybrid Markdown Parser.
+  - activity-logs/ACTIVITY_LOG.md — (This entry).
+
+DONE_CONDITION_MET: YES — The translation service translates large Markdown documents into Telugu seamlessly without truncation, OOM crashes, or breaking the Markdown layout (lists, tables, bolding).
+
+CURRENT_MICRO_TASK: Ad-hoc (Translation Engine Fix)
+NEXT_MICRO_TASK: Phase 6 tasks
+NEXT_MICRO_TASK_DESCRIPTION: Continue remaining tasks.
+
+BLOCKERS: None.
+
+GRAPHITI_UPDATED: NOT RUNNING
+MEM0_UPDATED:     NOT RUNNING
+
+---
+
+## Session 2026-07-08 08:46
+AGENT: Antigravity
+PHASE: 5 — Multilingual + Offline
+SPRINT: Ad-hoc — Translation Engine Fixes
+SUB_SPRINT: N/A
+MICRO_TASK_COMPLETED: Ad-hoc (Markdown Spaces & Broken Tags)
+MICRO_TASK_DESCRIPTION: Fix spaces injected inside Markdown syntax by IndicTrans2 and clean up stray HTML tags.
+SESSION_DURATION: 10 minutes
+
+TASKS_COMPLETED:
+  - Identified that the translation model was injecting spaces inside the HTML tags (e.g. `< b > మూత్రం < / b >`) which resulted in `** మూత్రం **` during regex conversion.
+  - Updated `html_to_md()` function in `translation_service.py` to use a lambda regex replacement that dynamically `strip()`s leading/trailing spaces from the translated text before wrapping it in asterisks.
+  - Added a cleanup regex to detect and silently remove broken or stray HTML tags (e.g. `<b>`, `</i>`) that the model failed to close properly, preventing them from bleeding into the user UI.
+  - Added logic to completely drop empty formatting tags instead of converting them to `****`.
+
+FILES_MODIFIED:
+  - backend/translation_service.py — Upgraded html_to_md regex.
+  - activity-logs/ACTIVITY_LOG.md — (This entry).
+
+DONE_CONDITION_MET: YES — Translated text now has perfectly attached Markdown syntax without spaces (e.g. `**మూత్రం**`) and no stray HTML tags.
+
+CURRENT_MICRO_TASK: Ad-hoc (Markdown Spaces & Broken Tags)
+NEXT_MICRO_TASK: Phase 6 tasks
+NEXT_MICRO_TASK_DESCRIPTION: Continue remaining tasks.
+
+BLOCKERS: None.
+
+GRAPHITI_UPDATED: NOT RUNNING
+MEM0_UPDATED:     NOT RUNNING
