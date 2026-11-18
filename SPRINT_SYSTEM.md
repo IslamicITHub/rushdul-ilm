@@ -39,11 +39,13 @@
 
 ## 📊 SPRINT PROGRESS TRACKER (Update this dashboard every session)
 
+> **Pointer reconciliation required (2026-11-18):** The newest activity-log entry says to continue Phase 6 tasks, while the dashboard previously pointed to Phase 5 / P5.S2.SS1.MT1. The code audit also found Phase 5 offline work incomplete and Phase 6 at prototype level. Do not start a numbered micro-task until the maintainer selects the authoritative next task.
+
 ```
-CURRENT_PHASE:        5
-CURRENT_SPRINT:       5.2
-CURRENT_SUB_SPRINT:   5.2.1
-CURRENT_MICRO_TASK:   P5.S2.SS1.MT1   ← START HERE
+CURRENT_PHASE:        UNRESOLVED — reconcile Phase 5/6 pointer with maintainer
+CURRENT_SPRINT:       UNRESOLVED
+CURRENT_SUB_SPRINT:   UNRESOLVED
+CURRENT_MICRO_TASK:   UNRESOLVED — do not infer a task ID
 
 PHASE 1 PROGRESS:
   Sprint 1.1 — Environment & Project Setup     [x] 7/7 micro-tasks done
@@ -73,9 +75,11 @@ PHASE 4 PROGRESS:
   Sprint 4.5 — Phase 4 Integration Test        [x] 1/1 micro-tasks done
 PHASE 5 PROGRESS:
   Sprint 5.1 — IndicTrans2 Docker Service      [x] 4/4 micro-tasks done
-  Sprint 5.2 — Coqui XTTS-v2 Docker Service    [x] 2/2 micro-tasks done
+  Sprint 5.2 — TTS Docker Service (currently Indic Parler; old title: Coqui XTTS-v2) [x] 2/2 micro-tasks done
   Sprint 5.3 — faster-whisper Docker Service   [x] 4/4 micro-tasks done
   Sprint 5.4 — whisper.cpp Offline Fallback    [x] 1/1 micro-tasks done
+
+> The phase/sprint counts and task descriptions below are historical planning records. They are not a verified status of current code; see [docs/DEVELOPMENT_STATUS.md](docs/DEVELOPMENT_STATUS.md) and `Report Documentation/` for the latest implementation audit.
 
 ---
 
@@ -166,7 +170,7 @@ STEP BY STEP:
   2. Verify NVIDIA NIM API integration.
   3. Test specific queries, broad topics (for clarification), and source filtering.
   4. Verify citations and markdown formatting.
-  5. Update Report Documentation/03_KNOWLEDGE_INGESTION.md.
+  5. Update Report Documentation/07_KNOWLEDGE_SOURCES.md.
 
 DONE CONDITION:
   Integration tests pass for all test cases.
@@ -1580,8 +1584,10 @@ DONE CONDITION:
   - **TASK:** Update `fastapi_server.py` to route query inputs and outputs through the `/translate` endpoint.
   - **DONE CONDITION:** Calling `curl` /query in Telugu returns translated answers and cites sources correctly.
 
-### SPRINT 5.2 — Coqui XTTS-v2 Docker Service
+### SPRINT 5.2 — TTS Docker Service
 **Goal:** Setup Indic-parler-TTS for high-quality TTS.
+
+> **Implementation note:** The original sprint title referred to Coqui XTTS-v2, but the current backend implementation uses `ai4bharat/indic-parler-tts`. This sprint record does not indicate that Coqui is present in the current codebase.
 
 - **[ ] P5.S2.SS1.MT1:** Add Indic-parler-TTS service to `docker-compose.yml`.
   - **TASK:** Add the `tts_service` to `docker-compose.yml` on port 8002.

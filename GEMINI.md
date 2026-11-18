@@ -153,6 +153,7 @@ These rules exist to protect the integrity of Islamic knowledge and the develope
    Tier 1 → Internet (server via cloud/VPS)
    Tier 2 → LAN (server via local Wi-Fi 192.168.x.x)
    Tier 3 → Fully offline (on-device — Room DB, whisper.cpp JNI, Opus-MT ONNX, Android TTS)
+⚠️ This is the target architecture, not current completeness: offline Q&A/translation are absent and server endpoints use a fixed LAN address.
 ```
 
 ### Rule AH4 — NEVER Exceed Hardware Limits
@@ -162,10 +163,10 @@ Developer's GPU: NVIDIA RTX 3050 — 4GB VRAM ONLY
 ✅ ALLOWED models (verified to fit in 4GB VRAM):
    - Qwen3:4b Q4_K_M (2.5GB VRAM) — LLM
    - faster-whisper-large-v3-turbo INT8 (1.5GB VRAM) — STT
-   - paraphrase-multilingual-mpnet-base-v2 (CPU, ~420MB RAM) — embeddings
+   - qwen3-embedding:0.6b — local embeddings (1,024 dimensions in ingestion code; retrieval uses CPU and ingestion scripts request CUDA)
    - IndicTrans2 indic-en-1B (fits in 3GB VRAM with INT8) — translation
-   - Coqui XTTS-v2 (fits in 3GB VRAM) — TTS
-   If multiple GPU services run together → warn developer to start them one at a time.
+   - Indic Parler TTS — current backend TTS implementation
+   GPU service concurrency is not globally scheduled; verify VRAM usage on the RTX 3050 before running multiple services together.
 ```
 
 ### Rule AH5 — NEVER Add Telemetry or Third-Party Analytics
@@ -175,7 +176,8 @@ Developer's GPU: NVIDIA RTX 3050 — 4GB VRAM ONLY
    - Google Crashlytics
    - Facebook SDK
    - Any third-party crash reporter or event tracker
-   - Any cloud LLM API calls (OpenAI, Anthropic API, Google Gemini API) — ALL inference is local
+   - Any unapproved cloud LLM provider
+   - NVIDIA NIM is the approved optional cloud path when configured with NVIDIA_API_KEY; questions and retrieved context are sent to it
 
 ✅ ONLY ALLOWED tracking: Local app usage stats stored in Room DB on the user's phone only.
 ```
@@ -201,24 +203,24 @@ Android package name is fixed: com.rushdululilm.app
 ```
 App Name:        Rushd-ul-Ilm (رشد العلم — Growth of Knowledge)
 Package:         com.rushdululilm.app
-Language:        Kotlin 2.x (Android) + Python 3.11 (backend)
+Language:        Kotlin 2.x (Android) + Python 3.11/3.13 (backend images)
 Android UI:      Jetpack Compose (NO XML layouts)
 Architecture:    MVVM + StateFlow + Hilt DI
-Local DB:        Room (SQLite wrapper) with FTS5 for offline search
+Local DB:        Room (SQLite wrapper) for saved-answer history; no offline fatwa FTS5 table
 HTTP:            Retrofit + OkHttp → FastAPI server
-Video:           ExoPlayer / Media3
+Video:           Mock video list; no wired ExoPlayer playback
 Audio capture:   AudioRecord API at 16kHz mono PCM
-Offline STT:     whisper.cpp via Android NDK + JNI (ggml-small-q5_0, 182MB)
-Offline Trans:   Opus-MT ONNX INT8 via ONNX Runtime Android (~525MB total)
-Offline TTS:     Android TextToSpeech API + Google Telugu/Urdu voice packs
+Offline STT:     whisper.cpp via Android NDK + JNI (bundled ggml-small-q5_1; current JNI configuration forces English)
+Offline Trans:   Not implemented; ONNX Runtime is only a declared dependency
+Offline TTS:     Android TextToSpeech API; available voices depend on device-installed voice data
 Network check:   ConnectivityManager + OkHttp socket ping (200ms timeout)
 
 Server (Ubuntu — RTX 3050):
   FastAPI:        port 8000  — main API server
-  Ollama:         port 11434 — serves Qwen3:4b Q4_K_M locally
+  Ollama:         port 11434 — selected when NVIDIA_API_KEY is absent; NIM failures do not auto-retry
   Qdrant:         port 6333  — vector DB for semantic search
   IndicTrans2:    port 8001  — Telugu/Urdu ↔ English translation
-  Coqui XTTS-v2: port 8002  — TTS in Telugu, Urdu, Arabic, English
+  Indic Parler TTS: port 8002 — current backend text-to-speech
   faster-whisper: port 8003  — GPU speech-to-text
 
 Islamic Sources (APPROVED — do not add others without developer permission):
@@ -265,15 +267,15 @@ After every coding session, you MUST update documentation:
 
 | Question | Answer |
 |----------|--------|
-| Which LLM for answers? | gpt-OSS:120b via cloud Nvidia NIM API key as a primary LLM and Qwen3:4b via Ollama as a fallback LLM |
+| Which LLM for answers? | NVIDIA NIM `openai/gpt-oss-20b` when `NVIDIA_API_KEY` is configured; otherwise local Ollama `qwen3:4b` |
 | Which embedding model? | qwen3-embedding:0.6b |
 | Which vector DB? | Qdrant (self-hosted Docker) |
 | Which RAG framework? | LlamaIndex |
 | Which translation? | IndicTrans2 (online) / Opus-MT ONNX (offline) |
 | Which STT? | faster-whisper-turbo (online) / whisper.cpp JNI (offline) |
-| Which TTS? | Coqui XTTS-v2 (online) / Android TTS API (offline) |
+| Which TTS? | Indic Parler TTS (backend) / Android TTS API (offline path) |
 | New Islamic source? | Ask developer for permission first — do NOT add automatically |
-| Cloud LLM API? | USE free cloud API for testing |
+| Cloud LLM API? | NVIDIA NIM is the approved optional path; disclose question/context transfer. Ask before adding other providers. |
 | Firebase? | NEVER — no Google telemetry |
 | New feature without offline fallback? | REFUSE — implement all three tiers or ask how to |
 

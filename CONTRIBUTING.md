@@ -218,15 +218,17 @@ If the RAG pipeline finds no relevant answer, the app must display:
 ### Absolute Prohibitions
 - ❌ **No Google Analytics** or Firebase Analytics
 - ❌ **No Crashlytics** or any external crash reporter
-- ❌ **No cloud LLM APIs** (OpenAI, Anthropic, Google Gemini API)
+- ❌ **No new cloud LLM provider** without explicit maintainer approval
+- ✅ The existing optional NVIDIA NIM path is approved; disclose that it receives the user's question and retrieved context
 - ❌ **No third-party SDKs** that collect user data
 - ❌ **No telemetry** of any kind
 
-### What Must Stay Local
-- ✅ Voice recordings — processed on-device or self-hosted server only
-- ✅ User questions — never sent to any cloud service
-- ✅ Query history — stored only in local Room database
-- ✅ All AI inference — local GPU (Ollama) or NVIDIA NIM API only
+### Current Data Boundaries
+- ⚠️ Online voice transcription sends audio to the configured backend STT service
+- ⚠️ With `NVIDIA_API_KEY` configured, the backend sends the question and retrieved context to NVIDIA NIM
+- ✅ Without the NIM key, the backend selects local Ollama; it does not automatically retry with Ollama after NIM errors
+- ✅ Saved-answer history is stored in the Android Room database
+- ⚠️ Do not promise backend request non-retention unless the deployed service's storage and logs have been verified
 
 ---
 

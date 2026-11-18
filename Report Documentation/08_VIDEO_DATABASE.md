@@ -1,37 +1,30 @@
 # 08_VIDEO_DATABASE.md
-# Rushd-ul-Ilm (رشد العلم) — Video Database Documentation
-# Last Updated: 2026-06-17 | Updated by: Antigravity
-# Status: IN PROGRESS — Video database ingestion scripts being built
+# Rushd-ul-Ilm (رشد العلم) — Video Library
+# Last Updated: 2026-11-18 | Updated by: Copilot
+# Status: PROTOTYPE — METADATA SCRAPER EXISTS; APP PLAYBACK/INDEXING NOT IMPLEMENTED
 
----
+## Current implementation
 
-## Purpose Of This File
+The Android Video Library screen currently filters five hard-coded sample records. Selecting a card only prints a message; no ExoPlayer playback is wired. The app's Media3 dependencies are present, but no player usage was found in first-party app code.
 
-This report explains the Video Database layer of Rushd-ul-Ilm in beginner-friendly language.
-This layer is responsible for downloading, indexing, and transcribing Islamic video lectures so they can be searched offline and related to text fatwas.
+The only first-party pipeline script currently present is `video-database/scrape_channel_urls.py`. It uses yt-dlp with `download=False` and writes URL/title/ID metadata to JSON. It does not download videos, transcribe them, index transcripts in Qdrant, or make an offline video database. `video-database/video_urls.txt` is a separate text file, not an integrated catalog.
 
----
+## Files
 
-## Script: `scrape_channel_urls.py`
+- `video-database/scrape_channel_urls.py` — prototype metadata collection from a supplied channel URL.
+- `video-database/video_urls.txt` — manually stored URL list.
+- `android-app/app/src/main/java/com/rushdululilm/app/viewmodel/VideoLibraryViewModel.kt` — five mock videos and in-memory title/scholar filtering.
+- `android-app/app/src/main/java/com/rushdululilm/app/ui/screens/VideoLibraryScreen.kt` — list UI; click action is a placeholder.
+- `android-app/app/src/main/java/com/rushdululilm/app/ui/components/VideoCard.kt` — reusable sample card.
 
-### What Was Created
+## Remaining work
 
-A new Python script `scrape_channel_urls.py` was created in the `video-database/` folder.
-This script extracts all the video URLs from a target YouTube channel and saves them into a structured JSON file.
+Video metadata persistence, transcript generation, transcript search, lawful source/usage review, local download management, and ExoPlayer integration are not present in the inspected implementation. Treat these as planned, not complete.
 
-- **Library Used:** `yt-dlp` — The industry standard tool for interacting with YouTube data.
-- **Functionality:** It uses the `extract_flat` option to fetch the video metadata (like title and URL) without downloading the actual MP4 video files. This makes the script incredibly fast.
-- **Output:** It saves the extracted data as a JSON file (by default `channel_videos.json`) ensuring that special characters (like Arabic or Urdu text in titles) are preserved perfectly using UTF-8 encoding.
-- **Command Line:** The script accepts arguments, so the user can easily run it from the terminal and pass any channel URL they want.
+## See Also
 
-### Beginner Explanation
-
-Imagine you want to know all the titles of the books in a huge library. Instead of walking down every single aisle and reading every cover (which takes forever), you ask the librarian to just print out the master catalog list. 
-
-`yt-dlp` is like that librarian. YouTube hides its video links dynamically, meaning they only load as you scroll down the page. Our script talks directly to YouTube's hidden "catalog" system and asks for the whole list at once, saving all the links into a single file so our other scripts can process them later.
-
-### Verification
-
-The script includes full line-by-line comments (`# ^`) as required by the project's beginner teaching rules.
+- [02_ANDROID_APP_LAYER.md](./02_ANDROID_APP_LAYER.md) — Android screens
+- [09_BACKEND_DOCKER.md](./09_BACKEND_DOCKER.md) — current backend
+- [10_OFFLINE_STRATEGY.md](./10_OFFLINE_STRATEGY.md) — offline video status
 
 ---

@@ -10,16 +10,16 @@
 [![License: GPL v3](https://img.shields.io/badge/License-GPLv3-blue.svg)](https://www.gnu.org/licenses/gpl-3.0)
 [![Platform](https://img.shields.io/badge/Platform-Android-green.svg)](https://developer.android.com)
 [![Kotlin](https://img.shields.io/badge/Kotlin-2.x-purple.svg)](https://kotlinlang.org)
-[![Python](https://img.shields.io/badge/Python-3.11+-blue.svg)](https://www.python.org)
+[![Python](https://img.shields.io/badge/Python-3.11%2B%20%2F%203.13-blue.svg)](https://www.python.org)
 [![Docker](https://img.shields.io/badge/Docker-Compose-blue.svg)](https://docs.docker.com/compose/)
-[![Privacy](https://img.shields.io/badge/Privacy-Zero%20Telemetry-brightgreen.svg)](#-privacy-first-design)
-[![Self-Hosted](https://img.shields.io/badge/AI-100%25%20Self--Hosted-orange.svg)](#-technology-stack)
+[![Privacy](https://img.shields.io/badge/Privacy-No%20Analytics-brightgreen.svg)](#-privacy-and-external-processing)
+[![AI](https://img.shields.io/badge/AI-Local%20or%20NIM-orange.svg)](#-privacy-and-external-processing)
 
 ---
 
-*No typing required. No English required. Fully voice-based.*
+*Voice-first access to Islamic knowledge for Telugu and Urdu speakers.*
 
-*Ask Islamic questions in Telugu, Urdu, or Hindi — get cited answers read back to you.*
+*Ask Islamic questions in Telugu, Urdu, or Hindi — review returned source links and use read-aloud support.*
 
 </div>
 
@@ -32,13 +32,13 @@
 - [How It Works](#-how-it-works)
 - [Key Features](#-key-features)
 - [System Architecture](#-system-architecture)
-- [Three-Tier Offline Strategy](#-three-tier-offline-strategy)
+- [Network and Offline Status](#-network-and-offline-status)
 - [Technology Stack](#-technology-stack)
 - [Current Development Status](#-current-development-status)
 - [Getting Started](#-getting-started)
 - [Project Structure](#-project-structure)
 - [Islamic Content Integrity](#-islamic-content-integrity)
-- [Privacy-First Design](#-privacy-first-design)
+- [Privacy and External Processing](#-privacy-and-external-processing)
 - [Known Issues & Limitations](#-known-issues--limitations)
 - [Roadmap](#-roadmap)
 - [Contributing](#-contributing)
@@ -82,10 +82,10 @@ Millions of Muslims in rural India — particularly in **Kurnool (Andhra Pradesh
 |---------|-------------|---------------------|
 | Voice Input | ✅ Primary interface — no typing needed | ❌ Typing required |
 | Local Languages | ✅ Telugu, Urdu, Hindi, English | ❌ Usually English/Arabic only |
-| Source Citations | ✅ Every answer links to the original fatwa URL | ❌ Often uncited |
-| Read Aloud | ✅ Built-in TTS in local languages | ❌ Rare |
-| Offline Mode | ✅ Three-tier fallback (Internet → LAN → Fully Offline) | ❌ Internet-dependent |
-| Privacy | ✅ Zero telemetry, all AI runs locally | ❌ Cloud APIs, analytics |
+| Source Citations | ✅ Displays source URLs returned by retrieval | ❌ Often uncited |
+| Read Aloud | ✅ Backend TTS and Android offline fallback | ❌ Rare |
+| Offline Mode | 🟡 Partial fallbacks; no complete three-tier pipeline | ❌ Internet-dependent |
+| Privacy | ✅ No analytics found; local inference unless optional NIM is enabled | ❌ Undisclosed external data flows |
 | Open Source | ✅ GPLv3 — community-driven | ❌ Proprietary |
 
 ---
@@ -104,15 +104,15 @@ sequenceDiagram
 
     U->>App: Presses mic & speaks in Telugu/Urdu
     App->>STT: Audio (16kHz mono PCM)
-    STT-->>App: Transcribed text (Telugu/Urdu)
+    STT-->>App: Transcribed text (language depends on the selected path)
     App->>Trans: Translate to English
     Trans-->>App: English question
     App->>RAG: Search Islamic knowledge base
     RAG->>RAG: Query Expansion (add synonyms/context)
-    RAG->>RAG: Qdrant semantic search (24,520 fatwas)
+    RAG->>RAG: Search the configured Qdrant collections
     RAG->>LLM: Context + strict RAG prompt
-    LLM-->>RAG: Answer with source citations
-    RAG-->>App: Cited answer + source URLs
+    LLM-->>RAG: Generated answer
+    RAG-->>App: Answer + source URLs returned by retrieval
     App->>Trans: Translate answer to Telugu/Urdu
     Trans-->>App: Translated answer
     App->>TTS: Generate speech audio
@@ -137,34 +137,35 @@ sequenceDiagram
 - Powered by **IndicTrans2** (state-of-the-art Indic translation model)
 
 ### 📚 Authenticated Islamic Knowledge
-- **15,739 fatwas** from [IslamQA.info](https://islamqa.info/en) (neutral, no madhab bias)
-- **8,781 fatwas** from [Darul Ifta Deoband](https://darulifta-deoband.com/en) (Hanafi madhab)
-- **Every answer** includes clickable source URLs — never unattributed
+- Source SQLite databases contained **15,739 IslamQA.info** and **8,781 Deoband** fatwa rows during the 2026-11-18 audit; current Qdrant counts were unavailable
+- Backend responses include source URLs when retrieval provides them; the app displays the returned URLs
 - Madhab preference filtering (Hanafi / Neutral / All sources)
 - AI strictly instructed: *"Answer ONLY from provided context. Never use your own knowledge."*
 
 ### 🧠 Smart AI Features
 - **Query Expansion**: AI enhances vague questions with Islamic terminology before searching
-- **Conversational Clarification**: For broad topics like "Prayer", the AI asks follow-up questions
-- **Multi-turn Chat**: Follow-up questions maintain context from previous answers
+- **Conversational Clarification**: The RAG prompt requests clarification for broad topics; this behavior has not been verified end-to-end
+- **Multi-turn Chat**: The backend accepts chat history, but the current Android question flow does not populate it
 - **AI Transparency**: Users can see the expanded search query the AI used
 
-### 📵 Works Offline
-- **Three-tier architecture**: Internet → LAN → Fully Offline
+### 📵 Partial Offline Support
+- **Intended three-tier design**: Internet → LAN → Fully Offline; server routing and offline Q&A/translation are incomplete
 - On-device speech-to-text via **whisper.cpp** (182MB model, runs on phone CPU)
-- On-device translation via **Opus-MT ONNX** (planned)
-- Offline keyword search via **Room FTS5** database
-- Android built-in **TextToSpeech** for offline read-aloud
+- On-device **Opus-MT ONNX translation is not implemented** (ONNX Runtime is only a declared dependency)
+- Offline Q&A search is not implemented; Room stores saved answers but has no fatwa FTS5 table
+- Android built-in **TextToSpeech** is used when the network-tier check reports offline
+- Offline whisper.cpp is wired but currently configured to transcribe English only
+- The video library is mock data; offline video playback is not wired
 
 ### 💾 Answer History
 - All answers automatically saved to local Room database
-- Browse past answers anytime — even offline
+- Previously saved answers can be browsed offline
 - Dedicated "Answers" tab in bottom navigation
 
-### 🔒 Complete Privacy
-- **Zero telemetry** — no analytics, no crash reporters
-- **No cloud APIs** — all AI inference on local GPU or user's phone
-- Voice recordings never leave the device/server
+### 🔒 Privacy
+- No analytics or third-party crash reporting was found in the app
+- If `NVIDIA_API_KEY` is configured, the backend sends the question and retrieved context to NVIDIA NIM; otherwise it selects local Ollama
+- Audio can be uploaded to the configured backend STT service; review [SECURITY.md](SECURITY.md) for the network boundary
 - No Firebase, no Google Analytics, no third-party SDKs
 
 ---
@@ -180,8 +181,8 @@ sequenceDiagram
                            │ HTTP calls via Retrofit + OkHttp
                            ▼
 ┌──────────────────────────────────────────────────────────────────┐
-│  Layer 2: AI/NLP Core (Ubuntu Server — Docker Compose)           │
-│  faster-whisper (STT) → IndicTrans2 (translate) → Parler (TTS)  │
+│  Layer 2: AI/NLP Core (Ubuntu Server — mixed Compose/native)    │
+│  faster-whisper (STT) → IndicTrans2 (translate) → Parler TTS   │
 └──────────────────────────┬───────────────────────────────────────┘
                            │
                            ▼
@@ -199,14 +200,14 @@ sequenceDiagram
                            │
                            ▼
 ┌──────────────────────────────────────────────────────────────────┐
-│  Layer 5: Islamic Video Database (Planned)                       │
-│  YouTube lectures + whisper transcripts → searchable offline     │
+│  Layer 5: Video Library prototype                                │
+│  Mock app entries + yt-dlp metadata scraper; no playback pipeline │
 └──────────────────────────┬───────────────────────────────────────┘
                            │
                            ▼
 ┌──────────────────────────────────────────────────────────────────┐
-│  Layer 6: Self-Hosted Backend (Docker Compose)                   │
-│  FastAPI (8000) + Ollama (11434) + Qdrant (6333) +              │
+│  Layer 6: Backend (Compose + native Ollama; optional cloud NIM)  │
+│  FastAPI (8000) + native Ollama (11434) + Qdrant (6333) +        │
 │  IndicTrans2 (8001) + TTS (8002) + STT (8003)                  │
 └──────────────────────────────────────────────────────────────────┘
 ```
@@ -215,19 +216,19 @@ sequenceDiagram
 
 ---
 
-## 📵 Three-Tier Offline Strategy
+## 📵 Network and Offline Status
 
-Every feature that touches the internet implements **all three tiers** automatically:
+The app has a network-tier detector and some offline fallbacks, but the complete three-tier strategy is not implemented. In particular, backend URLs are fixed to a LAN address, so INTERNET detection does not select a configurable VPS.
 
 | Capability | Tier 1: Internet | Tier 2: LAN | Tier 3: Fully Offline |
 |-----------|-----------------|-------------|----------------------|
-| **Speech-to-Text** | faster-whisper GPU (~1s) | Same via LAN IP | whisper.cpp JNI on-device (~8s) |
-| **Translation** | IndicTrans2 GPU (best accuracy) | Same via LAN IP | Opus-MT ONNX on-device (planned) |
-| **Text-to-Speech** | Indic Parler TTS (natural voice) | Same via LAN IP | Android TTS API + Google voice packs |
-| **Q&A Search** | Qdrant semantic + LLM (full RAG) | Same via LAN IP | Room FTS5 keyword search on local DB |
-| **Video Playback** | Stream from server | Stream via LAN | ExoPlayer from local storage |
+| **Speech-to-Text** | faster-whisper service | Same configured backend | whisper.cpp JNI (English currently forced) |
+| **Translation** | IndicTrans2 service (device placement needs verification) | Same configured backend | Not implemented |
+| **Text-to-Speech** | Indic Parler TTS service | Same configured backend | Android TTS when tier reports offline |
+| **Q&A Search** | FastAPI + Qdrant + configured LLM | Same configured backend | Not implemented; saved-answer history remains local |
+| **Video Playback** | Not implemented | Not implemented | Not implemented |
 
-The app detects the network tier in real-time using `ConnectivityManager.NetworkCallback` and switches automatically.
+Network-tier detection exists, but backend URLs are hard-coded to a LAN address; this does not route Internet-tier traffic to a configurable VPS.
 
 ---
 
@@ -240,19 +241,19 @@ The app detects the network tier in real-time using `ConnectivityManager.Network
 | Language | Kotlin 2.x | Android's official modern language |
 | UI Framework | Jetpack Compose | Declarative UI — no XML layouts |
 | Architecture | MVVM + StateFlow + Hilt DI | Clean separation of concerns |
-| Local DB | Room (SQLite) + FTS5 | Offline search & answer history |
+| Local DB | Room (SQLite) | Saved-answer history; no Android FTS5 fatwa index |
 | HTTP Client | Retrofit + OkHttp | Backend API communication |
-| Video Player | ExoPlayer / Media3 | Offline + streaming video |
+| Video screen | Jetpack Compose | Mock records only; playback is not implemented |
 | Audio Capture | AudioRecord API | 16kHz mono PCM for STT |
 | Offline STT | whisper.cpp via JNI (NDK) | On-device speech recognition |
 | Offline TTS | Android TextToSpeech | Built-in speech synthesis |
 
-### Backend Server (Ubuntu + GPU)
+### Backend Services (Ubuntu host; mixed Compose/native)
 
 | Service | Port | GPU | Purpose |
 |---------|------|-----|---------|
 | FastAPI | 8000 | Optional | Main API gateway — `/query`, `/transcribe`, `/translate`, `/tts` |
-| Ollama | 11434 | YES (CUDA) | Serves Qwen3:4b LLM locally (fallback) |
+| Ollama | 11434 | Host-dependent | Local LLM selected when `NVIDIA_API_KEY` is absent |
 | Qdrant | 6333 | No | Vector database for semantic search |
 | IndicTrans2 | 8001 | YES (CUDA) | Telugu/Urdu/Hindi ↔ English translation |
 | Indic Parler TTS | 8002 | YES (CUDA) | Text-to-speech in Indian languages |
@@ -262,15 +263,15 @@ The app detects the network tier in real-time using `ConnectivityManager.Network
 
 | Model | Purpose | Size | VRAM |
 |-------|---------|------|------|
-| meta/llama-3.3-70b-instruct | Primary LLM (via NVIDIA NIM API) | Cloud | 0 GB |
-| Qwen3:4b Q4_K_M | Fallback local LLM (via Ollama) | 2.5 GB | ~2.5 GB |
-| paraphrase-multilingual-MiniLM-L12-v2 | Text embeddings for Qdrant | ~420 MB | CPU |
+| openai/gpt-oss-20b | Primary when `NVIDIA_API_KEY` is set (NVIDIA NIM) | Cloud | Not local VRAM |
+| Qwen3:4b | Ollama selected when the NIM key is absent | Local model | Uses local GPU/CPU resources |
+| Qwen3-Embedding-0.6B | Embeddings in ingestion and retrieval code (1,024 dimensions) | Local model | CPU for retrieval; ingestion scripts request CUDA |
 | IndicTrans2 (8-bit quantized) | Translation | ~2 GB | ~1.5 GB |
 | ai4bharat/indic-parler-tts | Text-to-speech | ~1.5 GB | ~1.8 GB |
 | faster-whisper-large-v3-turbo | Speech-to-text | ~1.5 GB | ~1.5 GB |
-| ggml-small-q5_1 (whisper.cpp) | Offline on-device STT | 182 MB | CPU only |
+| ggml-small-q5_1 (whisper.cpp) | Offline on-device STT; bundled in app assets | ~181 MiB | CPU only |
 
-> ⚠️ **Hardware Limit**: All GPU models are designed for the **RTX 3050 (4GB VRAM)**. Dynamic GPU offloading ensures only one model uses the GPU at a time.
+> ⚠️ **Hardware Limit**: The target GPU has 4GB VRAM. Source review did not establish a global scheduler that guarantees GPU-heavy services never overlap; validate concurrency on the target machine.
 
 ---
 
@@ -278,12 +279,12 @@ The app detects the network tier in real-time using `ConnectivityManager.Network
 
 | Phase | Name | Status | Description |
 |-------|------|--------|-------------|
-| Phase 1 | Android UI Skeleton | ✅ Complete | 5 screens with navigation, theming, accessibility |
-| Phase 2 | Backend Docker Services | ✅ Complete | FastAPI + Qdrant + Ollama containerized |
-| Phase 3 | Knowledge Ingestion | ✅ Complete | 24,520 fatwas embedded in Qdrant |
-| Phase 4 | Android ↔ Backend | ✅ Complete | Full Q&A pipeline, answer history, network detection |
-| Phase 5 | Multilingual + Offline | 🟡 ~90% | Translation, TTS, STT working; offline translation pending |
-| Phase 6 | Video Library + Deployment | ⬜ Not Started | Video indexing, production deployment |
+| Phase 1 | Android UI Skeleton | Implemented | Five navigation destinations are present |
+| Phase 2 | Backend Services | Implemented; runtime not verified here | Compose defines API, Qdrant, translation, TTS, and STT; Ollama is native |
+| Phase 3 | Knowledge Ingestion | Scripts and source databases present | Source DB counts verified; current Qdrant collections unavailable to inspect |
+| Phase 4 | Android ↔ Backend | Implemented for configured LAN endpoint | Answer history and network-tier detection are present |
+| Phase 5 | Multilingual + Offline | Partial | Online service paths exist; offline translation and offline Q&A are not implemented |
+| Phase 6 | Video Library + Deployment | Prototype started | URL metadata scraper exists; indexing, playback, and deployment remain |
 
 > 📋 For detailed feature status, see [docs/DEVELOPMENT_STATUS.md](docs/DEVELOPMENT_STATUS.md).
 
@@ -327,9 +328,9 @@ ollama pull qwen3:4b
 
 # Create environment file
 cp backend/.env.example backend/.env
-# Edit .env to add your NVIDIA_API_KEY and HF_TOKEN
+# Optionally set NVIDIA_API_KEY to enable NIM; add HF_TOKEN for gated model downloads
 
-# Start all Docker services
+# Start the Compose-managed services (Ollama runs natively on the host if local inference is selected)
 cd backend
 docker compose up -d
 
@@ -341,9 +342,10 @@ curl http://localhost:6333/
 ### 4. Ingest Islamic Knowledge
 
 ```bash
-# Run inside the FastAPI container or with appropriate Python venv
-python backend/ingest_islamqa.py    # Embeds IslamQA fatwas into Qdrant
-python backend/ingest_deoband.py    # Embeds Deoband fatwas into Qdrant
+# Run from backend/ with the configured Python environment and local model files
+cd backend
+python ingest_islamqa.py    # Recreates the islamqa collection, then inserts records
+python ingest_deoband.py    # Recreates the deoband collection, then inserts records
 ```
 
 ### 5. Test the Q&A Pipeline
@@ -354,7 +356,7 @@ curl -X POST http://localhost:8000/query \
   -d '{"question": "How to perform wudu?", "language": "en"}'
 ```
 
-> 📖 For detailed setup instructions, see [docs/SETUP_GUIDE.md](docs/SETUP_GUIDE.md) *(coming soon)*.
+> A separate `docs/SETUP_GUIDE.md` is not present. These setup notes are provisional and rely on host-mounted environments and local model files.
 
 ---
 
@@ -398,7 +400,7 @@ rushdul-ilm/
 │       └── utils/                      ← Network utils, audio helpers
 │
 ├── backend/                            ← Python server code
-│   ├── docker-compose.yml              ← All services in one file
+│   ├── docker-compose.yml              ← Containerized services; Ollama runs natively
 │   ├── fastapi_server.py               ← Main API gateway
 │   ├── rag_pipeline.py                 ← LlamaIndex RAG engine
 │   ├── translation_service.py          ← IndicTrans2 endpoint
@@ -407,7 +409,21 @@ rushdul-ilm/
 │   ├── ingest_islamqa.py               ← IslamQA → Qdrant embeddings
 │   └── ingest_deoband.py               ← Deoband → Qdrant embeddings
 │
-├── Report Documentation/               ← Internal development docs
+├── video-database/                     ← Video metadata prototype
+│   ├── scrape_channel_urls.py          ← yt-dlp URL/title/ID metadata only
+│   └── video_urls.txt                  ← Channel/video URL input list
+│
+├── Report Documentation/               ← Internal implementation reports
+│   ├── 01_PROJECT_OVERVIEW.md
+│   ├── 02_ANDROID_APP_LAYER.md
+│   ├── 03_STT_PIPELINE.md
+│   ├── 04_TRANSLATION_PIPELINE.md
+│   ├── 05_TTS_PIPELINE.md
+│   ├── 06_RAG_PIPELINE.md
+│   ├── 07_KNOWLEDGE_SOURCES.md
+│   ├── 08_VIDEO_DATABASE.md
+│   ├── 09_BACKEND_DOCKER.md
+│   └── 10_OFFLINE_STRATEGY.md
 │
 └── activity-logs/                      ← AI agent session logs
     └── ACTIVITY_LOG.md                 ← Detailed session history
@@ -420,20 +436,20 @@ rushdul-ilm/
 This project treats Islamic knowledge with the **highest level of responsibility**:
 
 ### Source Verification
-Every answer displayed in the app comes from **authenticated Islamic scholar websites only**:
+The RAG pipeline retrieves from the configured approved-source collections; citations depend on the retrieved records and are not independently validated by the app:
 
 | # | Source | URL | Madhab | Fatwas |
 |---|--------|-----|--------|--------|
-| 1 | IslamQA.info | https://islamqa.info/en | Neutral (no madhab bias) | 15,739 |
+| 1 | IslamQA.info | https://islamqa.info/en | Neutral (no madhab bias) | 15,739 source SQLite rows at 2026-11-18 audit |
 | 2 | IslamQA.org | https://islamqa.org | Neutral | Planned |
-| 3 | Darul Ifta Deoband | https://darulifta-deoband.com/en | Hanafi | 8,781 |
+| 3 | Darul Ifta Deoband | https://darulifta-deoband.com/en | Hanafi | 8,781 source SQLite rows at 2026-11-18 audit |
 
-### Strict RAG-Only Policy
+### RAG-Only Policy (Prompt-Enforced)
 ```
-❌ The AI is NEVER allowed to generate Islamic rulings from its own training data
-✅ The AI can ONLY answer from verified source documents in the vector database
-✅ Every answer MUST include the original source URL as a clickable link
-✅ If no relevant answer is found, the app says:
+⚠️ The RAG prompt instructs the model to answer only from retrieved context; this is prompt-level, not a technical guarantee
+✅ Source URLs returned by the backend are displayed as links
+⚠️ This is prompt-level behavior; the backend does not guarantee every answer has a valid source URL
+⚠️ If no relevant answer is found, the prompt instructs the model to say:
    "I could not find an answer in the approved Islamic sources.
     Please consult a qualified Islamic scholar."
 ```
@@ -443,24 +459,17 @@ New Islamic sources can **only** be added with **explicit approval** from the pr
 
 ---
 
-## 🔒 Privacy-First Design
+## 🔒 Privacy and External Processing
 
 ```
-What NEVER happens in this app:
-  ❌ No Google Analytics or Firebase
-  ❌ No crash reporters that send data externally
-  ❌ No cloud LLM API calls (OpenAI, Anthropic, Google Gemini)
-  ❌ No voice recordings sent to any cloud service
-  ❌ No user query tracking or profiling
-  ❌ No third-party SDKs that collect data
-
-What ALWAYS stays local:
-  ✅ Voice recordings — processed on Ubuntu server or on-device
-  ✅ Islamic questions — never sent to Google, OpenAI, or any cloud
-  ✅ User history — only in local Room database on the phone
-  ✅ LLM inference — Qwen3:4b via Ollama or NVIDIA NIM API
-  ✅ Translation — IndicTrans2 self-hosted / Opus-MT on phone
-  ✅ All infrastructure — fully self-hosted Docker services
+✅ No analytics SDK, third-party crash reporter, or app telemetry was found
+✅ Saved answer history is held in the local Android Room database
+⚠️ With `NVIDIA_API_KEY` configured, the backend sends the question and retrieved source
+   context to NVIDIA NIM (`openai/gpt-oss-20b`)
+✅ Without that key, the backend selects local Ollama (`qwen3:4b`)
+⚠️ NIM request failures do not automatically retry with Ollama
+⚠️ Audio may be sent over the configured HTTP connection to backend STT
+⚠️ Review [SECURITY.md](SECURITY.md) and configure the service boundary before deployment
 ```
 
 ---
@@ -469,28 +478,32 @@ What ALWAYS stays local:
 
 | Issue | Status | Workaround |
 |-------|--------|------------|
-| 4GB VRAM limit prevents running multiple GPU models simultaneously | ✅ Resolved | Dynamic GPU offloading — models load to GPU only during inference |
+| 4GB VRAM limit | 🟡 Needs runtime validation | Current source does not establish a safe global scheduler for concurrent GPU workloads |
 | Hindi translation can produce text repetition loops | ✅ Resolved | Pinned `transformers==4.45.2` for translation service |
-| UserPreferencesRepository uses in-memory storage | 🟡 Open | Needs migration to `DataStore` for persistence across restarts |
-| whisper.cpp model weights (182MB) not in repo | 🟡 By Design | Must be downloaded separately before building release APK |
+| UserPreferencesRepository uses in-memory storage | 🟡 Open | Some settings do not persist across app restarts |
+| whisper.cpp offline language setting | 🟡 Open | Model asset is bundled, but native code currently forces English |
 | Android emulator ADB drops connection sometimes | 🟡 Open | Reconnect via `adb connect` |
-| Docker containers use ~2-3GB RAM combined | 🟡 Open | Lazy loading lifespan pattern implemented to reduce idle memory |
-| Offline translation (Opus-MT ONNX) not yet implemented | 🟡 Planned | Phase 6 deliverable |
+| GPU and host-memory use under concurrent workloads | 🟡 Needs runtime validation | Validate Compose services and native Ollama together on the target hardware |
+| Offline translation (Opus-MT ONNX) not implemented | 🟡 Open | Dependency exists without an app inference implementation |
+| Offline fatwa search/Q&A not implemented | 🟡 Open | Room only stores saved answers; no local fatwa FTS table |
+| Backend address is hard-coded | 🟡 Open | Retrofit and STT/TTS calls target a fixed LAN address |
+| Translation device placement is inconsistent | 🟡 Needs verification | Code sets CUDA but moves model to CPU before placing inputs on the configured device |
 
 ---
 
 ## 🗺️ Roadmap
 
-### Phase 6 — Video Library + Deployment (Upcoming)
-- [ ] Index Islamic YouTube lectures with whisper transcripts
-- [ ] Searchable video database in Qdrant
-- [ ] Offline video download & ExoPlayer playback
-- [ ] Production backend deployment to Linux VPS
-- [ ] Google Play Store listing
+### Remaining work (Phases 5–6)
+- [ ] Resolve and test IndicTrans2 runtime device placement
+- [ ] Implement and test offline Telugu/Urdu translation
+- [ ] Implement an approved offline fatwa search/Q&A path
+- [ ] Complete video indexing, transcription, search, download, and playback
+- [ ] Configure backend addressing and verify Internet/LAN behavior
+- [ ] Verify production deployment and distribution requirements
 
 ### Future Plans
 - [ ] iOS version (after Android is complete)
-- [ ] Opus-MT ONNX for fully offline on-device translation
+- [ ] Opus-MT ONNX for on-device translation
 - [ ] Community-submitted Islamic sources (with moderation)
 - [ ] Multiple regional language support (Kannada, Tamil, Malayalam)
 - [ ] Mosque/community center deployment kits
@@ -556,8 +569,8 @@ cd backend && docker compose up -d
 
 ### Backend Environment Variables
 ```env
-NVIDIA_API_KEY=your_nvidia_nim_api_key    # For primary LLM
-HF_TOKEN=your_huggingface_token           # For gated model downloads
+NVIDIA_API_KEY=                           # Optional; set a valid key to enable cloud NIM (question/context are sent)
+HF_TOKEN=your_huggingface_token           # Used for gated model downloads
 ```
 
 ---

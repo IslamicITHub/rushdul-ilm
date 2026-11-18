@@ -2,8 +2,14 @@
 
 This document tracks the progress and implementation details of the backend services for the Rushd-ul-Ilm project.
 
+> **Current implementation snapshot (2026-11-18):** This file contains older sprint notes; treat their historical status and verification claims as history, not current runtime state. The current Compose file defines FastAPI (host networking), Qdrant, IndicTrans2, Parler TTS, and faster-whisper. Ollama is expected to run natively on the host, not as an active Compose service. The FastAPI, translation, and TTS images use Python 3.13; the STT image uses Python 3.11. Services mount host virtual environments and local model folders, so this is not a clean, self-contained Docker build. FastAPI creates `RagPipeline` in its lifespan; TTS loads its model at service startup and moves it to CUDA for requests; STT loads and releases its model per transcription request. Translation source loads models into CPU memory, moves the model and inputs to CUDA for inference, then moves the model back to CPU; this path has not been runtime-verified and has no CPU fallback because `device` is hard-coded to `"cuda"`. Compose runs one Uvicorn worker per service without `--reload`; GPU resource handling remains service-specific, with no global concurrency guarantee.
+
+The live Qdrant service was not running during the documentation audit. The current LLM selection is NVIDIA NIM `openai/gpt-oss-20b` when `NVIDIA_API_KEY` is configured, otherwise local Ollama `qwen3:4b`. See [06_RAG_PIPELINE.md](./06_RAG_PIPELINE.md) and [SECURITY.md](../SECURITY.md) for the cloud-data boundary.
+
 ## 🚀 Phase 2 Overview
 **Goal:** All local AI services (Ollama, Qdrant, FastAPI) running in Docker containers with GPU acceleration enabled.
+
+> **Historical plan:** The original goal above is retained as a sprint record. It does not describe the current deployment: Ollama runs natively on the host, while the other listed services are defined in Compose.
 
 ---
 
@@ -88,7 +94,8 @@ A `Dockerfile` was created to package the Python API. It utilizes the lightweigh
 The `fastapi` service was then added to `docker-compose.yml`:
 - **Build Context:** Configured to build from the local `./backend` directory.
 - **Port:** 8000 mapped to the host.
-- **Live Reload:** The local `backend` directory was bind-mounted to `/app` inside the container, and the startup command was set to run Uvicorn with the `--reload` flag. This allows Python code changes to take effect immediately without rebuilding the container.
+- **Historical development setup:** The backend directory was bind-mounted to `/app`; an earlier command used Uvicorn's `--reload` flag.
+- **Current setup:** Compose still bind-mounts the code, but starts Uvicorn with one worker and without `--reload`. The current FastAPI lifespan initializes `RagPipeline` at startup and clears its reference at shutdown.
 
 **Verification:**
 The container was built and started. A `curl` request to `http://localhost:8000/health` successfully returned the expected JSON payload, confirming the API is reachable.
@@ -152,17 +159,17 @@ A final end-to-end test was performed to verify the stability of all backend ser
 **Status:** ✅ COMPLETE
 
 ### 1. IndicTrans2 Translation Service
-To support Telugu and Hindi translations offline, the `ai4bharat/indictrans2-en-indic-1B` model was containerized.
+The `ai4bharat/indictrans2-en-indic-1B` model was added as a self-hosted backend translation service. This is not on-device offline translation; the Android app still needs to reach the backend.
 - **Service:** `indictrans2` running on port `8001`.
 - **Environment:** Created `venv_indictrans2` to isolate its specific dependency versions (e.g., `transformers==4.45.2`).
-- **Memory Strategy:** Implemented a **Dynamic GPU Offloading** mechanism. Because the RTX 3050 only has 4GB of VRAM, the model loads into CPU RAM by default. It moves to the GPU (`.to("cuda")`) right before translating, and returns to the CPU (`.to("cpu")`) immediately after. Aggressive garbage collection (`del inputs`, `gc.collect()`) and `torch.cuda.empty_cache()` are used to free the VRAM for the TTS service.
+- **Memory Strategy:** Current source sets `device = "cuda"`, initially loads the model on CPU, moves the model and input tensors to CUDA for inference, then moves the model back to CPU. This path has not been runtime-verified; older CPU-only notes and source comments are stale, and this configuration does not provide a CPU fallback.
 
 ### 2. Parler-TTS Speech Service
-To synthesize high-quality speech offline, the `ai4bharat/indic-parler-tts` model was containerized.
+The `ai4bharat/indic-parler-tts` model was added as a backend speech service. It is not on-device offline TTS; the Android app needs to reach the backend to use this service.
 - **Service:** `tts` running on port `8002`.
 - **Environment:** Created `venv_tts` to isolate `parler_tts` dependencies.
 - **Download Script:** Added `download_tts.py` to securely fetch the gated model using the `.env` Hugging Face Token.
-- **Memory Strategy:** Utilizes the same Dynamic GPU Offloading orchestrator as the translation service. A typecast was added to convert the `float16` output tensor to `float32`, which is required by `scipy.io.wavfile` to serialize the audio correctly into a base64 WAV response.
+- **Model lifecycle:** The service loads its model and tokenizer during FastAPI startup into CPU memory, moves the model to CUDA for inference, then moves it back to CPU. The model-loading error path and GPU concurrency have not been runtime-verified; there is no global GPU scheduler.
 
 ---
 
@@ -205,7 +212,7 @@ backend/
 To provide highly accurate speech-to-text when connected to the local network, the `faster-whisper-large-v3-turbo` model was containerized.
 - **Service:** `stt` running on port `8003`.
 - **Environment:** Created `venv_stt` for its specific dependencies including `faster-whisper` and `requests`.
-- **Memory Strategy:** Loaded the model with `compute_type="int8"` which ensures it fits inside the limited 4GB VRAM of the host machine while maintaining accuracy and speed.
+- **Memory Strategy:** The service configures CUDA with `compute_type="int8"` and loads the model on demand for each transcription request, then deletes it and runs garbage collection. This is not proof that the workload always fits the 4GB GPU, and requests are not coordinated by a global GPU scheduler.
 - **Android Integration:** The Android app was updated in Phase 5.3 to send captured audio via Retrofit (Multipart) when the network is available. When the network is unavailable, it gracefully falls back to the local `whisper.cpp` JNI execution.
 ```
 
@@ -223,10 +230,8 @@ To fix this without destroying the grammar via chunking, we implemented a **Hybr
 2. **Cell-by-Cell Table Translation:** Table rows (e.g., `| Cell A | Cell B |`) are dynamically split by pipes (`|`). Each cell is translated individually, then perfectly re-joined with the pipes.
 3. **Inline Tagging (HTML Trick):** Standard Markdown bold/italics (`**word**`) are temporarily converted to HTML (`<b>word</b>`) before translation. Since models like IndicTrans2 are trained on massive amounts of web-scraped data, they natively understand HTML tags and keep them wrapped around the correct translated word without hallucinating. Post-translation, the HTML tags are safely swapped back to Markdown asterisks.
 
-### Hardware Scaling (CPU Offload)
-The IndicTrans2 1B model was crashing the GPU with a CUDA Out of Memory (OOM) error because the 4GB RTX 3050 VRAM was completely filled by the primary LLM (`Qwen3`/`Ollama`) and STT services. 
-
-*Fix:* The service was permanently hardcoded to execute on the CPU (`device="cpu"`), leveraging the 16GB of standard RAM and native `float32` AVX2 instruction processing on the Intel i5 10500H. This guarantees zero OOM crashes for massive translation tasks.
+### Historical Hardware Scaling Note (superseded)
+An earlier activity-log entry described forcing IndicTrans2 to CPU after an OOM report. The current checked-in implementation instead hard-codes `device = "cuda"`, stages the model in CPU memory, moves it to CUDA for inference, and offloads it afterward. The old CPU-only description and nearby source comments do not match that executable path. Do not treat either the earlier OOM fix or the current offload path as a guarantee against OOM; validate the service on the target hardware.
 
 
 ### Markdown Spacing & Stray Tag Fix

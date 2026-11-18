@@ -6,7 +6,6 @@
 # ⚠️  MANDATORY FOR ALL AI AGENTS: Read this file COMPLETELY before writing a single line of code.
 # ⚠️  After reading this file → read SPRINT_SYSTEM.md → read activity-logs/ACTIVITY_LOG.md → find CURRENT_MICRO_TASK → start there.
 # ⚠️  Do NOT ask the developer to re-explain the project. Everything is in this file + SPRINT_SYSTEM.md + the PDF.
-
 ---
 
 ## 🔑 PROJECT IDENTITY
@@ -55,25 +54,25 @@ Run through this checklist at the start of EVERY session. Check each item in ord
 | Language | Kotlin | 2.x | Primary language |
 | UI Framework | Jetpack Compose | Latest BOM | No XML layouts allowed |
 | Architecture | MVVM + StateFlow + Hilt DI | — | Hilt from day one |
-| Local DB | Room (SQLite) | — | FTS5 for offline keyword search |
+| Local DB | Room (SQLite) | — | Stores saved answers; no offline fatwa FTS5 index is implemented |
 | HTTP Client | Retrofit + OkHttp | — | Calls FastAPI at port 8000 |
-| Video Player | ExoPlayer / Media3 | Latest | Offline + streaming |
+| Video Playback | ExoPlayer / Media3 | Latest | Dependency/target only; the current video list uses mock data and is not wired to playback |
 | Audio Capture | AudioRecord API | — | 16kHz mono PCM only |
 | Network Check | ConnectivityManager | — | Ping-based tier detection |
-| Offline STT | whisper.cpp via JNI | ggml-small-q5_0 (182MB) | Android NDK + CMake |
-| Offline Translation | ONNX Runtime Android | 1.17.3 | Opus-MT ONNX INT8 models |
-| Offline TTS | Android TextToSpeech | — | Google Telugu + Urdu packs |
+| Offline STT | whisper.cpp via JNI | ggml-small-q5_1 bundled in app assets | Current JNI configuration forces English |
+| Offline Translation | ONNX Runtime Android | 1.17.3 | Runtime/inference for Opus-MT is not implemented |
+| Offline TTS | Android TextToSpeech | — | Used by the offline path; installed voice languages depend on device |
 
-### Server (Ubuntu machine with RTX 3050 → any Linux VPS)
+### Server (Ubuntu host with RTX 3050; VPS portability not yet verified)
 
 | Service | Docker Image | Port | GPU | Purpose |
 |---------|-------------|------|-----|---------|
-| FastAPI | python:3.11-slim | 8000 | Optional | Main API — /transcribe /translate /tts /query |
-| Ollama | non-docker | 11434 | YES (CUDA) | Serves Qwen3:4b LLM |
+| FastAPI | python:3.13-slim | 8000 | Optional | Main API — /transcribe /translate /tts /query |
+| Ollama | non-docker | 11434 | Host-dependent | Local LLM selected when NVIDIA_API_KEY is absent |
 | Qdrant | qdrant/qdrant | 6333 | No | Vector semantic search |
-| IndicTrans2 | custom Python 3.11 | 8001 | YES (CUDA) | Telugu/Urdu ↔ English |
-| Coqui XTTS-v2 | custom Python 3.11 | 8002 | YES (CUDA) | Text-to-Speech |
-| faster-whisper | custom Python 3.11 | 8003 | YES (CUDA) | GPU speech recognition |
+| IndicTrans2 | custom Python 3.13 image | 8001 | YES (CUDA) | Telugu/Urdu/Hindi translation; device placement needs verification |
+| Indic Parler TTS | custom Python 3.13 image | 8002 | YES (CUDA) | Current backend TTS implementation |
+| faster-whisper | custom Python 3.11 image | 8003 | YES (CUDA) | GPU speech recognition |
 
 **HARDWARE LIMIT: RTX 3050 = 4GB VRAM. Never load more than 3.5GB of models simultaneously.**
 
@@ -154,70 +153,45 @@ rushd-ul-ilm/                          ← Project root
 │       └── utils/                      ← Network check, audio helpers
 │
 ├── backend/                            ← Ubuntu server Python code
-│   ├── docker-compose.yml              ← Starts all services with one command
+│   ├── docker-compose.yml              ← Defines containerized services; Ollama runs separately on the host
 │   ├── fastapi_server.py               ← Main FastAPI app
-│   ├── rag_pipeline.py                 ← LlamaIndex + Qdrant + Ollama
+│   ├── rag_pipeline.py                 ← LlamaIndex + Qdrant + selected LLM (NIM or Ollama)
 │   ├── stt_service.py                  ← faster-whisper endpoint
 │   ├── translation_service.py          ← IndicTrans2 endpoint
-│   └── tts_service.py                  ← Coqui XTTS-v2 endpoint
+│   └── tts_service.py                  ← Indic Parler TTS endpoint
 │
-├── scraping/                           ← Islamic source download scripts
-│   ├── fast_mirror.py                  ← islamqa.info scraper (EXISTS)
-│   ├── dump_to_db.py                   ← islamqa.info → SQLite (EXISTS)
-│   └── deoband_offline_downloader.py   ← Deoband scraper (EXISTS)
-│
-└── video-database/                     ← Islamic lecture indexing scripts
-    ├── index_videos.py                 ← FFmpeg metadata extraction
-    └── transcribe_videos.py            ← faster-whisper batch transcription
+└── video-database/                     ← Current YouTube URL metadata scraper
+    └── scrape_channel_urls.py          ← Prototype channel URL metadata collection
 ```
+
+Islamic source SQLite databases are local source data; backend ingestion scripts live under `backend/`. Do not assume the source-download scripts described in older plans exist in this repository.
 
 ---
 
-## 🔁 THREE-TIER OFFLINE FALLBACK — MANDATORY FOR ALL FEATURES
+## 🔁 THREE-TIER OFFLINE STRATEGY — TARGET DESIGN, PARTIALLY IMPLEMENTED
 
-Every feature that touches the internet MUST implement all three tiers.
-The app switches tiers automatically using ConnectivityManager + socket ping.
+New network-dependent features should provide the three tiers when practical, but do not describe the complete fallback as already implemented. Current limitations: backend URLs use a fixed LAN address; offline whisper.cpp forces English; offline translation and offline Q&A are not implemented; video playback is not wired.
 
 ```
-Tier 1 — Internet available:
-  STT:         faster-whisper-large-v3-turbo GPU (port 8003) — ~1 second
-  Translation: IndicTrans2 GPU (port 8001) — best accuracy
-  TTS:         Coqui XTTS-v2 (port 8002) — natural voice
-  Q&A:         LlamaIndex + Qdrant semantic + Qwen3:4b (ports 6333, 11434)
-  Video search: Qdrant transcript search
+Current server path (configured LAN endpoint):
+  STT:         faster-whisper service (port 8003)
+  Translation: IndicTrans2 service (port 8001; device placement needs verification)
+  TTS:         Indic Parler TTS (port 8002)
+  Q&A:         LlamaIndex + Qdrant and a selected LLM
 
-Tier 2 — LAN only (same Wi-Fi as Ubuntu machine):
-  All same as Tier 1 but via 192.168.x.x instead of cloud IP
+LLM selection:
+  NVIDIA NIM:  openai/gpt-oss-20b, selected when NVIDIA_API_KEY is configured; question and retrieved context are sent to the cloud
+  Ollama:      qwen3:4b, selected when NVIDIA_API_KEY is absent; NIM failures do not automatically retry with Ollama
 
-Tier 3 — Fully offline (no network at all):
-  STT:         whisper.cpp JNI (ggml-small-q5_0, 182MB, on-device) — ~8 sec
-  Translation: Opus-MT ONNX INT8 (on-device, ~525MB total)
-  TTS:         Android TextToSpeech API + Google voice packs (~50MB)
-  Q&A:         Room FTS5 keyword search on downloaded SQLite fatwa DB
-  Video search: Room FTS5 on downloaded video metadata SQLite DB
-  Video play:  ExoPlayer from local phone storage
+Implemented offline paths:
+  STT:         whisper.cpp JNI (ggml-small-q5_1 bundled; current native configuration forces English)
+  TTS:         Android TextToSpeech when tier detection reports offline
+  Q&A:         Not implemented; Room stores saved answers only
+  Translation: Not implemented on-device
+  Video:       Not implemented
 ```
 
-**Network detection code (use this exact pattern):**
-```kotlin
-// Check network tier in this order — always check LAN before internet
-fun detectNetworkTier(context: Context): NetworkTier {
-    val cm = context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
-    // Check if ANY network is available at all
-    val network = cm.activeNetwork ?: return NetworkTier.OFFLINE
-    val caps = cm.getNetworkCapabilities(network) ?: return NetworkTier.OFFLINE
-    // Try to ping the local Ubuntu server (LAN check — 200ms timeout)
-    return if (pingServer("192.168.1.100", 8000, timeoutMs = 200)) {
-        NetworkTier.LAN  // Local server is reachable
-    } else if (caps.hasCapability(NetworkCapabilities.NET_CAPABILITY_INTERNET)) {
-        NetworkTier.INTERNET  // Internet is available, use cloud/VPS
-    } else {
-        NetworkTier.OFFLINE  // No network at all — use on-device models
-    }
-}
-
-enum class NetworkTier { INTERNET, LAN, OFFLINE }
-```
+Connectivity detection exists, but it does not yet configure separate Internet and LAN backend endpoints. Inspect the current `NetworkUtils` and network module before changing that behavior; do not copy a sample private IP as if it were the active endpoint.
 
 ---
 
@@ -333,7 +307,10 @@ RULE S7 — PHASE BOUNDARY CONFIRMATION
 
 ```
 ❌ Change package name from com.rushdululilm.app
-❌ Use any cloud LLM API (OpenAI, Anthropic, Google Gemini API) — ALL inference is local
+❌ Add a new cloud LLM provider without explicit developer approval
+✅ Existing approved optional cloud path: NVIDIA NIM, selected only when NVIDIA_API_KEY is configured
+⚠️ In NVIDIA NIM mode, disclose that the question and retrieved source context are sent to the provider
+⚠️ If NVIDIA NIM fails, current code does not automatically retry with Ollama
 ❌ Add Firebase Analytics, Google Analytics, or any third-party telemetry
 ❌ Add Crashlytics, Sentry, or any crash reporter that sends data externally
 ❌ Generate Islamic rulings from LLM training data — RAG only

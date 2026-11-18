@@ -22,23 +22,23 @@ If you discover a security vulnerability in Rushd-ul-Ilm, please report it respo
 
 ## Security Principles
 
-This project is built with a **privacy-first** design:
+The app currently has no analytics or third-party crash reporting identified in its dependencies. The backend has both local and cloud inference paths:
 
-- ✅ **Zero telemetry** — no analytics, crash reporters, or tracking
-- ✅ **No cloud AI APIs** — all inference runs locally or on self-hosted infrastructure
-- ✅ **No data exfiltration** — voice recordings and questions never leave the device/server
-- ✅ **No third-party SDKs** that collect user data
-- ✅ **Self-hosted infrastructure** — Docker Compose, Ollama, Qdrant are all local
+- When `NVIDIA_API_KEY` is configured, the backend sends the user's question and retrieved source context to NVIDIA NIM (`openai/gpt-oss-20b`).
+- When the key is absent, the backend selects local Ollama (`qwen3:4b`).
+- A failed NIM request does not automatically retry with Ollama.
+- Audio sent to backend STT leaves the phone and is processed by the configured backend service.
+- Saved answer history is stored in the Android Room database; backend request persistence was not independently runtime-verified during the documentation audit.
 
 ### Sensitive Data Handling
-- User voice recordings are processed and immediately discarded
+- User voice recordings are sent to the configured backend STT service when using online transcription; retention/deletion behavior should be verified before deployment
 - Question history is stored only in the local Room database on the user's phone
-- Server-side processing does not persist user data beyond the request lifecycle
+- Do not claim server-side non-persistence without verifying the deployed service and its logs/storage
 - API keys (NVIDIA_API_KEY, HF_TOKEN) must be stored in environment variables, never in source code
 - `local.properties` and `.env` files are excluded from version control
 
 ### Network Security
 - The app uses `network_security_config.xml` to control HTTP traffic permissions
 - Production deployments should use HTTPS for all server communication
-- The development configuration allows cleartext HTTP only for `10.0.2.2` (Android emulator host)
+- The development configuration permits cleartext HTTP for configured development endpoints; production deployments should use HTTPS and review `network_security_config.xml`
 

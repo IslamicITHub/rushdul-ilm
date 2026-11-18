@@ -209,8 +209,6 @@ NOTES_FOR_NEXT_AGENT:
 GRAPHITI_UPDATED: NOT RUNNING
 MEM0_UPDATED:     NOT RUNNING
 
----
-
 ## Session 2026-05-30 10:14
 AGENT: Codex (GPT-5 coding agent)
 PHASE: 1 — Android UI Skeleton
@@ -3486,6 +3484,96 @@ NEXT_MICRO_TASK: Phase 6 tasks
 NEXT_MICRO_TASK_DESCRIPTION: Continue remaining tasks.
 
 BLOCKERS: None.
+
+GRAPHITI_UPDATED: NOT RUNNING
+MEM0_UPDATED:     NOT RUNNING
+
+---
+
+## Session 2026-11-18
+AGENT: Copilot SDK in VS Code
+PHASE: Documentation synchronization (current build phase unresolved)
+SPRINT: Documentation audit follow-up
+SUB_SPRINT: N/A
+MICRO_TASK_COMPLETED: Approved documentation synchronization
+MICRO_TASK_DESCRIPTION: Align the README, reports, architecture/status references, policy/context docs, and task dashboard with audited source-code behavior. No application code was changed.
+
+TASKS_COMPLETED:
+  - Updated README descriptions for offline coverage, RAG/source guarantees, model/service selection, fixed LAN routing, privacy boundary, and current phase progress.
+  - Added/updated the Report Documentation pipeline and implementation snapshots; clarified unimplemented offline translation/Q&A and mock video behavior.
+  - Updated architecture, development status, report maintenance rules, SECURITY.md, CONTRIBUTING.md, AGENT_RULES.md, AI_SYSTEM_PROMPT.md, GEMINI.md, and backend/.env.example to disclose NVIDIA NIM data flow and actual local Ollama selection.
+  - Marked the SPRINT_SYSTEM.md task pointer unresolved because its Phase 5 pointer conflicts with the latest activity-log Phase 6 direction; did not invent a task ID.
+  - Preserved the existing unrelated whitespace-only change in AGENT_RULES.md.
+
+FILES_CHANGED:
+  - README.md
+  - REPORT_DOC_RULES.md
+  - Report Documentation/01_PROJECT_OVERVIEW.md
+  - Report Documentation/02_ANDROID_APP_LAYER.md
+  - Report Documentation/03_STT_PIPELINE.md (created)
+  - Report Documentation/03_KNOWLEDGE_INGESTION.md (renamed to 07_KNOWLEDGE_SOURCES.md)
+  - Report Documentation/04_TRANSLATION_PIPELINE.md
+  - Report Documentation/05_TTS_PIPELINE.md (created)
+  - Report Documentation/06_RAG_PIPELINE.md (created)
+  - Report Documentation/08_VIDEO_DATABASE.md
+  - Report Documentation/09_BACKEND_DOCKER.md
+  - Report Documentation/10_OFFLINE_STRATEGY.md (created)
+  - docs/ARCHITECTURE.md
+  - docs/DEVELOPMENT_STATUS.md
+  - AGENT_RULES.md
+  - AI_SYSTEM_PROMPT.md
+  - GEMINI.md
+  - CONTRIBUTING.md
+  - SECURITY.md
+  - backend/.env.example
+  - SPRINT_SYSTEM.md
+  - activity-logs/ACTIVITY_LOG.md
+
+CURRENT_MICRO_TASK: Approved documentation synchronization (complete)
+NEXT_MICRO_TASK: UNRESOLVED — maintainer must reconcile Phase 5 offline work with Phase 6 task pointer
+NEXT_MICRO_TASK_DESCRIPTION: Select the authoritative phase/sprint/micro-task before starting numbered implementation work.
+BLOCKERS: Current phase/task pointer disagreement between the prior sprint dashboard and latest activity log; no code work should begin until clarified.
+
+VALIDATION:
+  - No Android build, tests, backend startup, or live Qdrant inspection was run; this was documentation-only.
+  - After the final documentation edits, relative Markdown links in project documentation passed a local-path check; third-party vendored documentation was excluded.
+  - `git diff --check` passed; changed files are documentation/configuration only, with no application source changes.
+  - Graphify was not used, per developer request.
+
+GRAPHITI_UPDATED: NOT RUNNING
+MEM0_UPDATED:     NOT RUNNING
+
+---
+
+## Session 2026-11-18 — Git-History Documentation Follow-up
+AGENT: Copilot SDK in VS Code
+PHASE: Documentation synchronization (current build phase unresolved)
+SPRINT: Git-history audit follow-up
+SUB_SPRINT: N/A
+MICRO_TASK_COMPLETED: Approved backend lifecycle documentation updates
+MICRO_TASK_DESCRIPTION: Compare implementation-related commit history with current reports and GitHub documentation; correct specifically approved documentation gaps.
+
+TASKS_COMPLETED:
+  - Reviewed the active main-branch history through `28c1913c` and distinguished the July 9 commit's actual diff from broader claims in its commit message.
+  - Updated the backend report to distinguish historical setup notes from current Compose and model-lifecycle behavior; corrected stale `--reload`, CPU-only, and “offline” descriptions.
+  - Added source-based backend model lifecycle details and GPU concurrency limitations to the architecture reference.
+  - Clarified that the old Coqui XTTS-v2 sprint label does not describe the current Indic Parler TTS implementation.
+  - Confirmed README, CONTRIBUTING, and SECURITY already describe the main recent implementation and privacy boundaries; no changes were needed there.
+  - Made no Android or backend source-code changes.
+
+FILES_CHANGED:
+  - `Report Documentation/09_BACKEND_DOCKER.md`
+  - `docs/ARCHITECTURE.md`
+  - `SPRINT_SYSTEM.md`
+  - `activity-logs/ACTIVITY_LOG.md`
+
+NEXT_TASK: UNRESOLVED — maintainer must reconcile Phase 5 offline work with the Phase 6 task pointer
+BLOCKERS: The authoritative next implementation phase/micro-task remains unresolved; no numbered implementation task was started.
+
+VALIDATION:
+  - `git diff --check` passed, and the approved documentation diff sections were reviewed.
+  - No application build or runtime service test was run; this change is documentation-only.
+  - Graphify was not used, per developer request.
 
 GRAPHITI_UPDATED: NOT RUNNING
 MEM0_UPDATED:     NOT RUNNING

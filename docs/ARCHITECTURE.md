@@ -2,18 +2,20 @@
 
 > Detailed technical architecture documentation for developers and contributors.
 
+> **Implementation snapshot (audited 2026-11-18):** This document describes the code currently present, not the originally planned end state. Room stores saved answers only; on-device Q&A/FTS5 and Opus-MT inference are not implemented. The video list is mock data. Android backend URLs point to a fixed LAN address. The backend uses NVIDIA NIM only when `NVIDIA_API_KEY` is configured; otherwise it selects local Ollama. NIM errors do not automatically retry with Ollama.
+
 ---
 
 ## Table of Contents
 
 - [System Overview](#system-overview)
 - [Six-Layer Architecture](#six-layer-architecture)
-- [Three-Tier Offline Strategy](#three-tier-offline-strategy)
+- [Network and Offline Status](#network-and-offline-status)
 - [Android App Architecture (MVVM)](#android-app-architecture-mvvm)
 - [Backend Services (Docker Compose)](#backend-services-docker-compose)
 - [RAG Pipeline Flow](#rag-pipeline-flow)
 - [End-to-End Data Flow](#end-to-end-data-flow)
-- [Dynamic GPU Offloading](#dynamic-gpu-offloading)
+- [GPU Resource Constraints](#gpu-resource-constraints)
 - [Technology Decision Matrix](#technology-decision-matrix)
 - [Network Tier Detection](#network-tier-detection)
 
@@ -26,7 +28,7 @@ graph TB
     subgraph "📱 User's Android Phone"
         UI["Jetpack Compose UI<br/>5 Screens"]
         VM["ViewModels<br/>(MVVM + Hilt DI)"]
-        ROOM["Room DB<br/>(SQLite + FTS5)"]
+        ROOM["Room DB<br/>(saved answers)"]
         WHISPER_LOCAL["whisper.cpp JNI<br/>(Offline STT)"]
         ANDROID_TTS["Android TTS API<br/>(Offline TTS)"]
     end
@@ -38,7 +40,7 @@ graph TB
         INDICTRANS["IndicTrans2<br/>:8001"]
         TTS_SVC["Indic Parler TTS<br/>:8002"]
         STT_SVC["faster-whisper<br/>:8003"]
-        NIM["NVIDIA NIM API<br/>(Llama 3.3 70B)"]
+        NIM["NVIDIA NIM API<br/>(openai/gpt-oss-20b)"]
     end
 
     subgraph "📚 Knowledge Base"
@@ -50,15 +52,15 @@ graph TB
     VM --> ROOM
     VM --> WHISPER_LOCAL
     VM --> ANDROID_TTS
-    VM -->|"Retrofit + OkHttp"| FASTAPI
-    FASTAPI --> OLLAMA
+    VM -->|"Retrofit + OkHttp; fixed LAN URL"| FASTAPI
+    FASTAPI -->|"when NIM key absent"| OLLAMA
     FASTAPI --> QDRANT
     FASTAPI --> INDICTRANS
     FASTAPI --> TTS_SVC
     FASTAPI --> STT_SVC
-    FASTAPI -->|"Cloud API"| NIM
-    ISLAMQA -->|"Embedded vectors"| QDRANT
-    DEOBAND -->|"Embedded vectors"| QDRANT
+    FASTAPI -->|"when NIM key present; question and retrieved context leave host"| NIM
+    ISLAMQA -->|"ingestion scripts"| QDRANT
+    DEOBAND -->|"ingestion scripts"| QDRANT
 ```
 
 ---
@@ -71,76 +73,48 @@ graph TB
 - **5 Screens**: Home (mic), Answer, Answers History, Video Library, Settings
 - **Key Design**: Voice-first, 40%+ screen mic button, 48dp+ touch targets, bilingual labels
 
-### Layer 2 — AI/NLP Core
+### Layer 2 — AI/NLP Services
 - **STT**: faster-whisper (GPU) or whisper.cpp (on-device)
-- **Translation**: IndicTrans2 (GPU, 8-bit quantized) — Telugu/Urdu/Hindi ↔ English
+- **Translation**: IndicTrans2 service; its current device placement is inconsistent and needs runtime verification
 - **TTS**: Indic Parler TTS (GPU) or Android TTS API (offline)
-- **LLM**: NVIDIA NIM (Llama 3.3 70B primary) + Ollama Qwen3:4b (fallback)
+- **LLM**: NVIDIA NIM (`openai/gpt-oss-20b`) when the API key is configured; otherwise local Ollama (`qwen3:4b`). Failures do not trigger automatic fallback.
 
 ### Layer 3 — Islamic Knowledge Sources
-- Scraped and structured from authenticated Islamic scholar websites
-- Stored in SQLite databases with metadata (title, question, answer, URL)
-- Converted to vector embeddings for semantic search
+- Scraped data is stored in source SQLite databases with metadata (title, question, answer, URL)
+- Ingestion scripts generate 1,024-dimensional Qwen3-Embedding-0.6B vectors for Qdrant
+- Source database row counts were verified during the audit; current live Qdrant counts were unavailable
 
 ### Layer 4 — RAG Pipeline
 - **Framework**: LlamaIndex
 - **Retrieval**: Multi-collection Qdrant semantic search
-- **Generation**: Strict prompt — answers only from provided context with source citations
-- **Enhancement**: Query expansion, conversational clarification, chat history
+- **Generation**: Prompt instructs the model to answer only from provided context and cite source URLs; this is prompt-level, not a guarantee of valid citations
+- **Enhancement**: Query expansion is implemented; backend accepts chat history, but the Android question flow does not populate it
 
-### Layer 5 — Islamic Video Database (Planned)
-- YouTube Islamic lectures indexed with whisper transcripts
-- Searchable by topic via Qdrant
-- Offline playback via ExoPlayer
+### Layer 5 — Video Library Prototype
+- Android currently displays five mock video records
+- The video scraper is limited to YouTube channel URL metadata
+- Transcription, indexing, downloads, and ExoPlayer playback are not wired
 
-### Layer 6 — Self-Hosted Backend
-- Docker Compose orchestration
-- All services on a single Ubuntu machine with RTX 3050 GPU
-- Portable to any Linux VPS with Docker support
+### Layer 6 — Backend
+- Docker Compose defines FastAPI, Qdrant, IndicTrans2, Parler TTS, and faster-whisper; Ollama runs natively on the host
+- NVIDIA NIM is an optional cloud service, not part of Docker Compose
+- Compose uses host-mounted environments and local model directories; portability to a VPS is not established
 
 ---
 
-## Three-Tier Offline Strategy
+## Network and Offline Status
 
-```mermaid
-graph LR
-    subgraph "Tier 1: Internet"
-        I_STT["faster-whisper GPU<br/>~1 second"]
-        I_TRANS["IndicTrans2 GPU<br/>Best accuracy"]
-        I_TTS["Indic Parler TTS<br/>Natural voice"]
-        I_RAG["Qdrant + LLM<br/>Full semantic search"]
-    end
+The intended three-tier design is **incomplete**. Connectivity detection classifies the connection, but API, STT, and TTS endpoints are configured with a fixed LAN address; INTERNET detection does not currently select a public server.
 
-    subgraph "Tier 2: LAN Only"
-        L_STT["Same as Tier 1<br/>via 192.168.x.x"]
-        L_TRANS["Same as Tier 1<br/>via local IP"]
-        L_TTS["Same as Tier 1<br/>via local IP"]
-        L_RAG["Same as Tier 1<br/>via local IP"]
-    end
+| Capability | Server path | Offline path present in code |
+|-----------|-------------|------------------------------|
+| Speech-to-text | faster-whisper endpoint at configured backend | whisper.cpp JNI exists; native inference currently forces English |
+| Translation | IndicTrans2 service; runtime device placement needs verification | No Opus-MT ONNX inference implementation |
+| Text-to-speech | Indic Parler TTS endpoint | Android TextToSpeech is used when tier reports offline |
+| Q&A retrieval | FastAPI + Qdrant + selected LLM | No offline fatwa index or offline answer pipeline |
+| Video | Not implemented | Not implemented |
 
-    subgraph "Tier 3: Fully Offline"
-        O_STT["whisper.cpp JNI<br/>On-device ~8s"]
-        O_TRANS["Opus-MT ONNX<br/>On-device (planned)"]
-        O_TTS["Android TTS API<br/>Google voice packs"]
-        O_RAG["Room FTS5<br/>Keyword search"]
-    end
-
-    DETECT["NetworkUtils<br/>detectNetworkTier()"] --> I_STT
-    DETECT --> L_STT
-    DETECT --> O_STT
-```
-
-### How Network Detection Works
-1. `ConnectivityManager.NetworkCallback` provides a reactive stream of connectivity changes
-2. The app attempts to ping the local Ubuntu server (192.168.x.x:8000) with 200ms timeout
-3. If the LAN server responds → **Tier 2 (LAN)**
-4. If not, check `NET_CAPABILITY_INTERNET` → **Tier 1 (Internet)**
-5. Otherwise → **Tier 3 (Offline)**
-
-The app shows a visual banner:
-- 🟢 No banner when online
-- 🟠 `"📵 Offline Mode — Using Downloaded Knowledge"` when Tier 3 is active
-- 🟢 Brief `"Back Online!"` notification when connectivity restores
+`ConnectivityManager` detection and a LAN reachability check inform the tier state, but this status must not be interpreted as complete Internet/LAN service routing.
 
 ---
 
@@ -241,12 +215,23 @@ graph TB
 
 | Service | Docker Image | Volumes | GPU | Notes |
 |---------|-------------|---------|-----|-------|
-| **fastapi** | Custom (python:3.11-slim) | `./:/app`, local_models, data folders | No | Host networking for Ollama access |
+| **fastapi** | Custom (python:3.13-slim) | `./:/app`, local_models, data folders | No | Host networking for Ollama access |
 | **qdrant** | qdrant/qdrant:latest | qdrant_data (named) | No | Persistent vector storage |
-| **indictrans2** | Custom (python:3.11) | venv_indictrans2, hf_models_data | NVIDIA | 8-bit quantized models |
-| **tts** | Custom (python:3.11) | venv_tts, local_models | NVIDIA | Float16 model loading |
-| **stt** | Custom (python:3.11) | venv_stt | NVIDIA | faster-whisper-large-v3-turbo |
-| **ollama** | Native (not Docker) | ~/.ollama | NVIDIA | Runs on host, not in container |
+| **indictrans2** | Custom (Python 3.13 image) | Host venv and model directories | NVIDIA | Runtime device placement needs verification |
+| **tts** | Custom (Python 3.13 image) | Host venv and local model directories | NVIDIA | Indic Parler TTS |
+| **stt** | Custom (Python 3.11 image) | Host venv | NVIDIA | faster-whisper service |
+| **ollama** | Native (not Docker) | `~/.ollama` | Host-dependent | Used only when `NVIDIA_API_KEY` is absent |
+
+### Backend Model Lifecycles
+
+| Service | Loading and cleanup behavior |
+|---------|------------------------------|
+| **FastAPI / RAG** | A FastAPI lifespan creates `RagPipeline` at startup and clears the reference at shutdown. |
+| **IndicTrans2** | Translation models are loaded on demand by direction into CPU memory, moved with their inputs to CUDA for inference, then moved back to CPU. The source hard-codes CUDA; runtime behavior has not been verified and there is no CPU fallback. |
+| **Parler TTS** | The model and tokenizer load during service startup into CPU memory. The model moves to CUDA for inference and is returned to CPU afterward. |
+| **faster-whisper STT** | The model is constructed inside each `/transcribe` request, then deleted and Python garbage collection is run after inference. Compose sets `LD_LIBRARY_PATH` for the mounted CUDA libraries. |
+
+These are per-service strategies, not a shared GPU scheduler. The Compose commands use one Uvicorn worker per service; that does not prevent concurrent requests across different services from competing for GPU memory. Validate GPU and host-memory behavior on the target machine.
 
 ---
 
@@ -261,7 +246,7 @@ sequenceDiagram
     participant QD as Qdrant (:6333)
     participant LLM as LLM (NIM/Ollama)
 
-    App->>API: POST /query {question, language, sources, chat_history}
+    App->>API: POST /query {question, language, sources}
 
     alt language != "en"
         API->>Trans: Translate question to English
@@ -282,8 +267,8 @@ sequenceDiagram
     Note over RAG: Context Assembly
     RAG->>RAG: Build context with source URLs
 
-    Note over RAG: LLM Generation (Strict RAG Prompt)
-    RAG->>LLM: Context + "Answer ONLY from provided context. Cite URLs."
+    Note over RAG: LLM Generation (prompt-enforced RAG instruction)
+    RAG->>LLM: Context + instruction to answer only from context and cite URLs
     LLM-->>RAG: Generated answer with citations
 
     RAG-->>API: {answer, source_urls, expanded_query}
@@ -295,6 +280,8 @@ sequenceDiagram
 
     API-->>App: {answer, source_urls, question, expanded_query}
 ```
+
+The backend accepts chat history from API clients, but the current Android question flow does not populate that field. Prompt instructions and UI source links do not guarantee that each model answer contains a valid citation.
 
 ### RAG Safety Prompt (Simplified)
 ```
@@ -310,62 +297,34 @@ If no relevant information is found, say:
 
 ---
 
-## End-to-End Data Flow
+## Implemented Online Data Flow
 
 ```mermaid
 flowchart LR
-    A["🎤 User speaks\nTelugu/Urdu question"] --> B["📱 AudioRecord\n16kHz mono PCM"]
-    B --> C{"Network\nTier?"}
-
-    C -->|"Internet/LAN"| D["🖥️ faster-whisper\nGPU STT (~1s)"]
-    C -->|"Offline"| E["📱 whisper.cpp\nJNI STT (~8s)"]
-
-    D --> F["📝 Transcribed text\n(Telugu/Urdu)"]
-    E --> F
-
-    F --> G["🌐 IndicTrans2\nTranslate → English"]
-    G --> H["🔍 Qdrant Search\n24,520 fatwas"]
-    H --> I["🤖 LLM Generation\nStrict RAG prompt"]
-    I --> J["📖 Cited answer\n+ Source URLs"]
-    J --> K["🌐 IndicTrans2\nTranslate → Telugu/Urdu"]
-    K --> L["📱 Display answer\nwith source links"]
-    L --> M["🔊 TTS\nRead aloud"]
-    L --> N["💾 Room DB\nSave to history"]
+    A["Question text or captured audio"] --> B["Android app / configured LAN backend"]
+    B --> C["Optional STT and translation services"]
+    C --> D["FastAPI RAG pipeline"]
+    D --> E["Qdrant retrieval"]
+    E --> F{"LLM selection"}
+    F -->|"NVIDIA_API_KEY set"| G["NVIDIA NIM cloud"]
+    F -->|"Key absent"| H["Local Ollama"]
+    G --> I["Answer and available sources"]
+    H --> I
+    I --> J["Android answer UI and saved history"]
 ```
 
 ---
 
-## Dynamic GPU Offloading
+## GPU Resource Constraints
 
-The RTX 3050 (4GB VRAM) cannot run all GPU models simultaneously. The backend implements **dynamic GPU offloading**:
-
-```mermaid
-sequenceDiagram
-    participant CPU as CPU RAM
-    participant GPU as GPU VRAM (4GB)
-    participant SVC as Service
-
-    Note over CPU,GPU: Models load to CPU by default
-
-    SVC->>CPU: Model.to("cpu") at startup
-    Note over GPU: GPU VRAM: 0 GB
-
-    SVC->>GPU: Model.to("cuda") before inference
-    Note over GPU: GPU VRAM: ~1.5 GB
-    SVC->>SVC: Run inference
-    SVC->>CPU: Model.to("cpu") after inference
-    SVC->>SVC: gc.collect() + torch.cuda.empty_cache()
-    Note over GPU: GPU VRAM: 0 GB (freed)
-```
-
-**Rule**: Only ONE GPU-heavy model runs at a time. Services are called sequentially (Translation → TTS → STT), never in parallel.
+The target NVIDIA RTX 3050 has 4GB VRAM. Services have their own model-loading behavior, but the codebase does not establish a global scheduler that guarantees GPU-heavy translation, TTS, STT, and Ollama work can never overlap. Avoid claiming safe concurrent GPU operation until it is tested on the target machine. IndicTrans2 also has a source-level device-placement inconsistency that needs runtime verification.
 
 ---
 
 ## Network Tier Detection
 
 ```kotlin
-// Simplified NetworkUtils.kt logic
+// Simplified description; inspect NetworkUtils.kt for the current implementation
 enum class NetworkTier { INTERNET, LAN, OFFLINE }
 
 fun detectNetworkTier(context: Context): NetworkTier {
@@ -392,17 +351,17 @@ The app uses `ConnectivityManager.NetworkCallback` + `callbackFlow` for real-tim
 | Decision | Chosen | Alternative Rejected | Why |
 |----------|--------|---------------------|-----|
 | Android UI | Jetpack Compose | XML layouts | Modern, declarative, Google's standard since 2021 |
-| LLM | NVIDIA NIM + local Qwen3:4b | Cloud APIs (OpenAI, Anthropic) | Privacy + offline fallback |
-| Vector DB | Qdrant (self-hosted) | Pinecone, Weaviate | Self-hosted, no data leaves infrastructure |
+| LLM | NVIDIA NIM or local Qwen3:4b (selected by key presence) | Other providers | Current optional NIM mode sends question and retrieved context to the cloud |
+| Vector DB | Qdrant (self-hosted) | Pinecone, Weaviate | Self-hosted vector storage |
 | RAG Framework | LlamaIndex | LangChain | Simpler API for our RAG use case |
 | Translation | IndicTrans2 | Google Translate API | Privacy, self-hosted, best Indic language quality |
 | TTS | Indic Parler TTS | Google TTS API | Self-hosted, natural Indian language voices |
-| On-device STT | whisper.cpp (C++ JNI) | Google STT | Works fully offline, 99 languages |
+| On-device STT | whisper.cpp (C++ JNI) | Google STT | Offline model is bundled; current JNI configuration forces English |
 | HTTP Client | Retrofit + OkHttp | Ktor, Volley | Most popular Android HTTP client, best documentation |
 | DI Framework | Hilt | Dagger, Koin | Google recommended, works well with Compose |
-| Local DB | Room + FTS5 | Firebase, Realm | Built-in Android, offline-first, full-text search |
+| Local DB | Room saved-answer storage | Firebase, Realm | Built-in Android storage for answer history |
 | Backend Framework | FastAPI | Django, Flask | Fastest Python API, async, auto-generated docs |
-| Orchestration | Docker Compose | Kubernetes, manual | Single command to start all services, portable |
+| Orchestration | Docker Compose | Kubernetes, manual | Defines containerized services; host mounts and fixed endpoints limit portability |
 
 ---
 

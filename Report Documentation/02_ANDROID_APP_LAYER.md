@@ -4,6 +4,12 @@
 # Status: IN PROGRESS — Phase 1 Android setup started
 # Changes: Documented Android Studio installation, KVM verification, and Pixel_5_API_31 emulator setup
 
+> **Current implementation snapshot (2026-11-18):** The app has five navigation destinations: Home, Answer, Answers History, Video Library, and Settings. Home audio capture and backend Q&A are wired; saved answers use a Room `saved_answers` table. The Room schema has no FTS5 fatwa table. User preferences and Settings toggles are in-memory. The video list is mock data and its click action does not launch ExoPlayer. Offline STT calls whisper.cpp JNI but native configuration forces English; Android `TextToSpeech` is used when the network-tier check reports offline. Offline translation and offline Q&A are not implemented. See [10_OFFLINE_STRATEGY.md](./10_OFFLINE_STRATEGY.md).
+
+> The sections below preserve earlier implementation notes and milestone claims. Use the dated snapshot above as the current audit; older descriptions may reflect code or plans that have since changed.
+
+The remainder of this file records earlier screen-building work. Treat statements that call mock data or placeholder controls live features as historical, not as current capability.
+
 ---
 
 ## Purpose Of This File
@@ -813,14 +819,14 @@ The documentation details a safe step-by-step workflow:
 ### 4. Codebase Commenting Completion (2026-06-11)
 Successfully applied the beginner-friendly commenting rules (`Rule T1` and `Rule T2`) to all remaining screens in the Android App Layer and all Backend Services:
 - **Android Screens**:
-  - [AnswerScreen.kt](file:///home/hidayat/Documents/Islamic-Knowledge-QA-App/android-app/app/src/main/java/com/rushdululilm/app/ui/screens/AnswerScreen.kt): Added detailed comments for all Composable widgets, Annotated Strings, custom video card layouts, and state observers.
-  - [SettingsScreen.kt](file:///home/hidayat/Documents/Islamic-Knowledge-QA-App/android-app/app/src/main/java/com/rushdululilm/app/ui/screens/SettingsScreen.kt): Added detailed comments for section cards, selectable group Columns, RadioButtons, Switch controls, and database Download items.
-  - [VideoLibraryScreen.kt](file:///home/hidayat/Documents/Islamic-Knowledge-QA-App/android-app/app/src/main/java/com/rushdululilm/app/ui/screens/VideoLibraryScreen.kt): Added detailed comments for search OutlinedTextFields, clear/Search icons, and horizontal list cards.
+  - [AnswerScreen.kt](../android-app/app/src/main/java/com/rushdululilm/app/ui/screens/AnswerScreen.kt): Added detailed comments for all Composable widgets, Annotated Strings, custom video card layouts, and state observers.
+  - [SettingsScreen.kt](../android-app/app/src/main/java/com/rushdululilm/app/ui/screens/SettingsScreen.kt): Added detailed comments for section cards, selectable group Columns, RadioButtons, Switch controls, and database Download items.
+  - [VideoLibraryScreen.kt](../android-app/app/src/main/java/com/rushdululilm/app/ui/screens/VideoLibraryScreen.kt): Added detailed comments for search OutlinedTextFields, clear/Search icons, and horizontal list cards.
 - **Backend Services**:
-  - [fastapi_server.py](file:///home/hidayat/Documents/Islamic-Knowledge-QA-App/backend/fastapi_server.py): Commented REST endpoints, Pydantic models, and error handling.
-  - [rag_pipeline.py](file:///home/hidayat/Documents/Islamic-Knowledge-QA-App/backend/rag_pipeline.py): Commented LlamaIndex custom MultiCollectionRetriever, CombineQAPostprocessor, and NVIDIA NIM/Ollama LLM configurations.
-  - [ingest_deoband.py](file:///home/hidayat/Documents/Islamic-Knowledge-QA-App/backend/ingest_deoband.py) & [ingest_islamqa.py](file:///home/hidayat/Documents/Islamic-Knowledge-QA-App/backend/ingest_islamqa.py): Commented SentenceTransformer loading, Qdrant collection recreation, SQLite batching, and payload structures.
-  - [docker-compose.yml](file:///home/hidayat/Documents/Islamic-Knowledge-QA-App/backend/docker-compose.yml): Commented service volumes, environment variables, network bridges, and ports.
+  - [fastapi_server.py](../backend/fastapi_server.py): Commented REST endpoints, Pydantic models, and error handling.
+  - [rag_pipeline.py](../backend/rag_pipeline.py): LlamaIndex/Qdrant retrieval and current NVIDIA NIM/Ollama selection.
+  - [ingest_deoband.py](../backend/ingest_deoband.py) & [ingest_islamqa.py](../backend/ingest_islamqa.py): Commented embedding setup, Qdrant collection recreation, SQLite batching, and payload structures.
+  - [docker-compose.yml](../backend/docker-compose.yml): Service volumes, environment variables, network modes, and ports.
 
 Build verified successfully using `./gradlew :app:compileDebugKotlin` in `android-app/` directory.
 

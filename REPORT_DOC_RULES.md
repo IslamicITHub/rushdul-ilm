@@ -1,6 +1,7 @@
 # REPORT_DOC_RULES.md
 # Rushd-ul-Ilm (رشد العلم) — Report Documentation Maintenance Rules
-# Developer: Shaik Hidayatullah | Version 3.0
+# Developer: Shaik Hidayatullah | Version 3.1
+# Last Synced: 2026-11-18
 #
 # ════════════════════════════════════════════════════════════════════
 # PURPOSE: This file tells every AI agent HOW to write and maintain
@@ -20,105 +21,24 @@ Update the relevant file(s) after every coding session.
 
 | File | Covers | Update When |
 |------|--------|-------------|
-| `01_PROJECT_OVERVIEW.md` | What the app does, who it's for, why each technology was chosen | Phase 0 setup, any major architectural decision |
-| `02_ANDROID_APP_LAYER.md` | All Kotlin/Compose Android code — screens, ViewModels, Room DB | Phase 1 and Phase 4 |
-| `03_STT_PIPELINE.md` | Speech-to-text — faster-whisper (online) and whisper.cpp JNI (offline) | Phase 5 |
-| `04_TRANSLATION_PIPELINE.md` | IndicTrans2 (online) and Opus-MT ONNX (offline) | Phase 5 |
-| `05_TTS_PIPELINE.md` | Coqui XTTS-v2 (online) and Android TextToSpeech (offline) | Phase 5 |
-| `06_RAG_PIPELINE.md` | LlamaIndex + Qdrant + Qwen3:4b — how RAG works with cited answers | Phase 3 and Phase 4 |
-| `07_KNOWLEDGE_SOURCES.md` | Scraping scripts, SQLite DB structure, offline DB download | Phase 3 |
-| `08_VIDEO_DATABASE.md` | Video indexing, Whisper transcription, ExoPlayer integration | Phase 6 |
-| `09_BACKEND_DOCKER.md` | docker-compose.yml, FastAPI endpoints, all Docker services | Phase 2 |
-| `10_OFFLINE_STRATEGY.md` | Complete three-tier fallback system for all features | Phase 5 and Phase 6 |
+| `01_PROJECT_OVERVIEW.md` | Mission, audience, current scope, and implementation snapshot | Any major project or architecture change |
+| `02_ANDROID_APP_LAYER.md` | Kotlin/Compose screens, ViewModels, repositories, Room saved-answer history | Android code changes |
+| `03_STT_PIPELINE.md` | faster-whisper service and whisper.cpp JNI; document language and offline limits | STT changes |
+| `04_TRANSLATION_PIPELINE.md` | IndicTrans2 service and the unimplemented Opus-MT offline target | Translation changes |
+| `05_TTS_PIPELINE.md` | Indic Parler backend service and Android TextToSpeech fallback | TTS changes |
+| `06_RAG_PIPELINE.md` | LlamaIndex/Qdrant retrieval, Qwen3 embeddings, NIM/Ollama selection, prompt constraints | Ingestion or answer-generation changes |
+| `07_KNOWLEDGE_SOURCES.md` | Source SQLite databases, ingestion scripts, embedding configuration, verified counts | Source or ingestion changes |
+| `08_VIDEO_DATABASE.md` | Current mock library and URL-metadata scraper; planned indexing/playback work | Video changes |
+| `09_BACKEND_DOCKER.md` | Compose services, native Ollama, host mounts, FastAPI endpoints | Backend or deployment changes |
+| `10_OFFLINE_STRATEGY.md` | Implemented offline paths and gaps in the intended three-tier design | Network or offline changes |
 
 ---
 
 ## 📝 HOW TO WRITE EACH DOCUMENTATION FILE
 
-Every documentation file MUST follow this structure exactly:
+Use sections appropriate to the topic. Each report should make the current implementation and its limits clear, distinguish verified behavior from planned work, link to relevant source files, and include setup or test steps only when they have been verified.
 
-```markdown
-# [File Name]
-# Rushd-ul-Ilm — [Layer Name] Documentation
-# Last Updated: YYYY-MM-DD by [Agent Name]
-# Status: [NOT STARTED / IN PROGRESS / COMPLETE]
-
----
-
-## 🎯 What This Layer Does (Plain English — 3-5 sentences)
-[Explain what this component does in simple language.
- Use an analogy. Assume the reader knows nothing about Android/Python.]
-
----
-
-## 🔗 How It Connects to Other Layers
-[Show a simple ASCII diagram of how this component connects to others.
- Example:
-   Android App (Kotlin)
-       ↓ HTTP POST /transcribe
-   FastAPI Server (Python, port 8000)
-       ↓ calls
-   faster-whisper (port 8003)
-       ↓ returns
-   Telugu text → back to Android App
-]
-
----
-
-## 📂 Files in This Layer
-[List every file that belongs to this layer:
-   - path/to/file.kt — what it does
-   - path/to/another.py — what it does
-]
-
----
-
-## 🔧 Setup Instructions
-[Step-by-step instructions to set up this component from scratch.
- Include exact terminal commands with comments.
- Example:
-   # Install Android Studio on Parrot OS Linux
-   sudo snap install android-studio --classic
-   # ^ 'sudo' means "run as administrator" (like right-click Run as Admin in Windows)
-   # ^ 'snap' is a package manager built into Ubuntu/Parrot OS
-   # ^ '--classic' allows the app full system access (needed for Android Studio)
-]
-
----
-
-## 💻 Code — [Feature Name]
-
-### What this code does (explain BEFORE showing code)
-[2-4 sentences explaining what the code below does in plain English.
- Include analogy if helpful.]
-
-### File: [exact file path]
-```kotlin  ← (or python, yaml, bash as appropriate)
-// Every line MUST have a comment
-// Comment explains the WHY, not just the WHAT
-```
-
----
-
-## ✅ How to Test This Layer
-[Exact steps to verify this layer is working correctly.
- Include expected outputs the developer should see.]
-
----
-
-## 🐛 Common Problems and Fixes
-[List any errors that commonly occur and their exact fix.
- Format:
-   Problem: [error message or symptom]
-   Cause: [why it happens]
-   Fix: [exact commands or code changes to fix it]
-]
-
----
-
-## 🔗 References
-[Links to official documentation for every technology used in this layer]
-```
+Reports are not required to duplicate full source code. If code excerpts are necessary to explain behavior, keep them accurate, cite the source path, and label incomplete or unverified behavior.
 
 ---
 
