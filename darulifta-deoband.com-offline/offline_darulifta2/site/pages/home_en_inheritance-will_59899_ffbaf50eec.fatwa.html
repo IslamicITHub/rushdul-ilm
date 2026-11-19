@@ -1,0 +1,352 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head>
+<title>Inheritance</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="Inheritance">
+<meta name="keyword" content="Inheritance">
+<link href="https://darulifta-deoband.com/siteassets/css/bootstrap.min.css" rel="stylesheet" type="text/css">
+<link href="https://darulifta-deoband.com/siteassets/css/style.css" rel="stylesheet" type="text/css">
+<link href="https://darulifta-deoband.com/siteassets/css/grey.css" rel="stylesheet" type="text/css">
+<link href="https://darulifta-deoband.com/siteassets/css/pagination.css" rel="stylesheet" type="text/css"> <link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet" type="text/css">
+<link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet" type="text/css">
+<script async="" src="https://darulifta-deoband.com/siteassets/js/script.js" type="text/javascript"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js" type="text/javascript"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js" type="text/javascript"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js" type="text/javascript"></script>
+<script src="https://use.fontawesome.com/releases/v5.13.1/js/all.js" data-auto-replace-svg="nest" type="text/javascript"></script>
+<script async="" src="https://www.google.com/recaptcha/api.js" defer="" type="28ec23cd06212da6af08ef73-text/javascript"></script>
+<link rel="preload" as="script" href="//s7.addthis.com/js/300/addthis_widget.js#pubid=ra-5f38a06be154a914"><link rel="preload" as="script" href="https://www.googletagmanager.com/gtag/js?id=UA-2089511-2"><link rel="preload" as="script" href="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"><link rel="preload" as="script" href="https://cse.google.com/cse.js?cx=010118156426887088994:komd2vmfyig"><link rel="preload" as="script" href="https://www.google.com/recaptcha/api.js"><link rel="preload" as="script" href="https://use.fontawesome.com/releases/v5.13.1/js/all.js"><link rel="preload" as="script" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js"><link rel="preload" as="script" href="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"><link rel="preload" as="script" href="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"><link rel="preload" as="script" href="https://darulifta-deoband.com/siteassets/js/script.js"></head>
+<body>
+<header class="latest_main_header">
+	<div class="top_bar">
+		<div class="container">
+			<div class="row">
+				<!--<div class="col-md-12 text-right">-->
+					<div class="col-md-6 text-left">
+						<!-- <div id="google_translate_element"></div> -->
+						<div style="margin:15px;font-size:1.2em">
+							<a href="https://darululoom-deoband.com" style="color:#000">Darul Uloom Deoband, India</a>
+						</div>
+					</div>
+					<div class="col-md-6 text-right">
+						<div class="_overflow--visible is-flex _flex--self--center _h--100" style="line-height:2.2;">
+						
+						<!-- <a href="/en#hindi_fatwas" class="language-toggle language-toggle--upper-header" style="margin-right: 10px;">
+							<span class="lang-text" style="color: #000;">हिंदी</span>
+						</a> -->
+						<a href="/en" class="language-toggle language-toggle--upper-header" style="background: #7a9d96;margin-right: 10px;">
+							<span class="lang-text" style="background: #7a9d96;color: #fff;">English</span>
+						</a>
+						<a href="/ur" class="language-toggle language-toggle--upper-header" style="margin-right: 10px;">
+							<span class="lang-text" style="color: #000;font-size: 1.8em;">اردو</span>
+						</a>
+						
+
+							<!--
+								<a class="language-toggle language-toggle--upper-header">
+								<span class="icon"><i class="fa fa-caret-down"></i></span>
+								<span class="lang-text">English</span>
+								<span class="icon _ml--3"><i class="fa fa-globe fa-2x"></i></span>
+							</a>
+							-->
+							<div class="user-account user-account--upper-header">
+																<a href="https://darulifta-deoband.com/en/login">
+								<nav class="login_signup_text">
+									<span class="login-text">Login/Signup</span>
+									<span class="icon _ml--3 fa-account-text"><i class="fa fa-user-circle-o fa-2x"></i></span>
+								</nav>
+								</a>
+															</div> 
+						</div>
+					</div>
+				<!--</div> -->
+			</div>
+		</div>
+	</div>
+	<div class="header__language-bar" style="display:none;">
+		<div class="container">
+			<div class="row">
+				<div class="col-md-12">
+					<ul class="language_option">
+						<li><a href="https://darulifta-deoband.com/en" class="navbar-item is-tab has-text-centered">English</a></li>
+						<li><a href="https://darulifta-deoband.com/ur" class="navbar-item is-tab has-text-centered">اردو</a></li>
+						<!--<li><a href="https://darulifta-deoband.com/hi" class="navbar-item is-tab has-text-centered">हिन्दी</a></li>-->
+					</ul>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="middle_header">
+		<div class="container">
+			<div class="row">
+				<div class="col-md-5">
+					<a href="https://darulifta-deoband.com/en" class="header_logo">
+					<img src="/assets/images/logo-en.png" alt="Darul Ifta - Darul Uloom Deoband India" width="80%">
+					</a>
+				</div>
+				<div class="col-md-7">
+					<div class="header_srch enhi">
+						<script async="" src="https://cse.google.com/cse.js?cx=010118156426887088994:komd2vmfyig" type="text/javascript"></script>
+						<div class="gcse-search"></div>
+					</div>
+					<!-- <form class="header_srch" action="https://darulifta-deoband.com/en/home/search" method="get">
+						<input name="s" id="searchkey" type="text" class="searchtext_field" placeholder="Search...">
+						<input name="submit" type="submit" value="Search" class="searchtext_btn">
+					</form> -->
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="bottom_header">
+		<div class="container">
+			<div id="navMenu" class="navbar-menu header__menu__navbar-menu">
+				<ul class="header_menu">
+					<li>
+						<a class="navbar-item" href="https://darulifta-deoband.com/en"><span class="icon _mr--3"><i class="fa fa-home"></i></span> </a>
+					</li>
+					<li class="menu_items_mega">
+						<a class="navbar-item" href="javascript:;">Categories <span class="icon _mr--3" style="padding-top: 4px;"><i class="fa fa-caret-down"></i></span></a>
+						<ul class="mega_sub_menu">
+							<h5 class="total_res_ques">Total Questions: 9181</h5>
+							<li>
+								<div class="container">
+								<div class="row">
+																		<div class="cat_part_sec">
+										<h3>Faiths &amp; Beliefs</h3>
+										<ul class="sub_level_menu">
+																																	<li><a href="https://darulifta-deoband.com/home/qa/islamic-beliefs/1">Islamic Beliefs ()</a></li>
+																																												<li><a href="https://darulifta-deoband.com/home/qa/world-religions/2">World Religions ()</a></li>
+																																												<li><a href="https://darulifta-deoband.com/home/qa/false-sects/3">False Sects ()</a></li>
+																																												<li><a href="https://darulifta-deoband.com/home/qa/deviant-sects/4">Deviant Sects ()</a></li>
+																																												<li><a href="https://darulifta-deoband.com/home/qa/innovations-customs/5">Innovations &amp; Customs ()</a></li>
+																																												<li><a href="https://darulifta-deoband.com/home/qa/taqleed-fighi-schools/6">Taqleed &amp; Fighi Schools ()</a></li>
+																																												<li><a href="https://darulifta-deoband.com/home/qa/the-holy-quran/7">The Holy Quran ()</a></li>
+																																												<li><a href="https://darulifta-deoband.com/home/qa/hadith-sunnah/8">Hadith &amp; Sunnah ()</a></li>
+																																												<li><a href="https://darulifta-deoband.com/home/qa/dawah-tableeg/9">Dawah &amp; Tableeg ()</a></li>
+																																</ul>
+									</div>
+																		<div class="cat_part_sec">
+										<h3>Miscellaneous</h3>
+										<ul class="sub_level_menu">
+																																	<li><a href="https://darulifta-deoband.com/home/qa/halal-haram/10">Halal &amp; Haram ()</a></li>
+																																												<li><a href="https://darulifta-deoband.com/home/qa/dua-supplications/11">Dua (Supplications) ()</a></li>
+																																												<li><a href="https://darulifta-deoband.com/home/qa/islamic-names/13">Islamic Names ()</a></li>
+																																												<li><a href="https://darulifta-deoband.com/home/qa/tasawwuf/14">Tasawwuf ()</a></li>
+																																												<li><a href="https://darulifta-deoband.com/home/qa/history-biography/15">History &amp; Biography ()</a></li>
+																																																																		<li><a href="https://darulifta-deoband.com/home/qa/others/17">Others ()</a></li>
+																																</ul>
+									</div>
+																		<div class="cat_part_sec">
+										<h3>Prayers &amp; Duties</h3>
+										<ul class="sub_level_menu">
+																																	<li><a href="https://darulifta-deoband.com/home/qa/taharah-purity/18">Taharah (Purity) ()</a></li>
+																																												<li><a href="https://darulifta-deoband.com/home/qa/salah-prayer/19">Salah (Prayer) ()</a></li>
+																																												<li><a href="https://darulifta-deoband.com/home/qa/jumuah-eid-prayers/20">Jumuah &amp; Eid Prayers ()</a></li>
+																																												<li><a href="https://darulifta-deoband.com/home/qa/death-funeral/21">Death &amp; Funeral ()</a></li>
+																																												<li><a href="https://darulifta-deoband.com/home/qa/sawm-fasting/22">Sawm (Fasting) ()</a></li>
+																																												<li><a href="https://darulifta-deoband.com/home/qa/zakat-charity/23">Zakat &amp; Charity ()</a></li>
+																																												<li><a href="https://darulifta-deoband.com/home/qa/hajj-umrah/24">Hajj &amp; Umrah ()</a></li>
+																																												<li><a href="https://darulifta-deoband.com/home/qa/oaths-vows/25">Oaths &amp; Vows ()</a></li>
+																																												<li><a href="https://darulifta-deoband.com/home/qa/waqf-mosque-madrasa/26">Waqf, Mosque, Madrasa ()</a></li>
+																																												<li><a href="https://darulifta-deoband.com/home/qa/qurbani-slaughtering/27">Qurbani (Slaughtering) ()</a></li>
+																																</ul>
+									</div>
+																		<div class="cat_part_sec">
+										<h3>Social Matters</h3>
+										<ul class="sub_level_menu">
+																																	<li><a href="https://darulifta-deoband.com/home/qa/nikah-marriage/28">Nikah (Marriage) ()</a></li>
+																																												<li><a href="https://darulifta-deoband.com/home/qa/talaq-divorce/29">Talaq (Divorce) ()</a></li>
+																																												<li><a href="https://darulifta-deoband.com/home/qa/food-drinks/30">Food &amp; Drinks ()</a></li>
+																																												<li><a href="https://darulifta-deoband.com/home/qa/clothing-lifestyle/31">Clothing &amp; Lifestyle ()</a></li>
+																																												<li><a href="https://darulifta-deoband.com/home/qa/rights-etiquettes/32">Rights &amp; Etiquettes ()</a></li>
+																																												<li><a href="https://darulifta-deoband.com/home/qa/education-upbringing/33">Education &amp; Upbringing ()</a></li>
+																																																						</ul>
+									</div>
+																		<div class="cat_part_sec">
+										<h3>Transactions &amp; Dealings</h3>
+										<ul class="sub_level_menu">
+																																	<li><a href="https://darulifta-deoband.com/home/qa/business/35">Business ()</a></li>
+																																												<li><a href="https://darulifta-deoband.com/home/qa/shares-investments/36">Shares &amp; Investments ()</a></li>
+																																												<li><a href="https://darulifta-deoband.com/home/qa/interest-insurance/37">Interest &amp; Insurance ()</a></li>
+																																												<li><a href="https://darulifta-deoband.com/home/qa/other-transactions/38">Other Transactions ()</a></li>
+																																												<li><a href="https://darulifta-deoband.com/home/qa/inheritance-will/39">Inheritance &amp; Will ()</a></li>
+																																																						</ul>
+									</div>
+																	</div>
+							</div>
+							</li>
+						</ul>
+					</li>
+					<li><a class="navbar-item" href="https://darulifta-deoband.com/en/about">About</a></li>
+					<li><a class="navbar-item" href="https://darulifta-deoband.com/en/askquestion">Ask Question</a></li>
+					<li><a class="navbar-item" href="https://darulifta-deoband.com/en/contact">Contact</a></li>
+				</ul>
+			</div>
+		</div>
+	</div>
+</header>
+
+<!-- Hide views -->
+<style>
+	.users_views {display: none !important;}
+	.inner_container_list {display: none !important;}
+	.country_id { display: none !important;}
+</style><div id="midle_content">
+	<div class="container">
+		<div class="col-md-12">
+			<div class="tab-content">
+				<div id="recent_fatwas" class="container tab-pane active"><br>
+					<ul class="answer_detail">
+												<li>
+																					<div class="cate_sec">
+								<p class="category_name">
+									<span>
+										Transactions &amp; Dealings									</span> 
+									&gt;&gt; 
+									<span>
+																		<a href="https://darulifta-deoband.com/home/qa/inheritance-will/39">Inheritance &amp; Will</a>
+									</span>
+								</p>
+								<p class="quesid"><span class="ques_id">Question ID: 59899</span><span class="country_id">Country: India</span></p>
+							</div>
+							<h2><u>Title: </u> Inheritance</h2>
+														<h2><u>Question: </u> A man had 2 sons Mr X and Mr Y. Mr X had 3 sons and Mr Y had 1 son (Mr D). Mr D had no child so he adopted his sister-in-law's son and took care of him. And Mr D also given all his property and power of attorney to his sister-in-law's son.
+Some property of Mr D has been revealed in recent past after his death (he died 40 year ago) so according to Islamic law who will be the legal heir to his (Mr D) property?</h2>
+														<p class="fatwa_answer"><span class="ans_id">Answer ID: 59899</span><span style="color:#efefef; display:none;" class="ans_date">Posted on:
+ Aug 30, 2020</span></p>
+
+<p>Bismillah hir-Rahman nir-Rahim !</p>
+							<p> (Fatwa: 541/541/SD=10/1436)
+
+If Umar gave all his property to the said son of his sister-in-law and made him its full owner and withdrew his rights from the property then as per the Shariah his sister-in-law’s son shall be the owner of the gifted property. As for the properties which have been discovered after the death of Umar, if Umar’s ownership is proved in those properties then they shall be divided among his legal heirs as per the Shariah. 
+
+We can only write the share of each heir after we receive the detail of Umar’s Shariah heirs after his death till now.</p>
+							 
+							<div class="mt-4">
+								<p><b>Allah (Subhana Wa Ta'ala) knows Best</b></p>
+								<p>Darul Ifta, </p>
+								<p>Darul Uloom Deoband, India</p>
+							</div>
+
+
+							
+						</li>
+											</ul>
+				</div>
+			</div>
+			<div id="Question_list_related">
+				<div class="container">
+					<div class="row">
+						<div class="inner_container_list">
+							<div id="recent_fatwas" class="container tab-pane active">
+								<div class="heading_related_ques">
+									<h1 class="related_questions">Related Questions</h1>
+								</div>
+								<div class="ques_list_items">
+									<ul class="questions_list">
+																			<li><a href="https://darulifta-deoband.com/home/en/inheritance-will/59571"><span>Q.</span> PROPERTY DISTRIBUTION BETWEEN BROTHER AND SISTER AFTER FATHER DEATH																				</a>
+																				<span class="users_views">8311 views</span>
+																				</li>
+																			<li><a href="https://darulifta-deoband.com/home/en/inheritance-will/8174"><span>Q.</span> We were three brothers and three sisters in the family. My eldest brother passed away last year (2007). He was married, but no children. Two brothers (including me) are married and have children. Two sisters are also married and have children. One sister is divorced and has no children, but lives with one of my sisters. My mom (2001) and dad (1990) have died. They left some property for us in India. How can we distribute the property left by our parents? Does my sister-in-law, my eldest brother??s wife, get any share of the property? If yes, how much share would she get? I am the eldest in the family and I have the responsibility to justly distribute the property. Your response to my emailid (ags4unme@yahoo.com) will be greatly appreciated.																				</a>
+																				<span class="users_views">1832 views</span>
+																				</li>
+																			<li><a href="https://darulifta-deoband.com/home/en/inheritance-will/49483"><span>Q.</span> Wealth distribution																				</a>
+																				<span class="users_views">1626 views</span>
+																				</li>
+																			<li><a href="https://darulifta-deoband.com/home/en/inheritance-will/164769"><span>Q.</span> Husband's property distribution to wife and his mother																				</a>
+																				<span class="users_views">3072 views</span>
+																				</li>
+																			<li><a href="https://darulifta-deoband.com/home/en/inheritance-will/48616"><span>Q.</span> Division of income &amp; property share among wife, 2 sons (both married) and daughter (married).																				</a>
+																				<span class="users_views">2741 views</span>
+																				</li>
+																			<li><a href="https://darulifta-deoband.com/home/en/inheritance-will/13243"><span>Q.</span> assalamwalekum, respected n knowlegeable ulema's, this is to ask my mothers right to her fathers property. my grand father (nana/mothers father ) were 2 brothers n 5 sisters. he married twice had 3 kids from the first wife who died long ago but the second wife doesnt have any kids and is a widow. my mother is the youngest of 2 brothers .one died in 2000 in U.K he was a doctor there he left behind his wife and 4 sons all residing in the UK. my mothers elder brother is a divorcee with no kids and still alive. my grand father left behind vast immovable and movable property in form of residences farms money cattles land holdings fire arms etc etc. without any will . ill be highly obliged if u instruct us in the division of my mothers ancestral property which was in the name of my grand father or earned by him . plz give us the division details according to the sharia law as well as indian law for muslims if any as such present. helping us in this matter will solve our long standing problems in our family. thanking you with warm regards!																				</a>
+																				<span class="users_views">1471 views</span>
+																				</li>
+																			<li><a href="https://darulifta-deoband.com/home/en/inheritance-will/60099"><span>Q.</span> Agriculture land Distribution 																				</a>
+																				<span class="users_views">1947 views</span>
+																				</li>
+																			<li><a href="https://darulifta-deoband.com/home/en/inheritance-will/41904"><span>Q.</span> Inheritance																				</a>
+																				<span class="users_views">1452 views</span>
+																				</li>
+																			<li><a href="https://darulifta-deoband.com/home/en/inheritance-will/12561"><span>Q.</span> asalam-wali-kum, respected ulma's my grandfather/nana/mothers father birth-1922 were 2 brothers,whose father died at 1938.my nana inherited some property of his father but gave it to his only brother, but due to his hardwork, my nana made his own property .3 houses(residences) n numerous landed property from 1955-1988 till he died.now my nana left behind 2 sons n 1 daughter and a childless second wife.the elder son is divorced old in has so children.the 2nd son was settled in U.K n has 4 sons he died on 2000. the youngest daughter is married n has 3 grown up children.what is division of property among the children and childless 2nd wife of my nana according 2 sharia law.for 3 residences. n 10 plots of different value.																				</a>
+																				<span class="users_views">1532 views</span>
+																				</li>
+																			<li><a href="https://darulifta-deoband.com/home/en/inheritance-will/36686"><span>Q.</span> My mother-in-law has only three daughters alive, no sons																				</a>
+																				<span class="users_views">3444 views</span>
+																				</li>
+																			<li><a href="https://darulifta-deoband.com/home/en/inheritance-will/67776"><span>Q.</span> Can a person make will for his daughters during his life time?																				</a>
+																				<span class="users_views">2261 views</span>
+																				</li>
+																			<li><a href="https://darulifta-deoband.com/home/en/inheritance-will/14900"><span>Q.</span> assalamu alaikum muhtaram hazrat ji ,adaab,mera sawal ye hai k mery nana ne two shadiyan ki .first wife se aik daughter hai and doosri biwi se 5 children hain mery nana ne apni first wife ko house ka aik hissa likh ker de diya hai ,meri nani ne wo hissa apni daughter ko likh ker de diya hai. tu kiya iss main doosri biwi k children haqdar ho sakty hain k nahi .jazakallah.																				</a>
+																				<span class="users_views">2228 views</span>
+																				</li>
+																			<li><a href="https://darulifta-deoband.com/home/en/inheritance-will/4224"><span>Q.</span> I have a few questions regarding my cousin's father who has just passed away recently.He had business dealing with others, and some of those deals are not complete. Some people still owe him money, and some of those people claim he owes them money. Others have come after he passed away and claimed he owed them money. I would like to know the ins and outs of debt.What can/should be done about this?																				</a>
+																				<span class="users_views">1410 views</span>
+																				</li>
+																			<li><a href="https://darulifta-deoband.com/home/en/inheritance-will/32927"><span>Q.</span> Our father died leaving behind four sons and two daughters.																				</a>
+																				<span class="users_views">3395 views</span>
+																				</li>
+																			<li><a href="https://darulifta-deoband.com/home/en/inheritance-will/35001"><span>Q.</span> What will be the share of inheritance in a family of 2 wives, 5 sons and 1 daughter																				</a>
+																				<span class="users_views">1908 views</span>
+																				</li>
+																		</ul>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>	 
+	<div class="footer_text">
+		</div>
+		<div class="footer_deep_green">
+			<div class="site_wapp">
+				<div class="pull_left">2020 Ⓒ Darul Ifta - Darul Uloom Deoband, India<br>
+				Use of this website signifies your agreement to the <a href="https://darulifta-deoband.com/en/terms">Terms of Use</a>
+				</div>
+				<div class="pull_right">
+				
+				</div>
+				<br class="clear">
+			</div>
+		</div>
+	
+	<script type="text/javascript">
+	/*
+	$( document ).ready(function() {
+		$('.header__language-bar').hide();
+		$('.language-toggle').click(function(){
+			$('.header__language-bar').slideToggle();
+		})
+	})
+	*/
+	</script>
+	
+<script type="text/javascript">
+function googleTranslateElementInit() {
+document.getElementById("google_translate_element").innerHTML = "";
+new google.translate.TranslateElement({pageLanguage: 'en', includedLanguages: 'en,ur,hi', autoDisplay: false}, 'google_translate_element');
+}
+</script>
+<script type="28ec23cd06212da6af08ef73-text/javascript" src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit" defer="defer"></script>
+<!-- Global site tag (gtag.js) - Google Analytics -->
+<script async="" src="https://www.googletagmanager.com/gtag/js?id=UA-2089511-2" type="text/javascript"></script>
+<script type="text/javascript">
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'UA-2089511-2');
+</script>
+<!-- Go to www.addthis.com/dashboard to customize your tools -->
+<script type="text/javascript" src="//s7.addthis.com/js/300/addthis_widget.js#pubid=ra-5f38a06be154a914"></script><!--<script type="text/javascript" src="//s7.addthis.com/js/300/addthis_widget.js#pubid=ra-5f38a06be154a914"></script>-->
+
+
+
+
+<script defer="" src="https://static.cloudflareinsights.com/beacon.min.js/v833ccba57c9e4d2798f2e76cebdd09a11778172276447" integrity="sha512-57MDmcccJXYtNnH+ZiBwzC4jb2rvgVCEokYN+L/nLlmO8rfYT/gIpW2A569iJ/3b+0UEasghjuZH/ma3wIs/EQ==" data-cf-beacon="{&quot;version&quot;:&quot;2024.11.0&quot;,&quot;token&quot;:&quot;035447eb9d884d11bc561797e36a9e82&quot;,&quot;r&quot;:1,&quot;server_timing&quot;:{&quot;name&quot;:{&quot;cfCacheStatus&quot;:true,&quot;cfEdge&quot;:true,&quot;cfExtPri&quot;:true,&quot;cfL4&quot;:true,&quot;cfOrigin&quot;:true,&quot;cfSpeedBrain&quot;:true},&quot;location_startswith&quot;:null}}" crossorigin="anonymous"></script>
+
+
+</body></html>
