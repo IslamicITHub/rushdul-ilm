@@ -92,3 +92,6 @@ python3 fast_mirror.py
 
 ### Output Location
 The generated mirror will be in the `islamqa_pro_mirror/` directory. Open `index.html` in any browser to begin browsing offline.
+
+> [!NOTE] A note after running the above command
+> After running the `fast_mirrory.py` script, all the questions and answers are stored in raw html format in the .db file which is so noisy and it wastes lot of space and LLM tokens when providing as a context to LLMs. To clean all the html syntax and keep only plain text in the .db file, run the `db_filter.py` script after running the `fast_mirror.py` script.

@@ -1,10 +1,10 @@
-# Darul Ifta Deoband Scrapy Downloader (`downloader_claude.py`)
+# Darul Ifta Deoband Scrapy Downloader (`deoband_offline_downloader.py`)
 
-This documentation provides a comprehensive technical reference and architectural explanation for the `downloader_claude.py` script. It is designed for developers maintaining the codebase and AI agents performing "vibe coding" or system integration.
+This documentation provides a comprehensive technical reference and architectural explanation for the `deoband_offline_downloader.py` script. It is designed for developers maintaining the codebase and AI agents performing "vibe coding" or system integration.
 
 ## 1. Mission and Intent
 
-The `downloader_claude.py` is the primary data ingestion engine for the **Rushd-ul-Ilm** Islamic Knowledge Q&A App. Its goal is to create a high-fidelity, searchable, and 100% offline-ready archive of the Darul Ifta Deoband English fatwa database.
+The `deoband_offline_downloader.py` is the primary data ingestion engine for the **Rushd-ul-Ilm** Islamic Knowledge Q&A App. Its goal is to create a high-fidelity, searchable, and 100% offline-ready archive of the Darul Ifta Deoband English fatwa database.
 
 ### Core Objectives
 *   **Data Sovereignty:** Extract structured Islamic knowledge (Fatwas) to be used in a Retrieval-Augmented Generation (RAG) pipeline.
@@ -86,7 +86,7 @@ The schema includes an **FTS5 Virtual Table** for near-instant searching:
 2.  **Verify Manually:** Navigate to the site and solve the Cloudflare puzzle.
 3.  **Run the Script:**
     ```bash
-    python downloader_claude.py --workers 5 --delay 1.0
+    python deoband_offline_downloader.py --workers 5 --delay 1.0
     ```
 
 ---
@@ -96,7 +96,7 @@ The schema includes an **FTS5 Virtual Table** for near-instant searching:
 *   **Thread Safety:** Always use `self.lock` (SQLite) and `self.io_lock` (Filesystem) when modifying state in multi-threaded methods.
 *   **Normalization:** All URLs must be passed through `normalize_url()` to prevent duplicate entries caused by trailing slashes or fragments.
 *   **Politeness:** Never set `--delay` to `0` in production; the server employs rate-limiting that cookies alone cannot bypass.
-*   **Compatibility:** The SQLite schema is designed to be 100% compatible with `downloader2.py`.
+*   **Compatibility:** The SQLite schema is designed to be 100% compatible with `deoband_offline_downloader.py`.
 
 ---
 
